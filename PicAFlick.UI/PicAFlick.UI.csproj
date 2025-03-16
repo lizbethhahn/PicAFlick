@@ -7,4 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PicAFlick.Data\PicAFlick.Data.csproj" />
+    <ProjectReference Include="..\PicAFlick.Domain.Entities\PicAFlick.Domain.Entities.csproj" />
+    <ProjectReference Include="..\PicAFlick.Domain.Services\PicAFlick.Domain.Services.csproj" />
+  </ItemGroup>
+
 </Project>
