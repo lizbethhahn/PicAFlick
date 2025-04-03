@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.IdentityModel.Tokens;
 using PicAFlick.Data;
 using PicAFlick.Domain.Entities;
 
@@ -37,7 +38,8 @@ namespace PicAFlick.UI
                 {
                     case "1":
                         // Call method to search for a movie
-                        // TitleSearch();
+                        
+                        TitleSearch();
                         break;
                     case "2":
                         // Call method to add a movie 
@@ -74,6 +76,37 @@ namespace PicAFlick.UI
             // Exit message
             Console.WriteLine("Goodbye!");
         }
+
+        private static async void TitleSearch()
+        {
+            HttpClient httpClient = new HttpClient();
+            var tmdbClient = new TmdbApiClient(httpClient);
+
+            while (true)
+            {
+                Console.Write("Enter a movie title (or type 'exit' to quit): ");
+            string title = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(title) || title.ToLower() == "exit")
+                break;
+
+            string movieData = await tmdbClient.GetMovieByTitleAsync(title);
+
+            if (string.IsNullOrEmpty(movieData))
+            {
+                Console.WriteLine("No data found or an error occurred.");
+            }
+            else
+            {
+                Console.WriteLine($"TMDB Response:\n{movieData}");
+            }
+
+            Console.WriteLine("\n-----------------------------\n");
+            }
+        Console.WriteLine("Goodbye!");
+        }
+
+
         private static void AddMovie()
         {
             Console.WriteLine("Enter the title of the movie you want to add to the watch list:");
