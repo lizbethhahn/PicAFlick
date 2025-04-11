@@ -1,15 +1,15 @@
-﻿
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.IdentityModel.Tokens;
-using PicAFlick.Data;
+﻿using PicAFlick.Data;
 using PicAFlick.Domain.Entities;
+using System.Data;
+using System.Text.Json;
 
 namespace PicAFlick.UI
 {
     public class Program
     {
         private static MovieContext _context = new MovieContext();
-        public static void Main(string[] args)
+ 
+        public static async Task Main(string[] args)
         {
             _context.Database.EnsureCreated();
 
@@ -18,7 +18,6 @@ namespace PicAFlick.UI
             while (continueRunning)
             {
                 // Display the menu options
-                Console.Clear();  // Clears the console to display the menu cleanly
                 Console.WriteLine("=================================");
                 Console.WriteLine("Welcome to Pic-A-Flick");
                 Console.WriteLine("=================================");
@@ -31,15 +30,15 @@ namespace PicAFlick.UI
                 Console.Write("Please select an option (1-5): ");
 
                 // Get user input and handle it
-                string input = Console.ReadLine();
+                    string input = Console.ReadLine();
 
                 // Process user input using a switch statement
                 switch (input)
                 {
                     case "1":
                         // Call method to search for a movie
-                        
-                        TitleSearch();
+                        Console.Clear();
+                        await TitleSearch();
                         break;
                     case "2":
                         // Call method to add a movie 
@@ -54,58 +53,85 @@ namespace PicAFlick.UI
                         GetAllMovies();                       
                         break;
                     case "5":
-                        if (continueRunning = false)
-                        {
-                            Console.WriteLine("Exiting the application...");
-                        }
+                        continueRunning = false;
                         break;
                     default:
                         // Handle invalid input
-                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 4.");
+                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 5.");
                         break;
                 }
-
-                // Wait for the user to press a key before continuing
-                if (continueRunning)
-                {
-                    Console.WriteLine("\nPress any key to return to the menu...");
-                    Console.ReadKey();
-                }
             }
-
             // Exit message
-            Console.WriteLine("Goodbye!");
+            Console.WriteLine("=================================");
+            Console.WriteLine("Laters!");
+            Console.WriteLine("=================================");
         }
 
-        private static async void TitleSearch()
+        private static async Task TitleSearch()
         {
             HttpClient httpClient = new HttpClient();
             var tmdbClient = new TmdbApiClient(httpClient);
 
-            while (true)
+            bool keepSearching = true;
+
+            while (keepSearching)
             {
-                Console.Write("Enter a movie title (or type 'exit' to quit): ");
-            string title = Console.ReadLine();
+                //Console.Clear();
+                Console.Write("Enter a movie title or type 'exit' to return to the main menu: ");
+                string title = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(title) || title.ToLower() == "exit")
-                break;
+                if (title.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.Clear();
+                    break;
+                }
+                
+                if (!string.IsNullOrWhiteSpace(title))
+                {
+                    string movieData = await tmdbClient.GetMovieByTitleAsync(title);
+                    MovieSearchResult searchResult = JsonSerializer.Deserialize<MovieSearchResult>(movieData);
 
-            string movieData = await tmdbClient.GetMovieByTitleAsync(title);
+                    if (searchResult?.Results != null && searchResult.Results.Count > 0)
+                    {
+                        int lineCount = 0;
+                        foreach (var movie in searchResult.Results)
+                        {
+                            Console.WriteLine($"\nTitle: {movie.Title}");
+                            lineCount++;
+                            Console.WriteLine($"Overview: {movie.Overview}");
+                            lineCount++;
+                            Console.WriteLine($"Release Date: {movie.ReleaseDate}");
+                            lineCount++;
+                            Console.WriteLine($"Rating: {movie.VoteAverage} ({movie.VoteCount} votes)");
+                            lineCount++;
+                            Console.WriteLine("-----------------------------\n");
+                            lineCount++;
 
-            if (string.IsNullOrEmpty(movieData))
-            {
-                Console.WriteLine("No data found or an error occurred.");
+                            PauseIfNeeded(lineCount);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No results found.");
+                        //break;
+                    }
+                }                
+                else
+                {
+                    Console.WriteLine("\nNo title entered.");
+                }
             }
-            else
-            {
-                Console.WriteLine($"TMDB Response:\n{movieData}");
-            }
-
-            Console.WriteLine("\n-----------------------------\n");
-            }
-        Console.WriteLine("Goodbye!");
+            Console.WriteLine("\nPress any key to return to the main menu");
+            Console.ReadKey();
         }
-
+        private static void PauseIfNeeded(int lineCount, int maxLinesBeforePause = 20)
+        {
+            if (lineCount > 0 && lineCount % maxLinesBeforePause == 0)
+            {
+                Console.WriteLine("-- Press any key to continue --");
+                Console.ReadKey(true); // 'true' means it won’t display the key pressed
+            }
+        }
 
         private static void AddMovie()
         {

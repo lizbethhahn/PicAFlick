@@ -16,7 +16,7 @@ namespace PicAFlick.Data
 
         public TmdbApiClient(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(BaseUrl);
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
