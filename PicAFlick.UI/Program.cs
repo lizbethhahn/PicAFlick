@@ -1,4 +1,5 @@
-﻿using PicAFlick.Data;
+﻿using Domain.DTOs;
+using PicAFlick.Data;
 using PicAFlick.Domain.Entities;
 using System.Data;
 using System.Text.Json;
@@ -89,7 +90,7 @@ namespace PicAFlick.UI
                 if (!string.IsNullOrWhiteSpace(title))
                 {
                     string movieData = await tmdbClient.GetMovieByTitleAsync(title);
-                    MovieSearchResult searchResult = JsonSerializer.Deserialize<MovieSearchResult>(movieData);
+                    TmdbMovieSearchResponse searchResult = JsonSerializer.Deserialize<TmdbMovieSearchResponse>(movieData);
 
                     if (searchResult?.Results != null && searchResult.Results.Count > 0)
                     {

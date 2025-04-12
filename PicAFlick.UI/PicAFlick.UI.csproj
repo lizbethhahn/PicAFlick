@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Domain.DTOs\Domain.DTOs.csproj" />
     <ProjectReference Include="..\PicAFlick.Data\PicAFlick.Data.csproj" />
     <ProjectReference Include="..\PicAFlick.Domain.Entities\PicAFlick.Domain.Entities.csproj" />
     <ProjectReference Include="..\PicAFlick.Domain.Services\PicAFlick.Domain.Services.csproj" />
