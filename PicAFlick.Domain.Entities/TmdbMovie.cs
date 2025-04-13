@@ -2,7 +2,7 @@
 
 namespace PicAFlick.Domain.Entities
 {
-    public class Movie
+    public class TmdbMovie
     {
         [JsonPropertyName("adult")]
         public bool Adult { get; set; }

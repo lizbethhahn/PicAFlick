@@ -9,7 +9,7 @@ using PicAFlick.Data;
 
 namespace PicAFlick.Data.Migrations
 {
-    [DbContext(typeof(MovieContext))]
+    [DbContext(typeof(UserContext))]
     partial class MovieContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
