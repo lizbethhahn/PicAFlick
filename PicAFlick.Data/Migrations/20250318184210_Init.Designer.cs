@@ -10,7 +10,7 @@ using PicAFlick.Data;
 
 namespace PicAFlick.Data.Migrations
 {
-    [DbContext(typeof(MovieContext))]
+    [DbContext(typeof(UserContext))]
     [Migration("20250318184210_Init")]
     partial class Init
     {

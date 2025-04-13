@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Data", "PicAFlick
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.UI", "PicAFlick.UI\PicAFlick.UI.csproj", "{A1797E74-CD05-4BCB-910B-9532BFB92990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.DTOs", "Domain.DTOs\Domain.DTOs.csproj", "{DBF63911-91D6-4C35-8421-E943F7F25D60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Domain.DTOs", "PicAFlick.Domain.DTOs\PicAFlick.Domain.DTOs.csproj", "{AC0041D0-2529-4ABA-98BB-84F298BBA5A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{A1797E74-CD05-4BCB-910B-9532BFB92990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1797E74-CD05-4BCB-910B-9532BFB92990}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1797E74-CD05-4BCB-910B-9532BFB92990}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DBF63911-91D6-4C35-8421-E943F7F25D60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DBF63911-91D6-4C35-8421-E943F7F25D60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DBF63911-91D6-4C35-8421-E943F7F25D60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DBF63911-91D6-4C35-8421-E943F7F25D60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC0041D0-2529-4ABA-98BB-84F298BBA5A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC0041D0-2529-4ABA-98BB-84F298BBA5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC0041D0-2529-4ABA-98BB-84F298BBA5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC0041D0-2529-4ABA-98BB-84F298BBA5A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

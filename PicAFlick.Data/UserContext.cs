@@ -4,10 +4,10 @@ using PicAFlick.Domain.Entities;
 
 namespace PicAFlick.Data
 {
-    public class MovieContext : DbContext
+    public class UserContext : DbContext
     {   
-        public DbSet<Movie> Movies { get; set; }
-        public DbSet<TVShow> TVShows { get; set; }
+        public DbSet<UserMovie> UserMovies { get; set; }
+        public DbSet<UserTVShow> UsersTVShows { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

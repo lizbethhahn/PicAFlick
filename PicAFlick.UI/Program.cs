@@ -8,7 +8,7 @@ namespace PicAFlick.UI
 {
     public class Program
     {
-        private static MovieContext _context = new MovieContext();
+        private static UserContext _context = new UserContext();
  
         public static async Task Main(string[] args)
         {
@@ -138,14 +138,14 @@ namespace PicAFlick.UI
         {
             Console.WriteLine("Enter the title of the movie you want to add to the watch list:");
             string title = Console.ReadLine();
-            var movie = new Movie { Title = title };
-            _context.Movies.Add(movie);
+            var movie = new UserMovie { Title = title };
+            _context.UserMovies.Add(movie);
             _context.SaveChanges();
         }
 
         private static void GetAllMovies()
         {
-            var movies = _context.Movies.ToList();
+            var movies = _context.UserMovies.ToList();
 
             foreach (var movie in movies)
             {
@@ -158,11 +158,11 @@ namespace PicAFlick.UI
             Console.WriteLine("Enter the id of a movie to delete");
             if (int.TryParse(Console.ReadLine(), out int id))
             {
-                var idToDelete = _context.Movies.Where(m => m.Id == id);
+                var idToDelete = _context.UserMovies.Where(m => m.Id == id);
 
                 if (idToDelete != null)
                 {
-                    _context.Movies.RemoveRange(idToDelete);
+                    _context.UserMovies.RemoveRange(idToDelete);
                     _context.SaveChanges();
                     Console.WriteLine($"Movie with id {id} removed from the database");
                 }
