@@ -38,5 +38,21 @@ namespace PicAFlick.Data
                 return null;
             }
         }
+
+        public async Task<string> GetTvShowByTitleAsync(string title)
+        { 
+            string requestUrl = $"search/tv?api_key={ApiKey}&query={Uri.EscapeDataString(title)}";
+            HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                // Read and return the response content as a string
+                return await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                // Handle error (e.g., log it, throw exception, etc.)
+                return null;
+            }
+        }
     }
 }

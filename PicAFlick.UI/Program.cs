@@ -23,12 +23,13 @@ namespace PicAFlick.UI
                 Console.WriteLine("Welcome to Pic-A-Flick");
                 Console.WriteLine("=================================");
                 Console.WriteLine("1. Search for a movie to add to your watch list.");
-                Console.WriteLine("2. Add a movie to the watch list.");
-                Console.WriteLine("3. Remove a movie from the watchlist.");
-                Console.WriteLine("4. View All movies.");
-                Console.WriteLine("5. Exit");
+                Console.WriteLine("2. Search for a TV show to add to your watch list.");
+                Console.WriteLine("3. Add a movie to the watch list.");
+                Console.WriteLine("4. Remove a movie from the watchlist.");
+                Console.WriteLine("5. View All movies.");
+                Console.WriteLine("6. Exit");
                 Console.WriteLine("=================================");
-                Console.Write("Please select an option (1-5): ");
+                Console.Write("Please select an option (1-6): ");
 
                 // Get user input and handle it
                     string input = Console.ReadLine();
@@ -39,26 +40,30 @@ namespace PicAFlick.UI
                     case "1":
                         // Call method to search for a movie
                         Console.Clear();
-                        await TitleSearch();
+                        await MovieTitleSearch();
                         break;
                     case "2":
+                        // Call method to search for a TV show
+                        await TvShowTitleSearch();
+                        break;
+                    case "3":
                         // Call method to add a movie 
                         AddMovie();
                         break;
-                    case "3":
+                    case "4":
                         // Call method to delete a movie
                         RemoveMovieById();
                         break;
-                    case "4":
-                        // Call method to view all movies in the database
-                        GetAllMovies();                       
-                        break;
                     case "5":
+                        // Call method to view all movies in the database
+                        GetAllMovies();
+                        break; ;
+                    case "6":
                         continueRunning = false;
                         break;
                     default:
                         // Handle invalid input
-                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 5.");
+                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 6.");
                         break;
                 }
             }
@@ -68,7 +73,7 @@ namespace PicAFlick.UI
             Console.WriteLine("=================================");
         }
 
-        private static async Task TitleSearch()
+        private static async Task MovieTitleSearch()
         {
             HttpClient httpClient = new HttpClient();
             var tmdbClient = new TmdbApiClient(httpClient);
@@ -77,7 +82,6 @@ namespace PicAFlick.UI
 
             while (keepSearching)
             {
-                //Console.Clear();
                 Console.Write("Enter a movie title or type 'exit' to return to the main menu: ");
                 string title = Console.ReadLine();
 
@@ -117,6 +121,62 @@ namespace PicAFlick.UI
                         //break;
                     }
                 }                
+                else
+                {
+                    Console.WriteLine("\nNo title entered.");
+                }
+            }
+            Console.WriteLine("\nPress any key to return to the main menu");
+            Console.ReadKey();
+        }
+        private static async Task TvShowTitleSearch()
+        {
+            HttpClient httpClient = new HttpClient();
+            var tmdbClient = new TmdbApiClient(httpClient);
+
+            bool keepSearching = true;
+
+            while (keepSearching)
+            {
+                Console.Write("Enter a tv title or type 'exit' to return to the main menu: ");
+                string title = Console.ReadLine();
+
+                if (title.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.Clear();
+                    break;
+                }
+
+                if (!string.IsNullOrWhiteSpace(title))
+                {
+                    string tvData = await tmdbClient.GetTvShowByTitleAsync(title);
+                    TmdbMovieSearchResponse searchResult = JsonSerializer.Deserialize<TmdbMovieSearchResponse>(tvData);
+
+                    if (searchResult?.Results != null && searchResult.Results.Count > 0)
+                    {
+                        int lineCount = 0;
+                        foreach (var tvShow in searchResult.Results)
+                        {
+                            Console.WriteLine($"\nTitle: {tvShow.Title}");
+                            lineCount++;
+                            Console.WriteLine($"Overview: {tvShow.Overview}");
+                            lineCount++;
+                            Console.WriteLine($"Release Date: {tvShow.ReleaseDate}");
+                            lineCount++;
+                            Console.WriteLine($"Rating: {tvShow.VoteAverage} ({tvShow.VoteCount} votes)");
+                            lineCount++;
+                            Console.WriteLine("-----------------------------\n");
+                            lineCount++;
+
+                            PauseIfNeeded(lineCount);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No results found.");
+                        //break;
+                    }
+                }
                 else
                 {
                     Console.WriteLine("\nNo title entered.");
