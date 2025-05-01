@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using DotNetEnv;
 using PicAFlick.Data;
 using PicAFlick.Domain.Entities;
 using System.Data;
@@ -11,7 +12,16 @@ namespace PicAFlick.UI
         private static UserContext _context = new UserContext();
  
         public static async Task Main(string[] args)
-        {
+        {         
+            Env.Load();
+            var apiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY");
+
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                Console.WriteLine("API Key not set.");
+                return;
+            }
+
             _context.Database.EnsureCreated();
 
             bool continueRunning = true;

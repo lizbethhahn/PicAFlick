@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.UI", "PicAFlick.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Domain.DTOs", "PicAFlick.Domain.DTOs\PicAFlick.Domain.DTOs.csproj", "{AC0041D0-2529-4ABA-98BB-84F298BBA5A5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41F13562-C6A7-44F9-8BFE-3C921E96226D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
