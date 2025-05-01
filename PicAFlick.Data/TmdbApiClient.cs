@@ -1,17 +1,11 @@
-﻿using System;
-using System.Net.Http;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using DotNetEnv;
 
 namespace PicAFlick.Data
 {
     public class TmdbApiClient
     {
         private readonly HttpClient _httpClient;
-        private readonly string ApiKey = "1b9fad7d7035a0af07bea1e5c5d15b9f";
+        private readonly string ApiKey;
         private readonly string BaseUrl = "https://api.themoviedb.org/3/";
 
         public TmdbApiClient(HttpClient httpClient)
@@ -19,6 +13,10 @@ namespace PicAFlick.Data
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(BaseUrl);
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            // Fetch API key from environment variable
+            ApiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY")
+                     ?? throw new InvalidOperationException("TMDB_API_KEY not set");
         }
 
         public async Task<string> GetMovieByTitleAsync(string title)
