@@ -13,6 +13,5 @@
         public float? UserRating { get; set; }
         public bool IsWatched { get; set; } = false;
         public DateTime? DateWatched { get; set; }
-
     }
 }

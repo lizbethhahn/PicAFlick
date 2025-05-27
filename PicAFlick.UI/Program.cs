@@ -15,6 +15,7 @@ namespace PicAFlick.UI
         {         
             Env.Load();
             var apiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY");
+            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
             if (string.IsNullOrEmpty(apiKey))
             {

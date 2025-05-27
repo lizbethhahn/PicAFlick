@@ -18,4 +18,3 @@ namespace Domain.DTOs
         public int TotalResults { get; set; }
     }
 }
-

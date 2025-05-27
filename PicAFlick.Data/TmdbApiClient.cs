@@ -1,6 +1,4 @@
-﻿using DotNetEnv;
-
-namespace PicAFlick.Data
+﻿namespace PicAFlick.Data
 {
     public class TmdbApiClient
     {
