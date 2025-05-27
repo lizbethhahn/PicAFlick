@@ -105,7 +105,7 @@ namespace PicAFlick.UI
                 if (!string.IsNullOrWhiteSpace(title))
                 {
                     string movieData = await tmdbClient.GetMovieByTitleAsync(title);
-                    TmdbSearchResponse searchResult = JsonSerializer.Deserialize<TmdbSearchResponse>(movieData);
+                    TmdbMovieSearchResponse searchResult = JsonSerializer.Deserialize<TmdbMovieSearchResponse>(movieData);
 
                     if (searchResult?.Results != null && searchResult.Results.Count > 0)
                     {
@@ -161,7 +161,7 @@ namespace PicAFlick.UI
                 if (!string.IsNullOrWhiteSpace(title))
                 {
                     string tvData = await tmdbClient.GetTvShowByTitleAsync(title);
-                    TmdbSearchResponse searchResult = JsonSerializer.Deserialize<TmdbSearchResponse>(tvData);
+                    TmdbMovieSearchResponse searchResult = JsonSerializer.Deserialize<TmdbMovieSearchResponse>(tvData);
 
                     if (searchResult?.Results != null && searchResult.Results.Count > 0)
                     {
