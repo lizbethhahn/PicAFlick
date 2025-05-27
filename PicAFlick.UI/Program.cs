@@ -15,6 +15,7 @@ namespace PicAFlick.UI
         {         
             Env.Load();
             var apiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY");
+            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
             if (string.IsNullOrEmpty(apiKey))
             {
@@ -104,7 +105,7 @@ namespace PicAFlick.UI
                 if (!string.IsNullOrWhiteSpace(title))
                 {
                     string movieData = await tmdbClient.GetMovieByTitleAsync(title);
-                    TmdbMovieSearchResponse searchResult = JsonSerializer.Deserialize<TmdbMovieSearchResponse>(movieData);
+                    TmdbSearchResponse searchResult = JsonSerializer.Deserialize<TmdbSearchResponse>(movieData);
 
                     if (searchResult?.Results != null && searchResult.Results.Count > 0)
                     {
@@ -160,7 +161,7 @@ namespace PicAFlick.UI
                 if (!string.IsNullOrWhiteSpace(title))
                 {
                     string tvData = await tmdbClient.GetTvShowByTitleAsync(title);
-                    TmdbMovieSearchResponse searchResult = JsonSerializer.Deserialize<TmdbMovieSearchResponse>(tvData);
+                    TmdbSearchResponse searchResult = JsonSerializer.Deserialize<TmdbSearchResponse>(tvData);
 
                     if (searchResult?.Results != null && searchResult.Results.Count > 0)
                     {

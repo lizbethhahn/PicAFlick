@@ -25,3 +25,5 @@ copy .env.template .env
 ```cmd
 TMDB_API_KEY=your_api_key_here
 ```
+### Database Setup
+This app uses SQL Server for data storage. You must set the `DB_CONNECTION_STRING` in your `.env` file to connect to your SQL Server instance. Look at the .env.template for an example.
