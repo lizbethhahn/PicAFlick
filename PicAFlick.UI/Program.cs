@@ -17,11 +17,9 @@ namespace PicAFlick.UI
         public static async Task Main(string[] args)
         {
             Env.Load();
-            // Fetch API key from environment variable
-            var apiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY");
             var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
-            if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(connectionString))
             {
                 Console.WriteLine("Missing environment variables.");
                 return;

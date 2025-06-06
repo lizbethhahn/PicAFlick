@@ -10,18 +10,21 @@ namespace PicAFlick.Data
         public DbSet<UserMovie> UserMovies { get; set; }
         public DbSet<UserTVShow> UsersTVShows { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public UserContext(DbContextOptions<UserContext> options) : base(options)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                Env.Load();
-                
-                var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
-                    ?? throw new InvalidOperationException("DB_CONNECTION_STRING");
-                
-                optionsBuilder.UseSqlServer(
-                connectionString, options => options.MaxBatchSize(100));
-            }
         }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        Env.Load();
+
+        //        var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+        //            ?? throw new InvalidOperationException("DB_CONNECTION_STRING");
+
+        //        optionsBuilder.UseSqlServer(
+        //        connectionString, options => options.MaxBatchSize(100));
+        //    }
+        //}
     }
 }

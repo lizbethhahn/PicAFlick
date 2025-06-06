@@ -17,8 +17,8 @@ namespace PicAFlick.Data
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
             // Fetch API key from environment variable
-            //_apiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY")
-            //         ?? throw new InvalidOperationException("TMDB_API_KEY not set");
+            _apiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY")
+                     ?? throw new InvalidOperationException("TMDB_API_KEY not set");
         }
 
         public async Task<TmdbMovieSearchResponse> GetMovieByTitleAsync(string query, int page = 1)

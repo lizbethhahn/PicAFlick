@@ -103,7 +103,7 @@ namespace PicAFlick.UI
 
                 if (!string.IsNullOrWhiteSpace(title))
                 {
-                    TmdbMovieSearchResponse searchResult = JsonSerializer.Deserialize<TmdbMovieSearchResponse>(title);
+                    TmdbMovieSearchResponse searchResult = await _tmdbApiClient.GetMovieByTitleAsync(title);
 
                     if (searchResult?.Results != null && searchResult.Results.Count > 0)
                     {
@@ -138,7 +138,7 @@ namespace PicAFlick.UI
             Console.WriteLine("\nPress any key to return to the main menu");
             Console.ReadKey();
         }
-        private static async Task TvShowTitleSearchAsync()
+        private async Task TvShowTitleSearchAsync()
         {
             bool keepSearching = true;
 
@@ -155,7 +155,7 @@ namespace PicAFlick.UI
 
                 if (!string.IsNullOrWhiteSpace(title))
                 {
-                    TmdbMovieSearchResponse searchResult = JsonSerializer.Deserialize<TmdbMovieSearchResponse>(title);
+                    TmdbMovieSearchResponse searchResult = await _tmdbApiClient.GetTvShowByTitleAsync(title);
 
                     if (searchResult?.Results != null && searchResult.Results.Count > 0)
                     {
