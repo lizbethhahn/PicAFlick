@@ -1,32 +1,38 @@
-﻿namespace PicAFlick.Data
+﻿using Domain.DTOs;
+using PicAFlick.Domain.Services;
+using System.Text.Json;
+
+namespace PicAFlick.Data
 {
-    public class TmdbApiClient
+    public class TmdbApiClient : ITmdbApiClient
     {
         private readonly HttpClient _httpClient;
-        private readonly string ApiKey;
-        private readonly string BaseUrl = "https://api.themoviedb.org/3/";
+        private readonly string _apiKey;
+        private readonly string _baseUrl = "https://api.themoviedb.org/3/";
 
         public TmdbApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(BaseUrl);
+            _httpClient.BaseAddress = new Uri(_baseUrl);
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
             // Fetch API key from environment variable
-            ApiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY")
+            _apiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY")
                      ?? throw new InvalidOperationException("TMDB_API_KEY not set");
         }
 
-        public async Task<string> GetMovieByTitleAsync(string title)
+        public async Task<TmdbMovieSearchResponse> GetMovieByTitleAsync(string query, int page = 1)
         {
             // Construct the request URL
-            string requestUrl = $"search/movie?api_key={ApiKey}&query={Uri.EscapeDataString(title)}";
+            string requestUrl = $"search/movie?api_key={_apiKey}&query={Uri.EscapeDataString(query)}&page={page}";
             // Make the HTTP GET request
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+
             if (response.IsSuccessStatusCode)
             {
+                var json = await response.Content.ReadAsStringAsync();
                 // Read and return the response content as a string
-                return await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<TmdbMovieSearchResponse>(json);
             }
             else
             {
@@ -35,14 +41,15 @@
             }
         }
 
-        public async Task<string> GetTvShowByTitleAsync(string title)
+        public async Task<TmdbMovieSearchResponse> GetTvShowByTitleAsync(string title)
         { 
-            string requestUrl = $"search/tv?api_key={ApiKey}&query={Uri.EscapeDataString(title)}";
+            string requestUrl = $"search/tv?api_key={_apiKey}&query={Uri.EscapeDataString(title)}";
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
             {
+                var json = await response.Content.ReadAsStringAsync();
                 // Read and return the response content as a string
-                return await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<TmdbMovieSearchResponse>(json);
             }
             else
             {

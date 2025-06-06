@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PicAFlick.Domain.DTOs\PicAFlick.Domain.DTOs.csproj" />
+  </ItemGroup>
+
 </Project>
