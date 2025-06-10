@@ -41,9 +41,9 @@ namespace PicAFlick.Data
             }
         }
 
-        public async Task<TmdbMovieSearchResponse> GetTvShowByTitleAsync(string title)
+        public async Task<TmdbMovieSearchResponse> GetTvShowByTitleAsync(string query, int page = 1)
         { 
-            string requestUrl = $"search/tv?api_key={_apiKey}&query={Uri.EscapeDataString(title)}";
+            string requestUrl = $"search/tv?api_key={_apiKey}&query={Uri.EscapeDataString(query)}&page={page}";
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
             {
