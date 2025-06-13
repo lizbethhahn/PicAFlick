@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PicAFlick.Data\PicAFlick.Data.csproj" />
+    <ProjectReference Include="..\PicAFlick.Domain.DTOs\PicAFlick.Domain.DTOs.csproj" />
+    <ProjectReference Include="..\PicAFlick.Domain.Entities\PicAFlick.Domain.Entities.csproj" />
+    <ProjectReference Include="..\PicAFlick.Domain.Services\PicAFlick.Domain.Services.csproj" />
+  </ItemGroup>
+
+</Project>
