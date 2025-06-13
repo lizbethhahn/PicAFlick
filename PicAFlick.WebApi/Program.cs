@@ -1,13 +1,12 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using PicAFlick.Data;
+using PicAFlick.Domain.Services;
 
-Console.WriteLine("Current Dir: " + Directory.GetCurrentDirectory());
-
-Env.Load();
 var envPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName, ".env");
     DotNetEnv.Env.Load(envPath);
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+var tmdbApiToken = Environment.GetEnvironmentVariable("TMDB_API_TOKEN");
 
 if (string.IsNullOrEmpty(connectionString))
 {
@@ -18,8 +17,13 @@ if (string.IsNullOrEmpty(connectionString))
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<UserContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<UserContext>(options => options
+                .UseSqlServer(connectionString));
+builder.Services.AddHttpClient<ITmdbApiClient, TmdbApiClient>(client =>
+{
+    client.BaseAddress = new Uri("https://api.themoviedb.org/3/");
+    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {tmdbApiToken}");
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

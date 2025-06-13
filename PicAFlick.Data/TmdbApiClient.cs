@@ -7,7 +7,6 @@ namespace PicAFlick.Data
     public class TmdbApiClient : ITmdbApiClient
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
         private readonly string _baseUrl = "https://api.themoviedb.org/3/";
 
         public TmdbApiClient(HttpClient httpClient)
@@ -15,16 +14,12 @@ namespace PicAFlick.Data
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(_baseUrl);
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-
-            // Fetch API key from environment variable
-            _apiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY")
-                     ?? throw new InvalidOperationException("TMDB_API_KEY not set");
         }
 
         public async Task<TmdbMovieSearchResponse> GetMovieByTitleAsync(string query, int page = 1)
         {
             // Construct the request URL
-            string requestUrl = $"search/movie?api_key={_apiKey}&query={Uri.EscapeDataString(query)}&page={page}";
+            string requestUrl = $"search/movie?query={Uri.EscapeDataString(query)}&page={page}";
             // Make the HTTP GET request
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
 
@@ -43,7 +38,7 @@ namespace PicAFlick.Data
 
         public async Task<TmdbMovieSearchResponse> GetTvShowByTitleAsync(string query, int page = 1)
         { 
-            string requestUrl = $"search/tv?api_key={_apiKey}&query={Uri.EscapeDataString(query)}&page={page}";
+            string requestUrl = $"search/tv?query={Uri.EscapeDataString(query)}&page={page}";
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
             {
