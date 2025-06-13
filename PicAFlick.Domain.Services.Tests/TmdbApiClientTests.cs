@@ -10,7 +10,7 @@ namespace PicAFlick.Domain.Services.Tests
         public async Task GetMovieByTitleAsync_ShouldReturnMovieInfo()
         {
             // arrange
-            Environment.SetEnvironmentVariable("TMDB_API_KEY", "FAKE_API_KEY");
+            Environment.SetEnvironmentVariable("TMDB_API_TOKEN", "FAKE_API_TOKEN");
             var mockHandler = new Mock<HttpMessageHandler>();
 
             mockHandler
@@ -47,7 +47,7 @@ namespace PicAFlick.Domain.Services.Tests
         public async Task GetTvShowByTitle_ShouldReturnTvShowInfo()
         {
             // arrange
-            Environment.SetEnvironmentVariable("TMDB_API_KEY", "FAKE_API_KEY");
+            Environment.SetEnvironmentVariable("TMDB_API_TOKEN", "FAKE_API_TOKEN");
             var mockHandler = new Mock<HttpMessageHandler>();
             mockHandler
                 .Protected()
