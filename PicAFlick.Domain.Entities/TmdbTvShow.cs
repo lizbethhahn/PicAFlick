@@ -38,7 +38,7 @@ namespace PicAFlick.Domain.Entities
         public string? FirstAirDate { get; set; }
 
         [JsonPropertyName("title")]
-        public string? Title { get; set; }
+        public string? Name { get; set; }
 
         [JsonPropertyName("vote_average")]
         public double? VoteAverage { get; set; }

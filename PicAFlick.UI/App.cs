@@ -155,18 +155,18 @@ namespace PicAFlick.UI
 
                 if (!string.IsNullOrWhiteSpace(title))
                 {
-                    TmdbMovieSearchResponse searchResult = await _tmdbApiClient.GetTvShowByTitleAsync(title);
+                    TmdbTvShowSearchResponse searchResult = await _tmdbApiClient.GetTvShowByTitleAsync(title);
 
                     if (searchResult?.Results != null && searchResult.Results.Count > 0)
                     {
                         int lineCount = 0;
                         foreach (var tvShow in searchResult.Results)
                         {
-                            Console.WriteLine($"\nTitle: {tvShow.Title}");
+                            Console.WriteLine($"\nTitle: {tvShow.Name}");
                             lineCount++;
                             Console.WriteLine($"Overview: {tvShow.Overview}");
                             lineCount++;
-                            Console.WriteLine($"Release Date: {tvShow.ReleaseDate}");
+                            Console.WriteLine($"FirstAir Date: {tvShow.FirstAirDate}");
                             lineCount++;
                             Console.WriteLine($"Rating: {tvShow.VoteAverage} ({tvShow.VoteCount} votes)");
                             lineCount++;

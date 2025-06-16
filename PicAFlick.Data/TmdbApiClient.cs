@@ -16,10 +16,10 @@ namespace PicAFlick.Data
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
-        public async Task<TmdbMovieSearchResponse> GetMovieByTitleAsync(string query, int page = 1)
+        public async Task<TmdbMovieSearchResponse> GetMovieByTitleAsync(string query)
         {
             // Construct the request URL
-            string requestUrl = $"search/movie?query={Uri.EscapeDataString(query)}&page={page}";
+            string requestUrl = $"search/movie?query={Uri.EscapeDataString(query)}";
             // Make the HTTP GET request
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
 
@@ -36,15 +36,15 @@ namespace PicAFlick.Data
             }
         }
 
-        public async Task<TmdbMovieSearchResponse> GetTvShowByTitleAsync(string query, int page = 1)
+        public async Task<TmdbTvShowSearchResponse> GetTvShowByTitleAsync(string query)
         { 
-            string requestUrl = $"search/tv?query={Uri.EscapeDataString(query)}&page={page}";
+            string requestUrl = $"search/tv?query={Uri.EscapeDataString(query)}";
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
                 // Read and return the response content as a string
-                return JsonSerializer.Deserialize<TmdbMovieSearchResponse>(json);
+                return JsonSerializer.Deserialize<TmdbTvShowSearchResponse>(json);
             }
             else
             {
