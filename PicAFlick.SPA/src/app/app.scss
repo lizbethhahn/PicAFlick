@@ -1,0 +1,26 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+h1, h2 {
+  color: #333;
+}
+
+/* You can add your own components and class styles here */
+
+/* Example component styles */
+.app-header {
+  background-color: #4CAF50;
+  padding: 15px;
+  color: white;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+}

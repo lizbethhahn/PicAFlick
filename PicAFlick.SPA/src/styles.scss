@@ -1,1 +1,103 @@
+/* Reset some basic elements for consistent styling */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Form Styles */
+input[type="text"], textarea {
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, textarea:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+/* Button Styles */
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Container for the main app content */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.success-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+/* Styling for the movie data display */
+.movie-info {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.movie-info h2 {
+  margin-bottom: 15px;
+}
+
+.movie-info p {
+  margin-bottom: 10px;
+}
+
+.movie-info strong {
+  font-weight: bold;
+}
 /* You can add global styles to this file, and also import other style files */

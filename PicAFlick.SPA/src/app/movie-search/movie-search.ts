@@ -3,8 +3,8 @@ import { SearchService } from '../search.service';
 import { TmdbMovie } from '../search.service';
 
 @Component({
-  selector: 'app-search',
-  imports: [],
+  selector: 'app-movie-search',
+  standalone: false,
   templateUrl: './movie-search.html',
   styleUrl: './movie-search.scss'
 })

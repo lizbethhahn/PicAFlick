@@ -3,8 +3,8 @@ import { SearchService } from '../search.service';
 import { TmdbTvShow } from '../search.service';
 
 @Component({
-  selector: 'app-search',
-  imports: [],
+  selector: 'app-tv-show-search',
+  standalone: false,
   templateUrl: './tv-show-search.html',
   styleUrl: './tv-show-search.scss'
 })
