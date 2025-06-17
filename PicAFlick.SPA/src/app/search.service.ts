@@ -16,11 +16,17 @@ export interface TmdbTvShow {
 }
 
 export interface TmdbMovieSearchResponse {
-  results: TmdbMovie[];
+  page: number;
+  results: { Results: TmdbMovie[] };  // results is an object with a Results array
+  total_pages: number;
+  total_results: number;
 }
 
 export interface TmdbTvShowSearchResponse {
-  results: TmdbTvShow[];
+  page: number;
+  results: { Results: TmdbTvShow[] };  // results is an object with a Results array
+  total_pages: number;
+  total_results: number;
 }
 
 @Injectable({
@@ -32,12 +38,12 @@ export class SearchService {
   constructor(private http: HttpClient) { }
 
   // Search for movies by title
-  searchMovies(query: string): Observable<TmdbMovie> {
-    return this.http.get<TmdbMovie>(`${this.apiUrl}/movie/${query}`)
+  searchMovies(query: string): Observable<TmdbMovie[]> {
+    return this.http.get<TmdbMovie[]>(`${this.apiUrl}/movie/${query}`)
   }
 
   // Search for tv shows by title
-  searchTvShows(query: string): Observable<TmdbTvShow> {
-    return this.http.get<TmdbTvShow>(`${this.apiUrl}/tvShow/${query}`)
+  searchTvShows(query: string): Observable<TmdbTvShow[]> {
+    return this.http.get<TmdbTvShow[]>(`${this.apiUrl}/tvShow/${query}`)
   }
 }
