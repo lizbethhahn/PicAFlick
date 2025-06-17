@@ -6,7 +6,7 @@
         public string? Title { get; set; }   
         public string? Description { get; set; }
         public string? Genre { get; set; }
-        public DateTime? ReleaseDate { get; set; }
+        public DateTime? FirstAirDate { get; set; }
         public string? OriginalLanguage { get; set; }
         public int Season { get; set; }
         public int Episode { get; set; }

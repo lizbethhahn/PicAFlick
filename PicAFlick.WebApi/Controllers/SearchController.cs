@@ -20,14 +20,14 @@ namespace PicAFlick.WebApi.Controllers
         public async Task<IActionResult> SearchMovies(string title)
         {
             var results = await _tmdbApiClient.GetMovieByTitleAsync(title);
-            return Ok(results);
+            return Ok(results.Results);
         }
 
         [HttpGet("tvshow/{title}")]
         public async Task<IActionResult> SearchTvShows(string title)
         {
             var results = await _tmdbApiClient.GetTvShowByTitleAsync(title);
-            return Ok(results);
+            return Ok(results.Results);
         }
     }
 }
