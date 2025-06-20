@@ -1,13 +1,17 @@
 import { Component } from '@angular/core';
 import { SearchService } from '../search.service';
 import { TmdbMovie } from '../search.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-movie-search',
-  standalone: false,
+  standalone: true,
   templateUrl: './movie-search.html',
-  styleUrl: './movie-search.scss'
+  styleUrl: './movie-search.scss',
+  imports: [CommonModule, FormsModule]
 })
+
 export class MovieSearchComponent {
   searchTerm: string = '';
   searchResults: TmdbMovie[] = [];
@@ -22,8 +26,9 @@ export class MovieSearchComponent {
     }
     this.isLoading = true; 
     this.errorMessage = ''; 
+  }
 
-    // Call the search service to fetch results
+  searchMovies(query: string) {
     this.searchService.searchMovies(this.searchTerm).subscribe({
       next: (results) => {
         this.searchResults = results;  
@@ -34,7 +39,6 @@ export class MovieSearchComponent {
         this.errorMessage = "An error occurred while searching";  
         console.error(error);
       }
-    });
+    });  
   }
 }
-
