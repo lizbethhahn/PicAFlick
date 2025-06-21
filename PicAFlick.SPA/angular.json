@@ -59,6 +59,12 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "ssl": true,   
+            "sslCert": "C:/Users/lizbe/source/repos/PicAFlick/PicAFlick.SPA/src/assets/ssl/localhost.crt", 
+            "sslKey": "C:/Users/lizbe/source/repos/PicAFlick/PicAFlick.SPA/src/assets/ssl/localhost.key", 
+            "port": 4200
+          },
           "configurations": {
             "production": {
               "buildTarget": "PicAFlick.SPA:build:production"

@@ -1,4 +1,4 @@
-@PicAFlick.WebApi_HostAddress = http://localhost:5094
+@PicAFlick.WebApi_HostAddress = https://localhost:5000
 
 GET {{PicAFlick.WebApi_HostAddress}}/api/search/movie/title=star%wars
 Accept: application/json
