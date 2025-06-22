@@ -40,3 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Local SSL certs for Angular dev server
+src/assets/ssl/localhost.key
+src/assets/ssl/localhost.crt
+src/assets/ssl/localhost-openssl.cnf

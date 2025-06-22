@@ -19,7 +19,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<UserContext>(options => options
                 .UseSqlServer(connectionString));
-builder.Services.AddHttpClient<ITmdbApiClient, TmdbApiClient>(client =>
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularOrigin", builder =>
+    {
+        builder.WithOrigins("https://localhost:4200")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+    builder.Services.AddHttpClient<ITmdbApiClient, TmdbApiClient>(client =>
 {
     client.BaseAddress = new Uri("https://api.themoviedb.org/3/");
     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {tmdbApiToken}");
@@ -38,7 +47,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+ // app.UseHttpsRedirection();
+
+app.UseCors("AllowAngularOrigin");
 
 app.UseAuthorization();
 

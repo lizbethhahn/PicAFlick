@@ -24,12 +24,15 @@ export class MovieSearchComponent {
     if (!this.searchTerm.trim()) {
       return; 
     }
+
     this.isLoading = true; 
     this.errorMessage = ''; 
+
+    this.searchMovies(this.searchTerm);
   }
 
   searchMovies(query: string) {
-    this.searchService.searchMovies(this.searchTerm).subscribe({
+    this.searchService.searchMovies(query).subscribe({
       next: (results) => {
         this.searchResults = results;  
         this.isLoading = false;  

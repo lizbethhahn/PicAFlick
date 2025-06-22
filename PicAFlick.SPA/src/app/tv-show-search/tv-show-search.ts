@@ -26,10 +26,12 @@ export class TvShowSearchComponent {
     }
     this.isLoading = true; 
     this.errorMessage = ''; 
+
+    this.searchTvShows(this.searchTerm);
   }
     
   searchTvShows(query: string) {
-    this.searchService.searchTvShows(this.searchTerm).subscribe({
+    this.searchService.searchTvShows(query).subscribe({
       next: (results) => {
         this.searchResults = results;  
         this.isLoading = false;  
