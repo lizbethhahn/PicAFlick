@@ -1,1 +1,28 @@
-<p>tv-show-search works!</p>
+<div class="app-tv-show-search-container">
+  <h2>Search for a TV Show</h2>
+
+  <!-- Input field to accept tv show title -->
+  <input 
+    type="text" 
+    [(ngModel)]="searchTerm"   
+    placeholder="Enter tv show title" 
+    class="tv-show-title-input" />
+
+  <!-- Button to trigger the search -->
+  <button type="button" (click)="onSearch()" class="search-button">Search</button>
+
+  <!-- Display error message if no tv show found -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Display tv show data if available -->
+  <div *ngIf="searchResults" class="tv-show-data">
+    <div *ngFor="let tvShow of searchResults">
+      <h3>{{ tvShow.title }}</h3>
+      <p><strong>Overview:</strong> {{ tvShow.overview }}</p>
+      <p><strong>First Air Date:</strong> {{ tvShow.first_air_date }}</p>
+      <p><strong>Rating:</strong> {{ tvShow.vote_average }}</p>
+    </div>    
+  </div>
+</div>

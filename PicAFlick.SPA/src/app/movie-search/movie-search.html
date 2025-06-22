@@ -6,10 +6,10 @@
     type="text" 
     [(ngModel)]="searchTerm"   
     placeholder="Enter movie title" 
-    class="movie-input" />
+    class="movie-title-input" />
 
   <!-- Button to trigger the search -->
-  <button (click)="onSearch()" class="search-button">Search</button>
+  <button type="button" (click)="onSearch()" class="search-button">Search</button>
 
   <!-- Display error message if no movie found -->
   <div *ngIf="errorMessage" class="error-message">
@@ -23,8 +23,6 @@
       <p><strong>Overview:</strong> {{ movie.overview }}</p>
       <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
       <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
-    </div>
-    
+    </div>    
   </div>
 </div>
-
