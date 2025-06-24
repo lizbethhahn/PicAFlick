@@ -11,6 +11,6 @@ import { TvShowSearchComponent } from './tv-show-search/tv-show-search';
   styleUrls: ['./app.scss'],
   imports: [FormsModule, CommonModule, MovieSearchComponent, TvShowSearchComponent]
 })
-export class App {
+export class AppComponent {
   protected title = 'PicAFlick';
 }
