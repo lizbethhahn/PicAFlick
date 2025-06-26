@@ -1,23 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MovieSearchComponent } from './movie-search';
+import { SearchService } from '../search.service';
 
-describe('Search', () => {
-  let component: MovieSearchComponent;
-  let fixture: ComponentFixture<MovieSearchComponent>;
-
+describe('MovieSearchComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MovieSearchComponent]
+      imports: [MovieSearchComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        SearchService
+      ]
     })
     .compileComponents();
-
-    fixture = TestBed.createComponent(MovieSearchComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
+    const fixture = TestBed.createComponent(MovieSearchComponent);
+    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 });
