@@ -38,8 +38,9 @@ namespace PicAFlick.Data
 
         public async Task<TmdbTvShowSearchResponse> GetTvShowByTitleAsync(string query)
         { 
-            string requestUrl = $"search/tvShow?query={Uri.EscapeDataString(query)}";
+            string requestUrl = $"search/tv?query={Uri.EscapeDataString(query)}";
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();

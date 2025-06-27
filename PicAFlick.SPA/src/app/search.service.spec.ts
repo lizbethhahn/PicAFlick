@@ -52,7 +52,7 @@ describe('SearchService', () => {
         expect(tvshows[0].original_name).toBe('Firefly');
       });
 
-      const req = httpMock.expectOne('https://localhost:5000/api/Search/tvShow/Firefly');
+      const req = httpMock.expectOne('https://localhost:5000/api/Search/tv/Firefly');
       expect(req.request.method).toBe('GET');
       req.flush(mockTvShows);
     }

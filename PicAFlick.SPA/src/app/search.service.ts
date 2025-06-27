@@ -46,6 +46,6 @@ export class SearchService {
 
   // Search for tv shows by title
   searchTvShows(query: string): Observable<TmdbTvShow[]> {
-    return this.http.get<TmdbTvShow[]>(`${this.apiUrl}/tvShow/${query}`)
+    return this.http.get<TmdbTvShow[]>(`${this.apiUrl}/tv/${query}`)
   }
 }
