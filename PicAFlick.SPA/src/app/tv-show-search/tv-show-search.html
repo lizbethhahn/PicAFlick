@@ -19,7 +19,7 @@
   <!-- Display tv show data if available -->
   <div *ngIf="searchResults" class="tv-show-data">
     <div *ngFor="let tvShow of searchResults">
-      <h3>{{ tvShow.title }}</h3>
+      <h3>{{ tvShow.original_name }}</h3>
       <p><strong>Overview:</strong> {{ tvShow.overview }}</p>
       <p><strong>First Air Date:</strong> {{ tvShow.first_air_date }}</p>
       <p><strong>Rating:</strong> {{ tvShow.vote_average }}</p>
