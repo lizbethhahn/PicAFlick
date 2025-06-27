@@ -1,23 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TvShowSearchComponent } from './tv-show-search';
+import { SearchService } from '../search.service';
 
 describe('TvShowSearchComponent', () => {
-  let component: TvShowSearchComponent;
-  let fixture: ComponentFixture<TvShowSearchComponent>;
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TvShowSearchComponent]
+      imports: [TvShowSearchComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        SearchService
+      ]
     })
     .compileComponents();
-
-    fixture = TestBed.createComponent(TvShowSearchComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
+    const fixture = TestBed.createComponent(TvShowSearchComponent)
+    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 });

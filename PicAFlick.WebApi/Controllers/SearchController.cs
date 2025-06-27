@@ -16,17 +16,17 @@ namespace PicAFlick.WebApi.Controllers
             _tmdbApiClient = tmdbApiClient;
         }
 
-        [HttpGet("movie/{title}")]
-        public async Task<IActionResult> SearchMovies(string title)
+        [HttpGet("movie/{query}")]
+        public async Task<IActionResult> SearchMovies(string query)
         {
-            var results = await _tmdbApiClient.GetMovieByTitleAsync(title);
+            var results = await _tmdbApiClient.GetMovieByTitleAsync(query);
             return Ok(results.Results);
         }
 
-        [HttpGet("tvshow/{title}")]
-        public async Task<IActionResult> SearchTvShows(string title)
+        [HttpGet("tv/{query}")]
+        public async Task<IActionResult> SearchTvShows(string query)
         {
-            var results = await _tmdbApiClient.GetTvShowByTitleAsync(title);
+            var results = await _tmdbApiClient.GetTvShowByTitleAsync(query);
             return Ok(results.Results);
         }
     }

@@ -4,12 +4,14 @@ import { Observable } from 'rxjs';
 
 export interface TmdbMovie {
   title: string;
+  originial_title: string;
   overview: string;
   release_date: string;
   vote_average: number;
 }
 export interface TmdbTvShow {
   title: string;
+  original_name: string;
   overview: string;
   first_air_date: string;
   vote_average: number;
@@ -34,7 +36,7 @@ export interface TmdbTvShowSearchResponse {
 })
 
 export class SearchService {
-  private apiUrl = 'https://localhost:5000/api/search'
+  private apiUrl = 'https://localhost:5000/api/Search'
   constructor(private http: HttpClient) { }
 
   // Search for movies by title
@@ -44,6 +46,6 @@ export class SearchService {
 
   // Search for tv shows by title
   searchTvShows(query: string): Observable<TmdbTvShow[]> {
-    return this.http.get<TmdbTvShow[]>(`${this.apiUrl}/tvShow/${query}`)
+    return this.http.get<TmdbTvShow[]>(`${this.apiUrl}/tv/${query}`)
   }
 }
