@@ -40,7 +40,7 @@ describe('SearchService', () => {
     [SearchService, HttpTestingController],
     (service: SearchService, httpMock: HttpTestingController) => {
       const mockTvShows: TmdbTvShow[] = [{ 
-          title: '',
+          name: 'Firefly',
 					original_name: 'Firefly',
 					overview: 'In the year 2517, after the arrival of humans in a new star system, follow the adventures of the renegade crew of Serenity, a \"Firefly-class\" spaceship.', 
 					first_air_date: '2002-09-20', 
