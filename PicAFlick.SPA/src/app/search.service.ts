@@ -10,7 +10,7 @@ export interface TmdbMovie {
   vote_average: number;
 }
 export interface TmdbTvShow {
-  title: string;
+  name: string;
   original_name: string;
   overview: string;
   first_air_date: string;
