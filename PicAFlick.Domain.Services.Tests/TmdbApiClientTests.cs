@@ -59,7 +59,7 @@ namespace PicAFlick.Domain.Services.Tests
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Content = new StringContent("{\"page\":1,\"results\":[{\"title\":\"Breaking Bad\",\"id\":169}],\"total_pages\":1,\"total_results\":1}")
+                    Content = new StringContent("{\"page\":1,\"results\":[{\"name\":\"Breaking Bad\",\"id\":169}],\"total_pages\":1,\"total_results\":1}")
                 });
             var httpClient = new HttpClient(mockHandler.Object)
             {
@@ -72,7 +72,7 @@ namespace PicAFlick.Domain.Services.Tests
             // assert
             Assert.NotNull(result);
             Assert.NotEmpty(result.Results);
-            Assert.Equal("Breaking Bad", result.Results.First().Title);
+            Assert.Equal("Breaking Bad", result.Results.First().Name);
         }
     }
 }
