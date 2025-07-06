@@ -14,7 +14,7 @@ namespace PicAFlick.Domain.Entities
         public List<int>? GenreIds { get; set; }
 
         [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public int TmdbMovieId { get; set; }
 
         [JsonPropertyName("original_language")]
         public string? OriginalLanguage { get; set; }

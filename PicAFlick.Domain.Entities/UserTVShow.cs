@@ -1,17 +1,17 @@
 ﻿namespace PicAFlick.Domain.Entities
 {
     public class UserTVShow
-    {
-        public int Id { get; set; }
-        public string? Title { get; set; }   
-        public string? Description { get; set; }
-        public string? Genre { get; set; }
-        public DateTime? FirstAirDate { get; set; }
-        public string? OriginalLanguage { get; set; }
-        public int Season { get; set; }
-        public int Episode { get; set; }
-        public float? UserRating { get; set; }
-        public bool IsWatched { get; set; } = false;
+    {              
+        public string? BackdropPath { get; set; }
         public DateTime? DateWatched { get; set; }
+        public DateTime? FirstAirDate { get; set; }
+        public List<int>? GenreIds { get; set; }
+        public bool IsWatched { get; set; } = false;
+        public string? Name{ get; set; }   
+        public string? Overview { get; set; }
+        public string? PosterPath { get; set; }
+        public int TmdbTvShowId { get; set; }
+        public int UserTvShowId { get; set; }
+        public float? UserRating { get; set; }
     }
 }
