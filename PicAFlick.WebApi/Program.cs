@@ -4,7 +4,7 @@ using PicAFlick.Data;
 using PicAFlick.Domain.Services;
 
 var envPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName, ".env");
-    DotNetEnv.Env.Load(envPath);
+               Env.Load(envPath);
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 var tmdbApiToken = Environment.GetEnvironmentVariable("TMDB_API_TOKEN");
 
@@ -46,8 +46,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
- // app.UseHttpsRedirection();
 
 app.UseCors("AllowAngularOrigin");
 

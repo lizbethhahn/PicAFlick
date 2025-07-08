@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PicAFlick.Domain.DTOs\PicAFlick.Domain.DTOs.csproj" />
+    <ProjectReference Include="..\PicAFlick.Domain.Entities\PicAFlick.Domain.Entities.csproj" />
   </ItemGroup>
 
 </Project>
