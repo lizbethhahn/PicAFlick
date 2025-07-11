@@ -10,7 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit" Version="2.5.3" />
@@ -18,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PicAFlick.Data\PicAFlick.Data.csproj" />
     <ProjectReference Include="..\PicAFlick.Domain.Services\PicAFlick.Domain.Services.csproj" />
+	<ProjectReference Include="..\PicAFlick.Data\PicAFlick.Data.csproj" />  
   </ItemGroup>
 
   <ItemGroup>

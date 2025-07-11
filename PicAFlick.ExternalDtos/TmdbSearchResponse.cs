@@ -1,7 +1,6 @@
-﻿using PicAFlick.Domain.Entities;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace Domain.DTOs
+namespace PicAFlick.ExternalDtos
 {
     public class TmdbMovieSearchResponse
     {
@@ -32,5 +31,4 @@ namespace Domain.DTOs
         [JsonPropertyName("total_results")]
         public int TotalResults { get; set; }
     }
-
 }

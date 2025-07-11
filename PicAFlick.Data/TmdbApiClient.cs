@@ -1,4 +1,4 @@
-﻿using Domain.DTOs;
+﻿using PicAFlick.ExternalDtos;
 using PicAFlick.Domain.Services;
 using System.Text.Json;
 
