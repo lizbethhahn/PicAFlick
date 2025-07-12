@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PicAFlick.Domain.Entities
+namespace PicAFlick.ExternalDtos
 {
     public class TmdbTvShow
     {

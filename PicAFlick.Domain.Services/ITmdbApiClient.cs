@@ -1,4 +1,4 @@
-﻿using Domain.DTOs;
+﻿using PicAFlick.ExternalDtos;
 
 namespace PicAFlick.Domain.Services
 {

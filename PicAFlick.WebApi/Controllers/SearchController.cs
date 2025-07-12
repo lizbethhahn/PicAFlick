@@ -1,6 +1,4 @@
-﻿using Domain.DTOs;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
+﻿using Microsoft.AspNetCore.Mvc;
 using PicAFlick.Domain.Services;
 
 namespace PicAFlick.WebApi.Controllers
