@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PicAFlick.Data;
 
@@ -11,9 +12,11 @@ using PicAFlick.Data;
 namespace PicAFlick.Data.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class MovieContextModelSnapshot : ModelSnapshot
+    [Migration("20250711231906_MergeUserMedia")]
+    partial class MergeUserMedia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,14 +46,17 @@ namespace PicAFlick.Data.Migrations
                     b.Property<int>("TmdbId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("UserRating")
+                    b.Property<int?>("UserRating")
                         .HasPrecision(3, 1)
-                        .HasColumnType("decimal(3,1)");
+                        .HasColumnType("int");
 
                     b.Property<bool>("Watched")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
 
                     b.ToTable("UserMedia");
                 });
@@ -94,28 +100,12 @@ namespace PicAFlick.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("UserMediaId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserMediaId");
 
                     b.HasIndex("UserId", "TmdbId")
                         .IsUnique();
 
                     b.ToTable("WatchlistItems");
-                });
-
-            modelBuilder.Entity("PicAFlick.Domain.Entities.WatchlistItem", b =>
-                {
-                    b.HasOne("PicAFlick.Domain.Entities.UserMedia", "UserMedia")
-                        .WithMany()
-                        .HasForeignKey("UserMediaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserMedia");
                 });
 #pragma warning restore 612, 618
         }
