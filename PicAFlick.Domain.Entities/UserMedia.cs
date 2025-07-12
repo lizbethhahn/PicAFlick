@@ -16,6 +16,6 @@ namespace PicAFlick.Domain.Entities
 
         public string? Notes { get; set; }
 
-        public int? UserRating { get; set; }
+        public decimal? UserRating { get; set; }
     }
 }

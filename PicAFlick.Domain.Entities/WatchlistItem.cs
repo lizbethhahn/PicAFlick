@@ -14,6 +14,8 @@ namespace PicAFlick.Domain.Entities
         public byte? Rating { get; set; }
         public string? Title { get; set; }
         public int TmdbId { get; set; }
+        public UserMedia UserMedia { get; set; } = null!;
+        public int UserMediaId { get; set; }
         public required string UserId { get; set; } // UserId needs to be a string and strings aren't nullable; UserId is required.
     }
 }

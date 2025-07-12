@@ -18,15 +18,24 @@ namespace PicAFlick.Data
             // ------------------- UserMedia -----------------------
             builder.Entity<UserMedia>(m =>
             {
-                m.HasIndex(x => x.Id).IsUnique();
-                m.Property(x => x.UserRating).HasPrecision(3, 1);
+                m.Property(p => p.UserRating)
+                 .HasPrecision(3, 1);
             });
 
             // ------------------- WatchlistItem -------------------
             builder.Entity<WatchlistItem>(w =>
-            {               
-                w.HasIndex(p => new { p.UserId, p.TmdbId }).IsUnique(); // creates composit index
-                w.Property(p => p.Rating).HasColumnType("tinyint");
+            {   
+                w.HasOne(p => p.UserMedia)
+                 .WithMany()
+                 .HasForeignKey(p => p.UserMediaId)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+                // creates composite index
+                w.HasIndex(p => new { p.UserId, p.TmdbId }) 
+                 .IsUnique(); 
+
+                w.Property(p => p.Rating)
+                 .HasColumnType("tinyint");
             });
         }
     }
