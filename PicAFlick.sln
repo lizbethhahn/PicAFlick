@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.WebApi", "PicAFli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.ExternalDtos", "PicAFlick.ExternalDtos\PicAFlick.ExternalDtos.csproj", "{25580467-303A-4C25-AFDE-879B22E8B19C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Domain.Core", "PicAFlick.Domain.Core\PicAFlick.Domain.Core.csproj", "{BA531F87-2E4D-4178-8528-89B6739639C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,18 @@ Global
 		{25580467-303A-4C25-AFDE-879B22E8B19C}.Release|x64.Build.0 = Release|Any CPU
 		{25580467-303A-4C25-AFDE-879B22E8B19C}.Release|x86.ActiveCfg = Release|Any CPU
 		{25580467-303A-4C25-AFDE-879B22E8B19C}.Release|x86.Build.0 = Release|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Debug|x64.Build.0 = Debug|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Debug|x86.Build.0 = Debug|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Release|x64.ActiveCfg = Release|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Release|x64.Build.0 = Release|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Release|x86.ActiveCfg = Release|Any CPU
+		{BA531F87-2E4D-4178-8528-89B6739639C7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

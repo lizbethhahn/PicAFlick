@@ -1,4 +1,4 @@
-﻿namespace PicAFlick.Domain.Entities.Enums
+﻿namespace PicAFlick.Domain.Core.Enums
 {
     public enum MediaType
     {
