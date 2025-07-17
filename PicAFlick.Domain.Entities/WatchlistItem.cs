@@ -9,9 +9,10 @@ namespace PicAFlick.Domain.Entities
         public DateTime? DateWatched { get; set; }
         public MediaType MediaType { get; set; }
         public string? Notes { get; set; }
+        public string? Overview { get; set; }
         public string? PosterPath { get; set; }
         public int? ReleaseYear { get; set; }
-        public byte? Rating { get; set; }
+        public decimal? Rating { get; set; }
         public string? Title { get; set; }
         public int TmdbId { get; set; }
         public UserMedia UserMedia { get; set; } = null!;
