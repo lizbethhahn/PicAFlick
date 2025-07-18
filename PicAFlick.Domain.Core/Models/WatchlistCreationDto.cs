@@ -4,6 +4,9 @@ namespace PicAFlick.Domain.Core.Models
 {
     public class WatchlistCreationDto
     {
+        // Assigned by controller
+        public required string UserId { get; set; } = string.Empty;
+
         // Required Fields
         public required string Title { get; set; } =  string.Empty;
         public required MediaType MediaType { get; set; }
