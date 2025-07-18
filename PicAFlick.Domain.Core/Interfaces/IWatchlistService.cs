@@ -9,7 +9,7 @@ namespace PicAFlick.Domain.Core.Interfaces
 
         // Read
         Task<List<WatchlistDisplayDto>> GetItemsByUserAsync(string userId);
-        Task<WatchlistDisplayDto?> GetItemsByIdAsync(int id, string userId);
+        Task<WatchlistDisplayDto?> GetItemByIdAsync(int id, string userId);
 
         // Delete
         Task<bool> RemoveItemAsync(int id, string userId);
