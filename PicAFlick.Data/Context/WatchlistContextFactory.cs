@@ -1,21 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace PicAFlick.Data
+namespace PicAFlick.Data.Context
 {
-    public class UserContextFactory : IDesignTimeDbContextFactory<UserContext>
+    public class WatchlistContextFactory : IDesignTimeDbContextFactory<WatchlistContext>
     {
-        public UserContext CreateDbContext(string[] args)
+        public WatchlistContext CreateDbContext(string[] args)
         {
             var connString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
                              ?? throw new InvalidOperationException(
                                   "Set DB_CONNECTION_STRING in your environment");
 
-            var options = new DbContextOptionsBuilder<UserContext>()
+            var options = new DbContextOptionsBuilder<WatchlistContext>()
                 .UseSqlServer(connString)
                 .Options;
 
-            return new UserContext(options);
+            return new WatchlistContext(options);
         }
     }
 }
