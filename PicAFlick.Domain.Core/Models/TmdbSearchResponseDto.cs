@@ -1,14 +1,14 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PicAFlick.ExternalDtos
+namespace PicAFlick.Domain.Core.Models
 {
-    public class TmdbMovieSearchResponse
+    public class TmdbMovieSearchResponseDto
     {
         [JsonPropertyName("page")]
         public int Page { get; set; }
 
         [JsonPropertyName("results")]
-        public List<TmdbMovie>? Results { get; set; }
+        public List<TmdbMovieDto>? Results { get; set; }
 
         [JsonPropertyName("total_pages")]
         public int TotalPages { get; set; }
@@ -17,13 +17,13 @@ namespace PicAFlick.ExternalDtos
         public int TotalResults { get; set; }
     }
 
-    public class TmdbTvShowSearchResponse
+    public class TmdbTvShowSearchResponseDto
     {
         [JsonPropertyName("page")]
         public int Page { get; set; }
 
         [JsonPropertyName("results")]
-        public List<TmdbTvShow>? Results { get; set; }
+        public List<TmdbTvShowDto>? Results { get; set; }
 
         [JsonPropertyName("total_pages")]
         public int TotalPages { get; set; }

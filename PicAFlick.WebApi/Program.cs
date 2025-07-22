@@ -1,7 +1,8 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using PicAFlick.Data;
-using PicAFlick.Domain.Services;
+using PicAFlick.Data.Context;
+using PicAFlick.Domain.Core.Interfaces;
 
 var envPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName, ".env");
                Env.Load(envPath);
@@ -17,7 +18,7 @@ if (string.IsNullOrEmpty(connectionString))
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<UserContext>(options => options
+builder.Services.AddDbContext<WatchlistContext>(options => options
                 .UseSqlServer(connectionString));
 builder.Services.AddCors(options =>
 {

@@ -22,8 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <ProjectReference Include="..\PicAFlick.ExternalDtos\PicAFlick.ExternalDtos.csproj" />
-    <ProjectReference Include="..\PicAFlick.Domain.Services\PicAFlick.Domain.Services.csproj" />
+    <ProjectReference Include="..\PicAFlick.Domain.Core\PicAFlick.Domain.Core.csproj" />
   </ItemGroup>
 
 </Project>
