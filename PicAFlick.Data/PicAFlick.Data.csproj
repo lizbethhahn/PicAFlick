@@ -23,7 +23,6 @@
 
   <ItemGroup>
 	  <ProjectReference Include="..\PicAFlick.ExternalDtos\PicAFlick.ExternalDtos.csproj" />
-	  <ProjectReference Include="..\PicAFlick.Domain.Entities\PicAFlick.Domain.Entities.csproj" />
     <ProjectReference Include="..\PicAFlick.Domain.Services\PicAFlick.Domain.Services.csproj" />
   </ItemGroup>
 
