@@ -1,8 +1,8 @@
-using Moq;
+﻿using Moq;
 using Moq.Protected;
-using PicAFlick.Data;
+using Xunit;
 
-namespace PicAFlick.Domain.Services.Tests
+namespace PicAFlick.Data.Tests
 {
     public class TmdbApiClientTests
     {
