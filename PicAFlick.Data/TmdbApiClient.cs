@@ -1,6 +1,6 @@
-﻿using PicAFlick.ExternalDtos;
-using PicAFlick.Domain.Services;
-using System.Text.Json;
+﻿using System.Text.Json;
+using PicAFlick.Domain.Core.Models;
+using PicAFlick.Domain.Core.Interfaces;
 
 namespace PicAFlick.Data
 {
@@ -16,7 +16,7 @@ namespace PicAFlick.Data
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
-        public async Task<TmdbMovieSearchResponse> GetMovieByTitleAsync(string query)
+        public async Task<TmdbMovieSearchResponseDto> GetMovieByTitleAsync(string query)
         {
             // Construct the request URL
             string requestUrl = $"search/movie?query={Uri.EscapeDataString(query)}";
@@ -27,7 +27,7 @@ namespace PicAFlick.Data
             {
                 var json = await response.Content.ReadAsStringAsync();
                 // Read and return the response content as a string
-                return JsonSerializer.Deserialize<TmdbMovieSearchResponse>(json);
+                return JsonSerializer.Deserialize<TmdbMovieSearchResponseDto>(json);
             }
             else
             {
@@ -36,7 +36,7 @@ namespace PicAFlick.Data
             }
         }
 
-        public async Task<TmdbTvShowSearchResponse> GetTvShowByTitleAsync(string query)
+        public async Task<TmdbTvShowSearchResponseDto> GetTvShowByTitleAsync(string query)
         { 
             string requestUrl = $"search/tv?query={Uri.EscapeDataString(query)}";
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
@@ -45,7 +45,7 @@ namespace PicAFlick.Data
             {
                 var json = await response.Content.ReadAsStringAsync();
                 // Read and return the response content as a string
-                return JsonSerializer.Deserialize<TmdbTvShowSearchResponse>(json);
+                return JsonSerializer.Deserialize<TmdbTvShowSearchResponseDto>(json);
             }
             else
             {

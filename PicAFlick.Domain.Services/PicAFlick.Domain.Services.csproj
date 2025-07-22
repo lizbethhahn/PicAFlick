@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PicAFlick.Domain.Core\PicAFlick.Domain.Core.csproj" />
-    <ProjectReference Include="..\PicAFlick.ExternalDtos\PicAFlick.ExternalDtos.csproj" />
 	<ProjectReference Include="..\PicAFlick.Data\PicAFlick.Data.csproj" />
   </ItemGroup>
 

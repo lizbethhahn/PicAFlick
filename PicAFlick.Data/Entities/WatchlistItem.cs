@@ -18,5 +18,6 @@ namespace PicAFlick.Data.Entities
         public UserMedia UserMedia { get; set; } = null!;
         public int UserMediaId { get; set; }
         public required string UserId { get; set; } // UserId needs to be a string and strings aren't nullable; UserId is required.
+        public bool Watched { get; set; } = false;
     }
 }

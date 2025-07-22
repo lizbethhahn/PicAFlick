@@ -12,7 +12,7 @@ namespace PicAFlick.Domain.Core.Models
         public required MediaType MediaType { get; set; }
 
         // Tmdb metadata
-        public int? TmdbId { get; set; }
+        public int TmdbId { get; set; }
         public string? PosterPath { get; set; }
         public int? ReleaseYear { get; set; }
         public string? Overview {  get; set; }

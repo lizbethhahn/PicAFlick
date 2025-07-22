@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PicAFlick.Domain.Services;
+using PicAFlick.Domain.Core.Interfaces;
 
 namespace PicAFlick.WebApi.Controllers
 {

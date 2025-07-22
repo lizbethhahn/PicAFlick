@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PicAFlick.ExternalDtos
+namespace PicAFlick.Domain.Core.Models
 {
-    public class TmdbMovie
+    public class TmdbTvShowDto
     {
         [JsonPropertyName("adult")]
         public bool Adult { get; set; }
@@ -14,13 +14,16 @@ namespace PicAFlick.ExternalDtos
         public List<int>? GenreIds { get; set; }
 
         [JsonPropertyName("id")]
-        public int TmdbMovieId { get; set; }
+        public int TmdbTvShowId { get; set; }
+
+        [JsonPropertyName("origin_country")]
+        public List<string>? OriginCountry { get; set; }
 
         [JsonPropertyName("original_language")]
         public string? OriginalLanguage { get; set; }
 
-        [JsonPropertyName("original_title")]
-        public string? OriginalTitle { get; set; }
+        [JsonPropertyName("original_name")]
+        public string? OriginalName { get; set; }
 
         [JsonPropertyName("overview")]
         public string? Overview { get; set; }
@@ -31,19 +34,16 @@ namespace PicAFlick.ExternalDtos
         [JsonPropertyName("poster_path")]
         public string? PosterPath { get; set; }
 
-        [JsonPropertyName("release_date")]
-        public string? ReleaseDate { get; set; }
+        [JsonPropertyName("first_air_date")]
+        public string? FirstAirDate { get; set; }
 
-        [JsonPropertyName("title")]
-        public string? Title { get; set; }
-
-        [JsonPropertyName("video")]
-        public bool Video { get; set; }
+        [JsonPropertyName("name")]
+        public string? Name { get; set; }
 
         [JsonPropertyName("vote_average")]
-        public double VoteAverage { get; set; }
+        public double? VoteAverage { get; set; }
 
         [JsonPropertyName("vote_count")]
-        public int VoteCount { get; set; }
-    }   
+        public int? VoteCount { get; set; }
+    }
 }

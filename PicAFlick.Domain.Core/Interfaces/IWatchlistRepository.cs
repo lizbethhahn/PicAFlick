@@ -2,7 +2,7 @@
 
 namespace PicAFlick.Domain.Core.Interfaces
 {
-    public interface IWatchlistService
+    public interface IWatchlistRepository
     {
         // Create
         Task<WatchlistDisplayDto> AddItemAsync(WatchlistCreationDto dto);
