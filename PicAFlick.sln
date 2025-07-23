@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Data", "PicAFlick.Data\PicAFlick.Data.csproj", "{2EBFEB1C-6C1A-4027-AAD7-2B485F67FECB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41F13562-C6A7-44F9-8BFE-3C921E96226D}"
-	ProjectSection(SolutionItems) = preProject
-		PicAFlick.ExternalDtos\PicAFlick.ExternalDtos.csproj = PicAFlick.ExternalDtos\PicAFlick.ExternalDtos.csproj
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.WebApi", "PicAFlick.WebApi\PicAFlick.WebApi.csproj", "{4A56E480-6B33-4748-839B-F456C3238693}"
 EndProject
