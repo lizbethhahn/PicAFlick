@@ -367,3 +367,9 @@ FodyWeavers.xsd
 
 # Ignores UI project from Git
 PicAFlick.UI
+
+# SSL dev certs
+src/assets/ssl/*.crt
+src/assets/ssl/*.key
+src/assets/ssl/*.pem
+src/assets/ssl/*.cnf
