@@ -2,7 +2,7 @@ using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using PicAFlick.Data;
 using PicAFlick.Data.Context;
-using PicAFlick.Domain.Core.Interfaces;
+using PicAFlick.Infrastructure.Tmdb;
 
 var envPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName, ".env");
                Env.Load(envPath);

@@ -1,6 +1,6 @@
-﻿using PicAFlick.Domain.Core.Models;
+﻿using PicAFlick.Infrastructure.Tmdb.Models;
 
-namespace PicAFlick.Domain.Core.Interfaces
+namespace PicAFlick.Infrastructure.Tmdb
 {
     public interface ITmdbApiClient
     {

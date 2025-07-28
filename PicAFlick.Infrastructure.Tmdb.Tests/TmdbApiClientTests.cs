@@ -1,9 +1,8 @@
-﻿using Moq;
+using Moq;
 using Moq.Protected;
-//using Xunit;
 using PicAFlick.Infrastructure.Tmdb;
 
-namespace PicAFlick.Data.Tests
+namespace PicAFlick.Infrastructure.Tmdb.Tests
 {
     public class TmdbApiClientTests
     {

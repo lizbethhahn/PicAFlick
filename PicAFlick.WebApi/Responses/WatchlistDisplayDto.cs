@@ -1,6 +1,6 @@
-﻿using PicAFlick.Domain.Core.Enums;
+﻿using PicAFlick.Domain.Enums;
 
-namespace PicAFlick.Domain.Core.Models
+namespace PicAFlick.WebApi.Responses
 {
     public class WatchlistDisplayDto
     {   

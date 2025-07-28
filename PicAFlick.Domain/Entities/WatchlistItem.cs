@@ -1,6 +1,7 @@
-﻿using PicAFlick.Domain.Core.Enums;
+﻿using PicAFlick.Domain.Entity;
+using PicAFlick.Domain.Enums;
 
-namespace PicAFlick.Data.Entities
+namespace PicAFlick.Domain.Entities
 {
     public class WatchlistItem
     {

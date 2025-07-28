@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
-using PicAFlick.Domain.Core.Models;
-using PicAFlick.Domain.Core.Interfaces;
+using PicAFlick.Infrastructure.Tmdb.Models;
 
-namespace PicAFlick.Data
+namespace PicAFlick.Infrastructure.Tmdb
 {
     public class TmdbApiClient : ITmdbApiClient
     {

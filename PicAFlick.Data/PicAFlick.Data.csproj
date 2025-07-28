@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PicAFlick.Domain.Core\PicAFlick.Domain.Core.csproj" />
+    <ProjectReference Include="..\PicAFlick.Domain\PicAFlick.Domain.csproj" />
   </ItemGroup>
 
 </Project>
