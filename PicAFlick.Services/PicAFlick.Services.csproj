@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PicAFlick.Data\PicAFlick.Data.csproj" />
-    <ProjectReference Include="..\PicAFlick.Domain.Core\PicAFlick.Infrastructure.Tmdb.csproj" />
+    <ProjectReference Include="..\PicAFlick.Infrastructure.Tmdb\PicAFlick.Infrastructure.Tmdb.csproj" />
     <ProjectReference Include="..\PicAFlick.Domain\PicAFlick.Domain.csproj" />
   </ItemGroup>
 
