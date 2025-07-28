@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Infrastructure.Tm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Infrastructure.Tmdb", "PicAFlick.Infrastructure.Tmdb\PicAFlick.Infrastructure.Tmdb.csproj", "{8B3237CD-5778-743D-7622-BEDD03F54A73}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Shared", "PicAFlick.Shared\PicAFlick.Shared.csproj", "{A167B11F-E8C9-42CD-8142-4516372DB880}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,18 @@ Global
 		{8B3237CD-5778-743D-7622-BEDD03F54A73}.Release|x64.Build.0 = Release|Any CPU
 		{8B3237CD-5778-743D-7622-BEDD03F54A73}.Release|x86.ActiveCfg = Release|Any CPU
 		{8B3237CD-5778-743D-7622-BEDD03F54A73}.Release|x86.Build.0 = Release|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Debug|x64.Build.0 = Debug|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Debug|x86.Build.0 = Debug|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Release|x64.ActiveCfg = Release|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Release|x64.Build.0 = Release|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Release|x86.ActiveCfg = Release|Any CPU
+		{A167B11F-E8C9-42CD-8142-4516372DB880}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

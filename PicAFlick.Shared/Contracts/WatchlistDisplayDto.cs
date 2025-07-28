@@ -1,6 +1,6 @@
 ﻿using PicAFlick.Domain.Enums;
 
-namespace PicAFlick.WebApi.Responses
+namespace PicAFlick.Shared.Contracts
 {
     public class WatchlistDisplayDto
     {   
