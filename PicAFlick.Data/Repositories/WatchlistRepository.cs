@@ -1,7 +1,6 @@
-﻿using PicAFlick.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 using PicAFlick.Data.Context;
-using PicAFlick.Domain.Core.Interfaces;
-using PicAFlick.Domain.Core.Models;
+using PicAFlick.Domain.Entities;
 
 namespace PicAFlick.Data.Repositories
 {
@@ -14,55 +13,31 @@ namespace PicAFlick.Data.Repositories
             _context = context;
         }
 
-        // Create
-        public async Task<WatchlistDisplayDto> AddItemAsync(WatchlistCreationDto dto)
+        public async Task<IEnumerable<WatchlistItem>> GetAllAsync()
         {
-            var item = new WatchlistItem
-            {
-                UserId = dto.UserId,
-                Title = dto.Title,
-                MediaType = dto.MediaType,
-                TmdbId = dto.TmdbId,
-                PosterPath = dto.PosterPath,
-                ReleaseYear = dto.ReleaseYear,
-                Overview = dto.Overview,
-                Notes = dto.Notes
-            };
+            return await _context.WatchlistItems.AsNoTracking().ToListAsync();
+        }
 
-            await _context.WatchlistItems.AddAsync(item);
+        public async Task<WatchlistItem?> GetByIdAsync(int id)
+        {
+            return await _context.WatchlistItems.FindAsync(id);
+        }
+
+        public async Task<WatchlistItem> AddAsync(WatchlistItem item)
+        {
+            var entry = await _context.WatchlistItems.AddAsync(item);
             await _context.SaveChangesAsync();
-
-            return new WatchlistDisplayDto
-            {
-                Id = item.Id,
-                UserId = item.UserId,
-                Title = item.Title,
-                MediaType = item.MediaType,
-                TmdbId = item.TmdbId,
-                PosterPath = item.PosterPath,
-                ReleaseYear = item.ReleaseYear,
-                Overview = item.Overview,
-                Notes = item.Notes,
-                Watched = item.Watched
-            };
+            return entry.Entity;
         }
 
-        // Read
-        public async Task<List<WatchlistDisplayDto>> GetItemsByUserAsync(string userId)
+        public async Task<bool> RemoveAsync(int id)
         {
-            // TODO: Query WatchlistItems and project to DTOs
-            throw new NotImplementedException();
-        }
-        public async Task<WatchlistDisplayDto?> GetItemByIdAsync(int id, string userId)
-        {
-            throw new NotImplementedException();
-        }
+            var entity = await _context.WatchlistItems.FindAsync(id);
+            if (entity == null) return false;
 
-        // Delete
-        public async Task<bool> RemoveItemAsync(int id, string userId)
-        {
-            // TODO: Find by id and remove
-            throw new NotImplementedException();
+            _context.WatchlistItems.Remove(entity);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
