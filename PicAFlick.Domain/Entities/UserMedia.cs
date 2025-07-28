@@ -1,6 +1,6 @@
-﻿using PicAFlick.Domain.Core.Enums;
+﻿using PicAFlick.Domain.Enums;
 
-namespace PicAFlick.Data.Entities
+namespace PicAFlick.Domain.Entity
 {
     public class UserMedia
     {

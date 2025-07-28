@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PicAFlick.Domain.Core.Models
+namespace PicAFlick.Infrastructure.Tmdb.Models
 {
     public class TmdbMovieDto
     {
