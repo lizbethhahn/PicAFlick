@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PicAFlick.Data.Entities;
+using PicAFlick.Domain.Entities;
 
 namespace PicAFlick.Data.Context
 {
