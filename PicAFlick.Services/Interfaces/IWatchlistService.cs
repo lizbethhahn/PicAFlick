@@ -1,12 +1,13 @@
-﻿using PicAFlick.Domain.Entities;
+﻿using PicAFlick.Shared.Contracts;
 
 namespace PicAFlick.Services.Interfaces
 {
     public interface IWatchlistService
     {
-        Task<IEnumerable<WatchlistItem>> GetAllAsync();
-        Task<WatchlistItem?> GetByIdAsync(int id);
-        Task<WatchlistItem> AddAsync(WatchlistItem item);
-        Task<bool> RemoveAsync(int id);
-    }
+        Task<IEnumerable<WatchlistDisplayDto>> GetAllAsync(string? userId);
+        Task<WatchlistDisplayDto> GetByIdAsync(int id, string? userId);
+        Task<WatchlistDisplayDto> AddAsync(WatchlistCreationDto dto, string? userId);
+        Task<bool> RemoveAsync(int id, string userId);
+        Task RemoveEntryAsync(int id, string userId);
+        Task MarkAsWatchedAsync(int id, string userId);   }
 }

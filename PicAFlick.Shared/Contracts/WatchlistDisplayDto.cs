@@ -8,9 +8,9 @@ namespace PicAFlick.Shared.Contracts
         public int Id { get; set; }
 
         // Required fields
-        public required string UserId { get; set; }
-        public required string Title { get; set; }
-        public required MediaType MediaType { get; set; }
+        public required string UserId { get; set; } = string.Empty;
+        public required string Title { get; set; } = string.Empty;
+        public required MediaType MediaType { get; set; } = MediaType.Unknown;
 
         // Tmdb metadata
         public int? TmdbId { get; set; }
