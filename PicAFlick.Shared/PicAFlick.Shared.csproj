@@ -7,14 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="15.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\PicAFlick.Data\PicAFlick.Data.csproj" />
-    <ProjectReference Include="..\PicAFlick.Infrastructure.Tmdb\PicAFlick.Infrastructure.Tmdb.csproj" />
     <ProjectReference Include="..\PicAFlick.Domain\PicAFlick.Domain.csproj" />
-    <ProjectReference Include="..\PicAFlick.Shared\PicAFlick.Shared.csproj" />
+    <ProjectReference Include="..\PicAFlick.Infrastructure.Tmdb\PicAFlick.Infrastructure.Tmdb.csproj" />
   </ItemGroup>
 
 </Project>

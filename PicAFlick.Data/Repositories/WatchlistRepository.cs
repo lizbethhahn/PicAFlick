@@ -4,23 +4,26 @@ using PicAFlick.Domain.Entities;
 
 namespace PicAFlick.Data.Repositories
 {
-    public class WatchlistRepository : IWatchlistRepository
+    public class WatchlistRepository(WatchlistContext context) : IWatchlistRepository
     {
-        private readonly WatchlistContext _context;
+        private readonly WatchlistContext _context = context;
 
-        public WatchlistRepository(WatchlistContext context)
+        public async Task<IEnumerable<WatchlistItem>> GetAllAsync(string userId)
         {
-            _context = context;
+            return await _context.WatchlistItems
+                                 .AsNoTracking()
+                                 .Where (x => x.UserId == userId)
+                                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<WatchlistItem>> GetAllAsync()
+        public async Task<WatchlistItem> GetByIdAsync(int id, string userId)
         {
-            return await _context.WatchlistItems.AsNoTracking().ToListAsync();
-        }
-
-        public async Task<WatchlistItem?> GetByIdAsync(int id)
-        {
-            return await _context.WatchlistItems.FindAsync(id);
+            var entity = await _context.WatchlistItems
+                                 .AsNoTracking()
+                                 .FirstOrDefaultAsync(x =>
+                                    x.Id == id &&
+                                    x.UserId == userId);
+            return entity ?? throw new KeyNotFoundException($"No WatchlistItem {id} for user {userId}");                                    
         }
 
         public async Task<WatchlistItem> AddAsync(WatchlistItem item)
@@ -30,14 +33,44 @@ namespace PicAFlick.Data.Repositories
             return entry.Entity;
         }
 
-        public async Task<bool> RemoveAsync(int id)
-        {
-            var entity = await _context.WatchlistItems.FindAsync(id);
-            if (entity == null) return false;
+        public async Task<bool> RemoveAsync(int id, string userId)
+        { 
+            var entity = await _context.WatchlistItems
+                                       .FirstOrDefaultAsync(x =>
+                                           x.Id == id &&
+                                           x.UserId == userId)
+                        ?? throw new KeyNotFoundException($"No watchlist item {id} for user {userId}");
+
+            _context.WatchlistItems.Remove(entity);
+            var changes = await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task RemoveEntryAsync(int id, string userId)
+        { 
+            var entity = await _context.WatchlistItems
+                                       .FirstOrDefaultAsync(x =>
+                                           x.Id == id &&    
+                                           x.UserId == userId);
+            if (entity == null)
+                throw new KeyNotFoundException($"No watchlist item {id} for user {userId}");
 
             _context.WatchlistItems.Remove(entity);
             await _context.SaveChangesAsync();
-            return true;
+        }
+
+        public async Task MarkAsWatchedAsync(int id, string userId)
+        { 
+            var entity = await _context.WatchlistItems
+                                       .FirstOrDefaultAsync(x =>
+                                           x.Id == id &&
+                                           x.UserId == userId);
+            if (entity == null)
+                throw new KeyNotFoundException($"No watchlist item {id} for user {userId}");
+
+            entity.Watched = true;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -18,6 +18,7 @@
     <ProjectReference Include="..\PicAFlick.Infrastructure.Tmdb\PicAFlick.Infrastructure.Tmdb.csproj" />
     <ProjectReference Include="..\PicAFlick.Domain\PicAFlick.Domain.csproj" />
     <ProjectReference Include="..\PicAFlick.Services\PicAFlick.Services.csproj" />
+    <ProjectReference Include="..\PicAFlick.Shared\PicAFlick.Shared.csproj" />
   </ItemGroup>
 
 </Project>

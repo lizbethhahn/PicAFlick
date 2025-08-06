@@ -4,10 +4,11 @@ namespace PicAFlick.Data.Repositories
 {
     public interface IWatchlistRepository
     {
-        Task<IEnumerable<WatchlistItem>> GetAllAsync();
-        Task<WatchlistItem?> GetByIdAsync(int id);
+        Task<IEnumerable<WatchlistItem>> GetAllAsync(string userId);
+        Task<WatchlistItem> GetByIdAsync(int id, string userId);
         Task<WatchlistItem> AddAsync(WatchlistItem item);
-        Task<bool> RemoveAsync(int id);
-
+        Task<bool> RemoveAsync(int id, string userId);
+        Task RemoveEntryAsync(int id, string userId);
+        Task MarkAsWatchedAsync(int id, string userId);
     }
 }
