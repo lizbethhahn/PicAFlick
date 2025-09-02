@@ -8,7 +8,7 @@ namespace PicAFlick.Data.Repositories
     {
         private readonly WatchlistContext _context = context;
 
-        public async Task<IEnumerable<WatchlistItem>> GetAllAsync(string userId)
+        public async Task<IEnumerable<WatchlistItem>> GetAllAsync(string? userId)
         {
             return await _context.WatchlistItems
                                  .AsNoTracking()
@@ -16,7 +16,7 @@ namespace PicAFlick.Data.Repositories
                                  .ToListAsync();
         }
 
-        public async Task<WatchlistItem> GetByIdAsync(int id, string userId)
+        public async Task<WatchlistItem> GetByIdAsync(int id, string? userId)
         {
             var entity = await _context.WatchlistItems
                                  .AsNoTracking()
@@ -71,6 +71,23 @@ namespace PicAFlick.Data.Repositories
             entity.Watched = true;
 
             await _context.SaveChangesAsync();
+        }
+
+        public Task<UserMedia?> GetUserMediaByTmdbIdAsync(int tmdbId, CancellationToken ct = default) =>
+        _context.Set<UserMedia>().AsNoTracking().FirstOrDefaultAsync(m => m.TmdbId == tmdbId, ct);
+
+        public async Task<UserMedia> AddUserMediaAsync(UserMedia media, CancellationToken ct = default)
+        {
+            _context.Set<UserMedia>().Add(media);
+            await _context.SaveChangesAsync(ct);
+            return media;
+        }
+
+        public async Task<WatchlistItem> AddAsync(WatchlistItem item, CancellationToken ct = default)
+        {
+            _context.Set<WatchlistItem>().Add(item);
+            await _context.SaveChangesAsync(ct);
+            return item;
         }
     }
 }

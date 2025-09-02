@@ -1,5 +1,4 @@
-﻿using PicAFlick.Domain.Entity;
-using PicAFlick.Domain.Enums;
+﻿using PicAFlick.Domain.Enums;
 
 namespace PicAFlick.Domain.Entities
 {

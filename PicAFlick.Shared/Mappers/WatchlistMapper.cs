@@ -5,7 +5,7 @@ namespace PicAFlick.Domain.Services.Mappers
 {
     public static class WatchlistMapper
     {
-        public static WatchlistItem MapFromCreationDto(WatchlistCreationDto dto, string userId)
+        public static WatchlistItem MapFromCreationDto(WatchlistCreationDto dto, string? userId)
         {
             return new WatchlistItem
             {

@@ -15,7 +15,7 @@ namespace PicAFlick.Infrastructure.Tmdb
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
-        public async Task<TmdbMovieSearchResponseDto> GetMovieByTitleAsync(string query)
+        public async Task<TmdbMovieSearchResponseDto?> GetMovieByTitleAsync(string query)
         {
             // Construct the request URL
             string requestUrl = $"search/movie?query={Uri.EscapeDataString(query)}";
@@ -35,7 +35,7 @@ namespace PicAFlick.Infrastructure.Tmdb
             }
         }
 
-        public async Task<TmdbTvShowSearchResponseDto> GetTvShowByTitleAsync(string query)
+        public async Task<TmdbTvShowSearchResponseDto?> GetTvShowByTitleAsync(string query)
         { 
             string requestUrl = $"search/tv?query={Uri.EscapeDataString(query)}";
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
