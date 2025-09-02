@@ -5,60 +5,78 @@ using System.Security.Claims;
 
 namespace PicAFlick.WebApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class WatchlistController(IWatchlistService watchlistService) : ControllerBase
+    [Route("api/[controller]")]
+    public class WatchlistController(IWatchlistService watchlistService, IHostEnvironment env) : ControllerBase
     {
         private readonly IWatchlistService _watchlistService = watchlistService;
-        private string? ResolveUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private readonly IHostEnvironment _env = env;
 
-        // GET /api/watchlist
+        private string? ResolveUserId()
+        {
+            string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!string.IsNullOrEmpty(id)) return id;
+
+            // Dev fallback ONLY when not authenticated
+            if (_env.IsDevelopment()) return "dev-user";
+
+            return null; // will cause 401 below
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WatchlistDisplayDto>>> GetAll()
         {
-            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userId = ResolveUserId();
-#if DEBUG
-            userId ??= "dev-user"; // fallback for local testing
-#else
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
-#endif
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
             var items = await _watchlistService.GetAllAsync(userId);
             return Ok(items);
         }
 
-        // GET /api/watchlist/{id}
-        [HttpGet("{id}")]
+        [HttpPost]
+        public async Task<ActionResult> Create([FromBody] WatchlistCreationDto dto)
+        {
+            var userId = ResolveUserId();
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            var created = await _watchlistService.AddAsync(dto, userId);
+            if (created != null)
+            {
+                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            }
+            else
+            {
+                return BadRequest("Could not create watchlist item.");
+            }
+
+        }
+
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = ResolveUserId();
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
             var item = await _watchlistService.GetByIdAsync(id, userId);
             return Ok(item);
         }
 
-        // POST /api/watchist
-        [HttpPost]
-        public async Task<ActionResult> Create([FromBody] WatchlistCreationDto dto)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var created = await _watchlistService.AddAsync(dto, userId);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-        }
-
-        // DELETE /api/watchlist/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = ResolveUserId();
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
             await _watchlistService.RemoveEntryAsync(id, userId);
             return NoContent();
         }
 
-        // POST /api/watchlist/{id}/watched
-        [HttpPut("{id}/watched")]
+        [HttpPut("{id:int}/watched")]
         public async Task<IActionResult> MarkAsWatched(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = ResolveUserId();
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
             await _watchlistService.MarkAsWatchedAsync(id, userId);
             return NoContent();
         }

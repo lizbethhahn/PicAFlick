@@ -50,6 +50,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
 builder.Services.AddScoped<IWatchlistService, WatchlistService>();
 
+builder.Services.AddHttpsRedirection(o => o.HttpsPort = 7043);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -61,6 +63,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAngularOrigin");
 app.UseAuthorization();
+
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
