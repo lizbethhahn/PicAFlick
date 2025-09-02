@@ -12,17 +12,30 @@
   <button type="button" (click)="onSearch()" class="search-button">Search</button>
 
   <!-- Display error message if no movie found -->
-  <div *ngIf="errorMessage" class="error-message">
+  <!-- <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
-  </div>
+  </div> -->
+
+  @if (errorMessage) 
+  {
+    <div class="error-message">
+        {{ errorMessage }}
+    </div>
+  }
 
   <!-- Display movie data if available -->
-  <div *ngIf="searchResults" class="movie-data">
-    <div *ngFor="let movie of searchResults">
-      <h3>{{ movie.title }}</h3>
-      <p><strong>Overview:</strong> {{ movie.overview }}</p>
-      <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-      <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
-    </div>    
-  </div>
-</div>
+  @if (searchResults)
+  {
+    <div class="movie-data">
+      @for (movie of searchResults; track movie.id)
+      {
+        <div>
+          <hr class="solid-line">
+          <h3>{{ movie.title }}</h3>
+          <p><strong>Overview:</strong> {{ movie.overview }}</p>
+          <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+          <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
+        </div>
+      }       
+    </div>
+  }

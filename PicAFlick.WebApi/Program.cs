@@ -1,6 +1,5 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
-using PicAFlick.Data;
 using PicAFlick.Data.Context;
 using PicAFlick.Infrastructure.Tmdb;
 
