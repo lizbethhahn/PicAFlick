@@ -10,12 +10,19 @@ namespace PicAFlick.WebApi.Controllers
     public class WatchlistController(IWatchlistService watchlistService) : ControllerBase
     {
         private readonly IWatchlistService _watchlistService = watchlistService;
+        private string? ResolveUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         // GET /api/watchlist
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WatchlistDisplayDto>>> GetAll()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = ResolveUserId();
+#if DEBUG
+            userId ??= "dev-user"; // fallback for local testing
+#else
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+#endif
             var items = await _watchlistService.GetAllAsync(userId);
             return Ok(items);
         }
