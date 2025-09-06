@@ -1,6 +1,7 @@
 ﻿using PicAFlick.Data.Repositories;    
 using PicAFlick.Domain.Entities;
 using PicAFlick.Domain.Services.Mappers;
+using PicAFlick.Infrastructure.Tmdb;
 using PicAFlick.Services.Interfaces;
 using PicAFlick.Shared.Contracts;
 
@@ -9,8 +10,7 @@ namespace PicAFlick.Services.Implementations
     public class WatchlistService : IWatchlistService
     {
         private readonly IWatchlistRepository _repo;
-        //private readonly ITmdbApiClient _tmdb;
-
+       
         public WatchlistService(IWatchlistRepository repo)
         {
             _repo = repo;
