@@ -1,41 +1,37 @@
-﻿using PicAFlick.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using PicAFlick.Domain.Entities;
 using PicAFlick.Shared.Contracts;
 
 namespace PicAFlick.Domain.Services.Mappers
 {
     public static class WatchlistMapper
     {
-        public static WatchlistItem MapFromCreationDto(WatchlistCreationDto dto, string userId)
+        public static WatchlistItem MapFromCreationDto(WatchlistCreationDto dto, string? userId)
         {
             return new WatchlistItem
             {
                 UserId = userId,
-                Title = dto.Title,
-                MediaType = dto.MediaType,
-                TmdbId = dto.TmdbId,
-                PosterPath = dto.PosterPath,
-                ReleaseYear = dto.ReleaseYear,
-                Overview = dto.Overview,
                 Notes = dto.Notes,
-                DateAdded = DateTime.UtcNow
+                Watched = false,
+             // Rating = dto.UserRating
             };
         }
 
-        public static WatchlistDisplayDto MapToDisplayDto(WatchlistItem item)
+        public static WatchlistDisplayDto MapToDisplayDto(WatchlistItem entity)
         {
+            var media = entity.UserMedia ?? throw new InvalidOperationException("User Media was not loaded.");
+
             return new WatchlistDisplayDto
             {
-                Id = item.Id,
-                UserId = item.UserId,
-                Title = item.Title!,
-                MediaType = item.MediaType,
-                TmdbId = item.TmdbId,
-                PosterPath = item.PosterPath,
-                ReleaseYear = item.ReleaseYear,
-                Overview = item.Overview,
-                Notes = item.Notes,
-                Watched = item.Watched,
-                // UserRating = item.Rating // when you wire it up
+                Id = entity.Id,
+                TmdbId = media.TmdbId,
+                Title = media.Title,
+                MediaType = media.MediaType,
+                Notes = entity.Notes,
+                Watched = entity.Watched,
+                PosterPath = media.PosterPath,
+                Overview = media.Overview,
+             // UserRating = entity.Rating
             };
         }
     }

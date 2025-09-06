@@ -5,14 +5,9 @@ namespace PicAFlick.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SearchController : ControllerBase
+    public class SearchController(ITmdbApiClient tmdbApiClient) : ControllerBase
     {
-        private readonly ITmdbApiClient _tmdbApiClient;
-
-        public SearchController(ITmdbApiClient tmdbApiClient)
-        {
-            _tmdbApiClient = tmdbApiClient;
-        }
+        private readonly ITmdbApiClient _tmdbApiClient = tmdbApiClient;
 
         [HttpGet("movie/{query}")]
         public async Task<IActionResult> SearchMovies(string query)

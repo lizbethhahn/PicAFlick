@@ -12,17 +12,27 @@
   <button type="button" (click)="onSearch()" class="search-button">Search</button>
 
   <!-- Display error message if no tv show found -->
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
+  @if (errorMessage) 
+  {
+    <div class="error-message">
+        {{ errorMessage }}
+    </div>
+  }
 
   <!-- Display tv show data if available -->
-  <div *ngIf="searchResults" class="tv-show-data">
-    <div *ngFor="let tvShow of searchResults">
-      <h3>{{ tvShow.original_name }}</h3>
-      <p><strong>Overview:</strong> {{ tvShow.overview }}</p>
-      <p><strong>First Air Date:</strong> {{ tvShow.first_air_date }}</p>
-      <p><strong>Rating:</strong> {{ tvShow.vote_average }}</p>
-    </div>    
-  </div>
+  @if (searchResults)
+  {
+    <div class="tv-show-data">
+      @for (tvShow of searchResults; track tvShow.id)
+      {
+        <div>
+          <hr class="solid-line">
+          <h3>{{ tvShow.name }}</h3>
+          <p><strong>Overview:</strong> {{ tvShow.overview }}</p>
+          <p><strong>Release Date:</strong> {{ tvShow.first_air_date }}</p>
+          <p><strong>Rating:</strong> {{ tvShow.vote_average }}</p>
+        </div>
+      }       
+    </div>
+  }
 </div>

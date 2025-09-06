@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface TmdbMovie {
+  id: number;
   title: string;
   originial_title: string;
   overview: string;
@@ -10,6 +11,7 @@ export interface TmdbMovie {
   vote_average: number;
 }
 export interface TmdbTvShow {
+  id: number
   name: string;
   original_name: string;
   overview: string;

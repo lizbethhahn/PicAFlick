@@ -1,25 +1,33 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
-using PicAFlick.Data;
 using PicAFlick.Data.Context;
+using PicAFlick.Data.Repositories;
 using PicAFlick.Infrastructure.Tmdb;
+using PicAFlick.Services.Implementations;
+using PicAFlick.Services.Interfaces;
+using System;
 
 var envPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName, ".env");
-               Env.Load(envPath);
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+               Env.Load(envPath);   
 var tmdbApiToken = Environment.GetEnvironmentVariable("TMDB_API_TOKEN");
 
-if (string.IsNullOrEmpty(connectionString))
-{
-    Console.WriteLine("Missing environment variables.");
-    return;
-}
-
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+    ?? builder.Configuration.GetConnectionString("Default"); ;
+if (string.IsNullOrWhiteSpace(connectionString))
+    throw new InvalidOperationException("Missing DB connection. Set DB_CONNECTION_STRING or ConnectionStrings:Default.");
 
 // Add services to the container.
-builder.Services.AddDbContext<WatchlistContext>(options => options
-                .UseSqlServer(connectionString));
+builder.Services.AddDbContext<WatchlistContext>(opt =>
+{
+    opt.UseSqlServer(connectionString);
+    if (builder.Environment.IsDevelopment())
+    {
+        opt.EnableSensitiveDataLogging();       // dev-only
+        opt.EnableDetailedErrors();
+    }
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularOrigin", builder =>
@@ -39,6 +47,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
+builder.Services.AddScoped<IWatchlistService, WatchlistService>();
+
+builder.Services.AddHttpsRedirection(o => o.HttpsPort = 7043);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,9 +62,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAngularOrigin");
-
 app.UseAuthorization();
 
+app.UseHttpsRedirection();
 app.MapControllers();
-
 app.Run();

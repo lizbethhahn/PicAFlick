@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PicAFlick.Data.Context;
 
@@ -10,9 +11,11 @@ using PicAFlick.Data.Context;
 namespace PicAFlick.Data.Migrations
 {
     [DbContext(typeof(WatchlistContext))]
-    partial class WatchlistContextModelSnapshot : ModelSnapshot
+    [Migration("20250906191249_AddUserMediaMetadataAndConstraints")]
+    partial class AddUserMediaMetadataAndConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
