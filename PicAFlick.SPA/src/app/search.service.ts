@@ -38,7 +38,7 @@ export interface TmdbTvShowSearchResponse {
 })
 
 export class SearchService {
-  private apiUrl = 'https://localhost:5000/api/Search'
+  private apiUrl = 'https://localhost:7043/api/Search'
   constructor(private http: HttpClient) { }
 
   // Search for movies by title
