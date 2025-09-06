@@ -24,22 +24,22 @@ namespace PicAFlick.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WatchlistDisplayDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<WatchlistDisplayDto>>> GetAll(CancellationToken ct)
         {
             var userId = ResolveUserId();
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            var items = await _watchlistService.GetAllAsync(userId);
+            var items = await _watchlistService.GetAllAsync(userId, ct);
             return Ok(items);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] WatchlistCreationDto dto)
+        public async Task<ActionResult> Create([FromBody] WatchlistCreationDto dto, CancellationToken ct)
         {
             var userId = ResolveUserId();
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            var created = await _watchlistService.AddAsync(dto, userId);
+            var created = await _watchlistService.AddAsync(dto, userId, ct);
             if (created != null)
             {
                 return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
@@ -48,36 +48,35 @@ namespace PicAFlick.WebApi.Controllers
             {
                 return BadRequest("Could not create watchlist item.");
             }
-
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(int id, CancellationToken ct)
         {
             var userId = ResolveUserId();
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            var item = await _watchlistService.GetByIdAsync(id, userId);
+            var item = await _watchlistService.GetByIdAsync(id, userId, ct);
             return Ok(item);
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
             var userId = ResolveUserId();
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            await _watchlistService.RemoveEntryAsync(id, userId);
+            await _watchlistService.RemoveEntryAsync(id, userId, ct);
             return NoContent();
         }
 
         [HttpPut("{id:int}/watched")]
-        public async Task<IActionResult> MarkAsWatched(int id)
+        public async Task<IActionResult> MarkAsWatched(int id, CancellationToken ct)
         {
             var userId = ResolveUserId();
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            await _watchlistService.MarkAsWatchedAsync(id, userId);
+            await _watchlistService.MarkAsWatchedAsync(id, userId, ct);
             return NoContent();
         }
     }

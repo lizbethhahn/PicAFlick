@@ -4,18 +4,13 @@ namespace PicAFlick.Domain.Entities
 {
     public class UserMedia
     {
-        public int Id { get; set; } // Primary key
-
-        public int TmdbId { get; set; } // TMDb's ID for movie or TV show
-
+        public int Id { get; set; }
+        public int TmdbId { get; set; }            // UNIQUE
+        public MediaType MediaType { get; set; }
         public string Title { get; set; } = string.Empty;
+        public string? Overview { get; set; }       // from TMDb
+        public string? PosterPath { get; set; }     // TMDb gives relative path (e.g., "/abc.jpg")
 
-        public MediaType MediaType { get; set; } // Enum: Movie or TV
-
-        public bool Watched { get; set; }
-
-        public string? Notes { get; set; }
-
-        public decimal? UserRating { get; set; }
+     // public DateTime LastSyncedUtc { get; set; } = DateTime.UtcNow;
     }
 }
