@@ -362,8 +362,13 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Contains my Tmdb API token
-.env
+# Local configuration and secrets
+appsettings.Development.json
+appsettings.*.local.json
+*.user
 
-# Ignores UI project from Git
+# Has Tmdb Api Key & connection string
+.env 
+
+# Ignores old UI project from Git
 PicAFlick.UI
