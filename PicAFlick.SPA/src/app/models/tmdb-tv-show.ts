@@ -3,7 +3,7 @@ export interface TmdbTvShowDto {
     backdropPath?: string;
     genreIds?: number[];
     tmdbMovieId: number;
-    originCountry: string[];
+    originCountry?: string[];
     originalLanguage?: string;
     originialName?: string;
     overview?: string;
