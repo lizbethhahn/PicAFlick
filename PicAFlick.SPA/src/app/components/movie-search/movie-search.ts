@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
-import { SearchService } from '../search.service';
-import { TmdbTvShow } from '../search.service';
+import { SearchService } from '../../services/search.service';
+import { TmdbMovie } from '../../services/search.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-tv-show-search',
+  selector: 'app-movie-search',
   standalone: true,
-  templateUrl: './tv-show-search.html',
-  styleUrl: './tv-show-search.scss',
+  templateUrl: './movie-search.html',
+  styleUrl: './movie-search.scss',
   imports: [CommonModule, FormsModule]
 })
 
-export class TvShowSearchComponent {
+export class MovieSearchComponent {
   searchTerm: string = '';
-  searchResults: TmdbTvShow[] = [];
+  searchResults: TmdbMovie[] = [];
   isLoading: boolean = false;
   errorMessage: string = '';
 
@@ -24,23 +24,24 @@ export class TvShowSearchComponent {
     if (!this.searchTerm.trim()) {
       return; 
     }
+
     this.isLoading = true; 
     this.errorMessage = ''; 
 
-    this.searchTvShows(this.searchTerm);
+    this.searchMovies(this.searchTerm);
   }
-    
-  searchTvShows(query: string) {
-    this.searchService.searchTvShows(query).subscribe({
+
+  searchMovies(query: string) {
+    this.searchService.searchMovies(query).subscribe({
       next: (results) => {
         this.searchResults = results;  
         this.isLoading = false;  
       },
       error: (error) => {
         this.isLoading = false;  
-        this.errorMessage = "An error occurred while searching"; 
+        this.errorMessage = "An error occurred while searching";  
         console.error(error);
       }
-    });
+    });  
   }
 }

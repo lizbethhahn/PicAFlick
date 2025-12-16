@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { SearchService } from './search.service';
+import { SearchService } from './services/search.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {

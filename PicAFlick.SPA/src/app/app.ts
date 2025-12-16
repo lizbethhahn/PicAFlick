@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MovieSearchComponent } from './movie-search/movie-search';
-import { TvShowSearchComponent } from './tv-show-search/tv-show-search';
-import { WatchlistComponent } from './watchlist/watchlist';
+import { MovieSearchComponent } from './components/movie-search/movie-search';
+import { TvShowSearchComponent } from './components/tv-show-search/tv-show-search';
+import { WatchlistComponent } from './components/watchlist/watchlist';
 
 @Component({
   selector: 'app-root',
