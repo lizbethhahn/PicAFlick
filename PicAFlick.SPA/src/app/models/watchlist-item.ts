@@ -6,5 +6,5 @@ export interface WatchlistItem {
     userMediaId: number;
     userMedia: UserMedia;
     notes?: string;
-    watched: false;
+    watched: boolean;
 }

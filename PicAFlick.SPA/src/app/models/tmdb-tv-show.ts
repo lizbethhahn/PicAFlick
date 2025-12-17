@@ -1,5 +1,5 @@
 export interface TmdbTvShowDto {
-   adult: false;
+   adult: boolean;
     backdropPath?: string;
     genreIds?: number[];
     tmdbMovieId: number;

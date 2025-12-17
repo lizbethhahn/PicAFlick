@@ -1,5 +1,5 @@
 export interface TmdbMovieDto {
-    adult: false;
+    adult: boolean;
     backdropPath?: string;
     genreIds?: number[];
     tmdbMovieId: number;
@@ -10,7 +10,7 @@ export interface TmdbMovieDto {
     posterPath?: string;
     releaseDate?: string;
     title?: string;
-    video: false;
+    video: boolean;
     voteAverage?: number;
     voteCount?: number;
 }
