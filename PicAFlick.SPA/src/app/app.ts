@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MovieSearchComponent } from './components/movie-search/movie-search';
-import { TvShowSearchComponent } from './components/tv-show-search/tv-show-search';
-import { WatchlistComponent } from './components/watchlist/watchlist';
+import { BottomNavComponent } from './layout/bottom-nav/bottom-nav';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
   standalone: true,
   styleUrls: ['./app.scss'],
-  imports: [FormsModule, CommonModule, MovieSearchComponent, TvShowSearchComponent, WatchlistComponent]
+  imports: [FormsModule, 
+            CommonModule, 
+            BottomNavComponent,
+            RouterOutlet]
 })
 export class AppComponent {
   protected title = 'PicAFlick';
