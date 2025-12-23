@@ -1,7 +1,9 @@
-<body>
-    <div>
-        <h1>Hello, welcome to {{ title }}</h1>
-        <app-movie-search></app-movie-search>
-        <app-tv-show-search></app-tv-show-search>
-    </div>
-</body>
+<div class="app-shell">
+  <div class="content">
+    <main>
+        <router-outlet></router-outlet>
+    </main>
+
+    <app-bottom-nav></app-bottom-nav>
+  </div>
+</div>

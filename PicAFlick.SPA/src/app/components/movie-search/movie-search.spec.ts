@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MovieSearchComponent } from './movie-search';
-import { SearchService } from '../search.service';
+
 
 describe('MovieSearchComponent', () => {
   beforeEach(async () => {
@@ -10,8 +10,7 @@ describe('MovieSearchComponent', () => {
       imports: [MovieSearchComponent],
       providers: [
         provideHttpClient(),
-        provideHttpClientTesting(),
-        SearchService
+        provideHttpClientTesting()
       ]
     })
     .compileComponents();

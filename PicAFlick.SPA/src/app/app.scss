@@ -1,26 +1,30 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  padding: 10px;
-  background-color: #f5f5f5;
+main {
+  /* Match this to the height of your navbar */
+  padding-bottom: 70px; 
 }
 
-h1, h2 {
-  color: #333;
+:host {
+  display: block;
+  height: 100%;
 }
 
-/* You can add your own components and class styles here */
-
-/* Example component styles */
-.app-header {
-  background-color: #4CAF50;
-  padding: 15px;
-  color: white;
+.app-shell {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto; /* content takes remaining space, nav sizes itself */
 }
 
-.app-footer {
-  text-align: center;
-  padding: 10px;
-  background-color: #333;
-  color: white;
+.content {
+  overflow: auto; /* <- scroll happens here */
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+  .app-shell {
+    grid-template-rows: auto 1fr; /* nav row first */
+  }
+
+  app-bottom-nav {
+    order: -1; /* nav appears before content */
+  }
 }

@@ -100,4 +100,16 @@ button:focus {
 .movie-info strong {
   font-weight: bold;
 }
+
+:root {
+  --bottom-nav-height: 72px;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.content {
+  padding-bottom: var(--bottom-nav-height);
+}
 /* You can add global styles to this file, and also import other style files */

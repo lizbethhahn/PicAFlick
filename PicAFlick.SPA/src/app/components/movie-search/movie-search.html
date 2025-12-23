@@ -11,11 +11,6 @@
   <!-- Button to trigger the search -->
   <button type="button" (click)="onSearch()" class="search-button">Search</button>
 
-  <!-- Display error message if no movie found -->
-  <!-- <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div> -->
-
   @if (errorMessage) 
   {
     <div class="error-message">
