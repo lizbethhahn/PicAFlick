@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BottomNavComponent } from './layout/bottom-nav/bottom-nav';
+import { NavBarComponent } from './layout/nav-bar/nav-bar';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,10 +9,10 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.html',
   standalone: true,
   styleUrls: ['./app.scss'],
-  imports: [FormsModule, 
-            CommonModule, 
-            BottomNavComponent,
-            RouterOutlet]
+  imports: [FormsModule,
+    CommonModule,
+    NavBarComponent,
+    RouterOutlet, NavBarComponent]
 })
 export class AppComponent {
   protected title = 'PicAFlick';

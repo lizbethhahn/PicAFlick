@@ -24,7 +24,7 @@ main {
     grid-template-rows: auto 1fr; /* nav row first */
   }
 
-  app-bottom-nav {
+  app-nav-bar {
     order: -1; /* nav appears before content */
   }
 }
