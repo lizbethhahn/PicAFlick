@@ -40,8 +40,9 @@ input[type="text"]:focus, textarea:focus {
 /* Button Styles */
 button {
   padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: lightcoral;
+  color: black;
+  font-size: 18px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -81,28 +82,32 @@ button:focus {
 }
 
 /* Styling for the movie data display */
-.movie-info {
-  background-color: #fff;
+.movie-info, .tv-show-info {
+  background-color: #a0efdf;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
 }
 
-.movie-info h2 {
+.movie-info h2, 
+.tv-show-info h2 {
   margin-bottom: 15px;
 }
 
-.movie-info p {
+.movie-info p, 
+.tv-show-info p {
   margin-bottom: 10px;
 }
 
-.movie-info strong {
+.movie-info strong, 
+.tv-show-info strong {
   font-weight: bold;
 }
 
 :root {
   --bottom-nav-height: 72px;
+  --top-nav-height: 72px;
 }
 
 .app-shell {
@@ -111,5 +116,6 @@ button:focus {
 
 .content {
   padding-bottom: var(--bottom-nav-height);
+  padding-top: var(--top-nav-height)
 }
 /* You can add global styles to this file, and also import other style files */

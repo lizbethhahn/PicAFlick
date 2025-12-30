@@ -21,11 +21,13 @@
   <!-- Display movie data if available -->
   @if (searchResults)
   {
-    <div class="movie-data">
+    <div class="movie-card">
       @for (movie of searchResults; track movie.id)
       {
-        <div>
-          <hr class="solid-line">
+        <div class="poster">
+          <img src="https://image.tmdb.org/t/p/w185/{{ movie.poster_path }}"/> 
+        </div>
+        <div class="movie-info">
           <h3>{{ movie.title }}</h3>
           <p><strong>Overview:</strong> {{ movie.overview }}</p>
           <p><strong>Release Date:</strong> {{ movie.release_date }}</p>

@@ -1,0 +1,62 @@
+/* Container Styles */
+.movie-card {
+  display: grid;
+  /* Desktop: 1 part poster, 5 parts text */
+  grid-template-columns: 1fr 5fr; 
+  width: 100%;
+  background: #eeeab7;
+  border: 1px solid #eeeab7;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* Poster Styles */
+.poster {
+  width: 185px;
+  height: 278px;
+}
+
+/* Info Section */
+.movie-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.movie-info h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1a1a1a;
+}
+
+.movie-info p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* --- Mobile Layout (Phone) --- */
+@media (max-width: 480px) {
+  .movie-card {
+    /* Stack elements vertically */
+    grid-template-columns: 1fr; 
+    /* Let the card grow to fit the text */
+    height: auto; 
+  }
+
+  .poster {
+    /* Give the poster a fixed height on mobile so it doesn't look like a tiny strip */
+    height: 250px; 
+  }
+
+  .movie-info {
+    /* Ensure text is left-aligned and looks good on mobile */
+    padding: 16px;
+    justify-content: flex-start;
+  }
+}
