@@ -26,7 +26,12 @@
     {
       <div class="tv-show-card">
         <div class="poster">
-          <img src="https://image.tmdb.org/t/p/w185/{{ tvShow.poster_path }}"/> 
+          @if (tvShow.poster_path)
+          {
+            <img src="https://image.tmdb.org/t/p/w185/{{ tvShow.poster_path }}"/>
+          } @else {
+            <img src="assets/images/tv-placeholder.jpg">
+          }
         </div>
         <div class="tv-show-info">
           <h3>{{ tvShow.name }}</h3>
