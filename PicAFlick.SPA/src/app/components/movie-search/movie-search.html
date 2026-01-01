@@ -21,9 +21,9 @@
   <!-- Display movie data if available -->
   @if (searchResults)
   {
-    <div class="movie-card">
-      @for (movie of searchResults; track movie.id)
-      {
+    @for (movie of searchResults; track movie.id)
+    {
+      <div class="movie-card">
         <div class="poster">
           <img src="https://image.tmdb.org/t/p/w185/{{ movie.poster_path }}"/> 
         </div>
@@ -33,6 +33,6 @@
           <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
           <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
         </div>
-      }       
-    </div>
+      </div>
+    }       
   }

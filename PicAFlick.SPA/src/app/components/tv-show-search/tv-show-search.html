@@ -22,9 +22,9 @@
   <!-- Display tv show data if available -->
   @if (searchResults)
   {
-    <div class="tv-show-card">
-      @for (tvShow of searchResults; track tvShow.id)
-      {
+    @for (tvShow of searchResults; track tvShow.id)
+    {
+      <div class="tv-show-card">
         <div class="poster">
           <img src="https://image.tmdb.org/t/p/w185/{{ tvShow.poster_path }}"/> 
         </div>
@@ -34,7 +34,6 @@
           <p><strong>Release Date:</strong> {{ tvShow.first_air_date }}</p>
           <p><strong>Rating:</strong> {{ tvShow.vote_average }}</p>
         </div>
-      }       
-    </div>
+      </div>
+    }       
   }
-</div>
