@@ -22,17 +22,18 @@
   <!-- Display tv show data if available -->
   @if (searchResults)
   {
-    <div class="tv-show-data">
-      @for (tvShow of searchResults; track tvShow.id)
-      {
-        <div>
-          <hr class="solid-line">
+    @for (tvShow of searchResults; track tvShow.id)
+    {
+      <div class="tv-show-card">
+        <div class="poster">
+          <img src="https://image.tmdb.org/t/p/w185/{{ tvShow.poster_path }}"/> 
+        </div>
+        <div class="tv-show-info">
           <h3>{{ tvShow.name }}</h3>
           <p><strong>Overview:</strong> {{ tvShow.overview }}</p>
           <p><strong>Release Date:</strong> {{ tvShow.first_air_date }}</p>
           <p><strong>Rating:</strong> {{ tvShow.vote_average }}</p>
         </div>
-      }       
-    </div>
+      </div>
+    }       
   }
-</div>

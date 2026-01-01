@@ -1,0 +1,56 @@
+/* Container Styles */
+.tv-show-card {
+  display: grid;
+  /* Desktop: 1 part poster, 5 parts text */
+  grid-template-columns: .75fr 5fr; 
+  width: 100%;
+  background-color: #a0efdf;
+  border: 7px double #e91598;
+  border-radius: 20px;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  line-height: 0; // allows the poster to take up entire height of container
+}
+
+/* Info Section */
+.tv-show-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tv-show-info h3 {
+  margin: 0;
+  color: black;
+}
+
+.tv-show-info p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* --- Mobile Layout (Phone) --- */
+@media (max-width: 480px) {
+  .tv-show-card {
+    /* Stack elements vertically */
+    grid-template-columns: 1fr; 
+    /* Let the card grow to fit the text */
+    height: auto; 
+  }
+
+  .poster {
+    /* Give the poster a fixed height on mobile so it doesn't look like a tiny strip */
+    height: 278px; 
+  }
+
+  .tv-show-info {
+    /* Ensure text is left-aligned and looks good on mobile */
+    padding: 16px;
+    justify-content: flex-start;
+  }
+}

@@ -9,6 +9,7 @@ export interface TmdbMovie {
   overview: string;
   release_date: string;
   vote_average: number;
+  poster_path: string;
 }
 export interface TmdbTvShow {
   id: number
@@ -17,6 +18,7 @@ export interface TmdbTvShow {
   overview: string;
   first_air_date: string;
   vote_average: number;
+  poster_path: string;
 }
 
 export interface TmdbMovieSearchResponse {
