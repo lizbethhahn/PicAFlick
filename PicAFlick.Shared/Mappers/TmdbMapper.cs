@@ -2,7 +2,7 @@
 using PicAFlick.Shared.Contracts;
 using PicAFlick.Infrastructure.Tmdb.Models;
 
-namespace PicAFlick.Domain.Services.Mappers
+namespace PicAFlick.Shared.Mappers
 {
     public static class TmdbMapper
     {

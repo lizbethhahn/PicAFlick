@@ -4,7 +4,7 @@ export interface TmdbMovieDto {
     genreIds?: number[];
     tmdbMovieId: number;
     originalLanguage?: string;
-    originialTitle?: string;
+    originalTitle?: string;
     overview?: string;
     popularity?: number;
     posterPath?: string;

@@ -2,7 +2,7 @@
 using PicAFlick.Domain.Entities;
 using PicAFlick.Shared.Contracts;
 
-namespace PicAFlick.Domain.Services.Mappers
+namespace PicAFlick.Shared.Mappers
 {
     public static class WatchlistMapper
     {
