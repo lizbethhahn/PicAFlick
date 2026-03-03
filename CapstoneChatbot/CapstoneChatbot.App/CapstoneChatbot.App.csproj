@@ -21,4 +21,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CapstoneChatbot.Tmdb\CapstoneChatbot.Tmdb.csproj" />
+  </ItemGroup>
+
 </Project>
