@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CapstoneChatbot.Tmdb.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace CapstoneChatbot.App.Models
 
         public string Title { get; set; } = string.Empty;
 
-        public string MediaType { get; set; } = string.Empty; // "movie" or "tv"
+        public MediaType MediaType { get; set; }
 
         public int? TmdbId { get; set; }
 
