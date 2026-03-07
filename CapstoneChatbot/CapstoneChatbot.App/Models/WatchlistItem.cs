@@ -17,5 +17,9 @@ namespace CapstoneChatbot.App.Models
         public decimal? Rating { get; set; }
 
         public DateTime AddedAt { get; set; } = DateTime.UtcNow;
+
+        public string? Overview { get; set; }
+
+        public string? PosterPath { get; set; }
     }
 }
