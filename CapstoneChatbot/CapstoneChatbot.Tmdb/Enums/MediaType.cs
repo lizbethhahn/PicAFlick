@@ -1,6 +1,4 @@
-﻿
-
-namespace CapstoneChatbot.Tmdb.Enums
+﻿namespace CapstoneChatbot.Tmdb.Enums
 {
     public enum MediaType
     {

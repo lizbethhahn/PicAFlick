@@ -1,6 +1,7 @@
 ﻿using CapstoneChatbot.App.Data;
 using CapstoneChatbot.App.Models;
 using Microsoft.EntityFrameworkCore;
+using CapstoneChatbot.Tmdb.Enums;
 
 namespace CapstoneChatbot.App.Services;
 
@@ -13,17 +14,13 @@ public class WatchlistService
         _db = db;
     }
 
-    public async Task AddAsync(string title, string mediaType, decimal? rating)
+    public async Task AddAsync(string title, MediaType mediaType, decimal? rating)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new ArgumentException("Title is required.", nameof(title));
 
-        if (string.IsNullOrWhiteSpace(mediaType))
-            throw new ArgumentException("Media type is required.", nameof(mediaType));
-
-        mediaType = mediaType.Trim().ToLowerInvariant();
-        if (mediaType is not ("movie" or "tv"))
-            throw new ArgumentException("Media type must be 'movie' or 'tv'.", nameof(mediaType));
+        if (!Enum.IsDefined(typeof(MediaType), mediaType))
+            throw new ArgumentException("Invalid media type.", nameof(mediaType));
 
         if (rating is < 1m or > 5m)
             throw new ArgumentOutOfRangeException(nameof(rating), "Rating must be between 1 and 5.");
