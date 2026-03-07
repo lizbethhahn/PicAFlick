@@ -1,6 +1,7 @@
 ﻿using CapstoneChatbot.App.Data;
 using CapstoneChatbot.App.Services;
 using Microsoft.EntityFrameworkCore;
+using CapstoneChatbot.Tmdb.Enums;
 
 var dbPath = Path.Combine(AppContext.BaseDirectory, "capstone.db");
 var connectionString = $"Data Source={dbPath}";
@@ -47,7 +48,13 @@ while (true)
         var title = Console.ReadLine() ?? "";
 
         Console.Write("Media Type (movie/tv): ");
-        var mediaType = Console.ReadLine() ?? "";
+        var mediaTypeText = Console.ReadLine() ?? "";
+        MediaType mediaType = mediaTypeText.ToLowerInvariant() switch
+        {
+            "movie" => MediaType.Movie,
+            "tv" => MediaType.TvShow,
+            _ => MediaType.Unknown
+        };
 
         Console.Write("Rating (1–5, halves allowed, optional): ");
         var ratingText = Console.ReadLine();
