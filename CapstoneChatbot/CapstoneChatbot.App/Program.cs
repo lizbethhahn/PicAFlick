@@ -92,11 +92,37 @@ while (true)
             }
 
             Console.WriteLine("Search Results:");
-            foreach (var result in results)
+            for (int i = 0; i < results.Count; i++)
             {
-                Console.WriteLine($"- {result.Title} ({result.MediaType}) | Release Date: {result.ReleaseDate}");
+                var result = results[i];
+                Console.WriteLine($"{i + 1}. {result.Title} ({result.MediaType}) | Release Date: {result.ReleaseDate}");
             }
-               
+
+            Console.WriteLine();
+            Console.Write("Select a result number to add to watchlist: ");
+            var selectionInput = Console.ReadLine();
+
+            if (!int.TryParse(selectionInput, out int selection))
+            {
+                Console.WriteLine("Invalid selection.");
+                continue;
+            }
+
+            if (selection < 1 || selection > results.Count)
+            {
+                Console.WriteLine("Selection out of range.");
+                continue;
+            }
+
+            // User sees results numbered 1..N, but List indexing is 0..N-1
+            var chosenResult = results[selection - 1];
+
+            await watchlist.AddAsync(
+                chosenResult.Title, 
+                chosenResult.MediaType, 
+                chosenResult.TmdbId, 
+                null);
+            Console.WriteLine("Item added.");
         }
         catch (Exception ex)
         {
@@ -123,12 +149,14 @@ while (true)
         var ratingText = Console.ReadLine();
 
         decimal? rating = null;
-        if (!string.IsNullOrWhiteSpace(ratingText) && decimal.TryParse(ratingText, out var parsed))
+        if (!string.IsNullOrWhiteSpace(ratingText) && decimal.TryParse(ratingText, out var parsed)) 
+        {
             rating = parsed;
+        }
 
         try
         {
-            await watchlist.AddAsync(title, mediaType, rating);
+            await watchlist.AddAsync(title, mediaType, null, rating);
             Console.WriteLine("Item added.");
         }
         catch (Exception ex)

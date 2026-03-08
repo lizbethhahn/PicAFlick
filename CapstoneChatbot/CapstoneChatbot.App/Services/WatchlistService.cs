@@ -14,7 +14,7 @@ public class WatchlistService
         _db = db;
     }
 
-    public async Task AddAsync(string title, MediaType mediaType, decimal? rating)
+    public async Task AddAsync(string title, MediaType mediaType, int? tmdbId, decimal? rating)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new ArgumentException("Title is required.", nameof(title));
@@ -32,6 +32,7 @@ public class WatchlistService
         {
             Title = title.Trim(),
             MediaType = mediaType,
+            TmdbId = tmdbId,
             Rating = rating,
             Watched = false
         };
