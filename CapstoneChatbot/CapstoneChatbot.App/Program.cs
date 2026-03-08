@@ -34,7 +34,7 @@ await db.Database.EnsureCreatedAsync();
 var watchlist = new WatchlistService(db);
 
 Console.WriteLine("Capstone Chatbot Watchlist");
-Console.WriteLine("Commands: add | list | exit");
+Console.WriteLine("Commands: add | list | search | exit");
 
 while (true)
 {
@@ -57,6 +57,51 @@ while (true)
         foreach (var item in items)
             Console.WriteLine($"- {item.Title} ({item.MediaType}) | Watched: {item.Watched} | Rating: {item.Rating}");
 
+        continue;
+    }
+
+    if (cmd is "search")
+    {
+        Console.Write("Search Title: ");
+        var query = Console.ReadLine() ?? "";
+
+        Console.Write("Media Type (movie/tv): ");
+        var mediaTypeText = Console.ReadLine() ?? "";
+
+        MediaType mediaType = mediaTypeText.ToLowerInvariant() switch
+        {
+            "movie" => MediaType.Movie,
+            "tv" => MediaType.TvShow,
+            _ => MediaType.Unknown
+        };
+
+        if (mediaType == MediaType.Unknown)
+        {
+            Console.WriteLine("Invalid media type. Use 'movie' or 'tv'.");
+            continue;
+        }
+
+        try
+        {
+            var results = await tmdbClient.SearchAsync(query, mediaType);
+
+            if (results.Count == 0)
+            {
+                Console.WriteLine("No results found.");
+                continue;
+            }
+
+            Console.WriteLine("Search Results:");
+            foreach (var result in results)
+            {
+                Console.WriteLine($"- {result.Title} ({result.MediaType}) | Release Date: {result.ReleaseDate}");
+            }
+               
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during search: {ex.Message}");
+        }
         continue;
     }
 
