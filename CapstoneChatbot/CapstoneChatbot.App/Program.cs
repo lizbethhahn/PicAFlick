@@ -1,7 +1,25 @@
 ﻿using CapstoneChatbot.App.Data;
 using CapstoneChatbot.App.Services;
-using Microsoft.EntityFrameworkCore;
 using CapstoneChatbot.Tmdb.Enums;
+using CapstoneChatbot.Tmdb.Clients;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+var configuration = new ConfigurationBuilder()
+    .AddUserSecrets<Program>()
+    .Build();
+
+var tmdbApiToken = configuration["Tmdb:ApiToken"]
+    ?? throw new InvalidOperationException("TMDb API token is missing.");
+
+using var httpClient = new HttpClient
+{
+    BaseAddress = new Uri("https://api.themoviedb.org/3/")
+};
+
+httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {tmdbApiToken}");
+
+var tmdbClient = new TmdbClient(httpClient);
 
 var dbPath = Path.Combine(AppContext.BaseDirectory, "capstone.db");
 var connectionString = $"Data Source={dbPath}";
