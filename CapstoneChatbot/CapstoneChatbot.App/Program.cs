@@ -33,8 +33,10 @@ await db.Database.EnsureCreatedAsync();
 
 var watchlist = new WatchlistService(db);
 
+const string CommandPrompt = "Commands: add | list | search | exit";
+
 Console.WriteLine("Capstone Chatbot Watchlist");
-Console.WriteLine("Commands: add | list | search | exit");
+Console.WriteLine(CommandPrompt);
 
 while (true)
 {
@@ -57,6 +59,7 @@ while (true)
         foreach (var item in items)
             Console.WriteLine($"- {item.Title} ({item.MediaType}) | Watched: {item.Watched} | Rating: {item.Rating}");
 
+        Console.WriteLine(CommandPrompt);
         continue;
     }
 
@@ -65,20 +68,24 @@ while (true)
         Console.Write("Search Title: ");
         var query = Console.ReadLine() ?? "";
 
-        Console.Write("Media Type (movie/tv): ");
-        var mediaTypeText = Console.ReadLine() ?? "";
+        MediaType mediaType;
 
-        MediaType mediaType = mediaTypeText.ToLowerInvariant() switch
+        while (true)
         {
-            "movie" => MediaType.Movie,
-            "tv" => MediaType.TvShow,
-            _ => MediaType.Unknown
-        };
+            Console.Write("Media Type (movie/tv): ");
+            var mediaTypeText = Console.ReadLine() ?? "";
 
-        if (mediaType == MediaType.Unknown)
-        {
+            mediaType = mediaTypeText.ToLowerInvariant() switch
+            {
+                "movie" => MediaType.Movie,
+                "tv" => MediaType.TvShow,
+                _ => MediaType.Unknown
+            };
+
+            if (mediaType != MediaType.Unknown)
+                break;
+
             Console.WriteLine("Invalid media type. Use 'movie' or 'tv'.");
-            continue;
         }
 
         try
@@ -88,6 +95,7 @@ while (true)
             if (results.Count == 0)
             {
                 Console.WriteLine("No results found.");
+                Console.WriteLine(CommandPrompt);
                 continue;
             }
 
@@ -99,18 +107,26 @@ while (true)
             }
 
             Console.WriteLine();
-            Console.Write("Select a result number to add to watchlist: ");
+            Console.Write("Enter a number to select an item to add to the watch list, or press Enter to return to the command prompt: ");
             var selectionInput = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(selectionInput))
+            {
+                Console.WriteLine(CommandPrompt);
+                continue;
+            }
 
             if (!int.TryParse(selectionInput, out int selection))
             {
                 Console.WriteLine("Invalid selection.");
+                Console.WriteLine(CommandPrompt);
                 continue;
             }
 
             if (selection < 1 || selection > results.Count)
             {
                 Console.WriteLine("Selection out of range.");
+                Console.WriteLine(CommandPrompt);
                 continue;
             }
 
@@ -123,6 +139,7 @@ while (true)
                 chosenResult.TmdbId, 
                 null);
             Console.WriteLine("Item added.");
+            Console.WriteLine(CommandPrompt);
         }
         catch (Exception ex)
         {
@@ -163,9 +180,10 @@ while (true)
         {
             Console.WriteLine($"Could not add item: {ex.Message}");
         }
-
+        Console.WriteLine(CommandPrompt);
         continue;
     }
 
-    Console.WriteLine("Unknown command. Try: add, list, exit");
+    Console.WriteLine("Unknown command.");
+    Console.WriteLine(CommandPrompt);
 }
