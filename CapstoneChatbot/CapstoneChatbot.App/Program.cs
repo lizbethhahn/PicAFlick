@@ -1,4 +1,5 @@
 ﻿using CapstoneChatbot.App.Data;
+using CapstoneChatbot.App.Clients;
 using CapstoneChatbot.App.Services;
 using CapstoneChatbot.Tmdb.Enums;
 using CapstoneChatbot.Tmdb.Clients;
@@ -31,7 +32,34 @@ var options = new DbContextOptionsBuilder<CapstoneDbContext>()
 await using var db = new CapstoneDbContext(options);
 await db.Database.EnsureCreatedAsync();
 
+var picHttpClient = new HttpClient
+{
+    BaseAddress = new Uri("https://localhost:7043")
+};
+var picAFlickApiClient = new PicAFlickApiClient(picHttpClient);
+
 var watchlist = new WatchlistService(db);
+
+var picWatchlist = await picAFlickApiClient.GetWatchlistAsync();
+
+Console.WriteLine($"Fetched {picWatchlist.Count} watchlist items.\n");
+
+var movies = picWatchlist.Count(x => x.MediaType == MediaType.Movie);
+var tvShows = picWatchlist.Count(x => x.MediaType == MediaType.TvShow);
+var watched = picWatchlist.Count(x => x.Watched);
+var unwatched = picWatchlist.Count(x => !x.Watched);
+
+Console.WriteLine($"Movies: {movies}");
+Console.WriteLine($"TV Shows: {tvShows}");
+Console.WriteLine($"Watched: {watched}");
+Console.WriteLine($"Unwatched: {unwatched}\n");
+
+Console.WriteLine("Titles:");
+
+foreach (var item in picWatchlist.Take(5))
+{
+    Console.WriteLine($" - {item.Title}");
+}
 
 const string CommandPrompt = "Commands: add | list | search | remove | watched |exit";
 
