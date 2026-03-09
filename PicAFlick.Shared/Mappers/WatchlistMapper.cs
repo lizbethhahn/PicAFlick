@@ -31,6 +31,7 @@ namespace PicAFlick.Domain.Services.Mappers
                 Watched = entity.Watched,
                 PosterPath = media.PosterPath,
                 Overview = media.Overview,
+                ReleaseDate = media.ReleaseDate,
              // UserRating = entity.Rating
             };
         }
