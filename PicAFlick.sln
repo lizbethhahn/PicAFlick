@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Infrastructure.Tm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicAFlick.Shared", "PicAFlick.Shared\PicAFlick.Shared.csproj", "{A167B11F-E8C9-42CD-8142-4516372DB880}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneChatbot.App", "CapstoneChatbot\CapstoneChatbot.App\CapstoneChatbot.App.csproj", "{A9C276F0-77C4-4558-3D35-F53E217A317A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,18 @@ Global
 		{A167B11F-E8C9-42CD-8142-4516372DB880}.Release|x64.Build.0 = Release|Any CPU
 		{A167B11F-E8C9-42CD-8142-4516372DB880}.Release|x86.ActiveCfg = Release|Any CPU
 		{A167B11F-E8C9-42CD-8142-4516372DB880}.Release|x86.Build.0 = Release|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Debug|x64.Build.0 = Debug|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Debug|x86.Build.0 = Debug|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Release|x64.ActiveCfg = Release|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Release|x64.Build.0 = Release|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Release|x86.ActiveCfg = Release|Any CPU
+		{A9C276F0-77C4-4558-3D35-F53E217A317A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
