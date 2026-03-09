@@ -33,7 +33,7 @@ await db.Database.EnsureCreatedAsync();
 
 var watchlist = new WatchlistService(db);
 
-const string CommandPrompt = "Commands: add | list | search | exit";
+const string CommandPrompt = "Commands: add | list | search | remove | watched |exit";
 
 Console.WriteLine("Capstone Chatbot Watchlist");
 Console.WriteLine(CommandPrompt);
@@ -180,6 +180,120 @@ while (true)
         {
             Console.WriteLine($"Could not add item: {ex.Message}");
         }
+        Console.WriteLine(CommandPrompt);
+        continue;
+    }
+
+    if (cmd is "remove")
+    {
+        var items = await watchlist.ListAsync();
+
+        if (items.Count == 0)
+        {
+            Console.WriteLine("Watchlist is empty.");
+            Console.WriteLine(CommandPrompt);
+            continue;
+        }
+
+        Console.WriteLine("Watchlist:");
+        for (int i = 0; i < items.Count; i++)
+        {
+            var item = items[i];
+            Console.WriteLine($"{i + 1}. {item.Title} ({item.MediaType})");
+        }
+
+        Console.Write("Enter a number to remove an item, or press Enter to return to the command prompt: ");
+        var removeInput = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(removeInput))
+        {
+            Console.WriteLine(CommandPrompt);
+            continue;
+        }
+
+        if (!int.TryParse(removeInput, out int removeSelection))
+        {
+            Console.WriteLine("Invalid selection.");
+            Console.WriteLine(CommandPrompt);
+            continue;
+        }
+
+        if (removeSelection < 1 || removeSelection > items.Count)
+        {
+            Console.WriteLine("Selection out of range.");
+            Console.WriteLine(CommandPrompt);
+            continue;
+        }
+
+        var itemToRemove = items[removeSelection - 1];
+
+        try
+        {
+            await watchlist.RemoveAsync(itemToRemove.Id);
+            Console.WriteLine("Item removed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not remove item: {ex.Message}");
+        }
+
+        Console.WriteLine(CommandPrompt);
+        continue;
+    }
+
+    if (cmd is "watched")
+    {
+        var items = await watchlist.ListAsync();
+
+        if (items.Count == 0)
+        {
+            Console.WriteLine("Watchlist is empty.");
+            Console.WriteLine(CommandPrompt);
+            continue;
+        }
+
+        Console.WriteLine("Watchlist:");
+        for (int i = 0; i < items.Count; i++)
+        {
+            var item = items[i];
+            Console.WriteLine($"{i + 1}. {item.Title} ({item.MediaType}) | Watched: {item.Watched}");
+        }
+
+        Console.Write("Enter a number to mark an item as watched, or press Enter to return to the command prompt: ");
+        var watchedInput = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(watchedInput))
+        {
+            Console.WriteLine(CommandPrompt);
+            continue;
+        }
+
+        if (!int.TryParse(watchedInput, out int watchedSelection))
+        {
+            Console.WriteLine("Invalid selection.");
+            Console.WriteLine(CommandPrompt);
+            continue;
+        }
+
+        if (watchedSelection < 1 || watchedSelection > items.Count)
+        {
+            Console.WriteLine("Selection out of range.");
+            Console.WriteLine(CommandPrompt);
+            continue;
+        }
+
+        var itemToMarkWatched = items[watchedSelection - 1];
+
+        try
+        {
+            await watchlist.MarkWatchedAsync(itemToMarkWatched.Id);
+            Console.WriteLine("Item marked as watched.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not mark item as watched: {ex.Message}");
+        }
+
         Console.WriteLine(CommandPrompt);
         continue;
     }

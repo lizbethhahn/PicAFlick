@@ -41,6 +41,29 @@ public class WatchlistService
         await _db.SaveChangesAsync();
     }
 
+    public async Task RemoveAsync(int id)
+    {
+        var item = await _db.WatchlistItems.FindAsync(id);
+
+        if (item is null)
+            throw new InvalidOperationException("Item not found.");
+
+        _db.WatchlistItems.Remove(item);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task MarkWatchedAsync(int id)
+    {
+        var item = await _db.WatchlistItems.FindAsync(id);
+
+        if (item is null)
+            throw new InvalidOperationException("Item not found.");
+
+        item.Watched = true;
+
+        await _db.SaveChangesAsync();
+    }
+
     public Task<List<WatchlistItem>> ListAsync()
         => _db.WatchlistItems
             .OrderByDescending(x => x.AddedAt)
