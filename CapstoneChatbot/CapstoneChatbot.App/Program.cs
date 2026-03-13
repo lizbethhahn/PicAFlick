@@ -36,29 +36,26 @@ var picHttpClient = new HttpClient
 {
     BaseAddress = new Uri("https://localhost:7043")
 };
-var picAFlickApiClient = new PicAFlickApiClient(picHttpClient);
 
+var picAFlickApiClient = new PicAFlickApiClient(picHttpClient);
 var watchlist = new WatchlistService(db);
+var watchlistAnalyzer = new WatchlistAnalyzer();
 
 var picWatchlist = await picAFlickApiClient.GetWatchlistAsync();
+var analysisResult = watchlistAnalyzer.Analyze((IEnumerable<WatchlistItemDto>)picWatchlist);
 
-Console.WriteLine($"Fetched {picWatchlist.Count} watchlist items.\n");
+Console.WriteLine($"Fetched {analysisResult.TotalCount} watchlist items.\n");
 
-var movies = picWatchlist.Count(x => x.MediaType == MediaType.Movie);
-var tvShows = picWatchlist.Count(x => x.MediaType == MediaType.TvShow);
-var watched = picWatchlist.Count(x => x.Watched);
-var unwatched = picWatchlist.Count(x => !x.Watched);
-
-Console.WriteLine($"Movies: {movies}");
-Console.WriteLine($"TV Shows: {tvShows}");
-Console.WriteLine($"Watched: {watched}");
-Console.WriteLine($"Unwatched: {unwatched}\n");
+Console.WriteLine($"Movies: {analysisResult.MovieCount}");
+Console.WriteLine($"TV Shows: {analysisResult.TvShowCount}");
+Console.WriteLine($"Watched: {analysisResult.WatchedCount}");
+Console.WriteLine($"Unwatched: {analysisResult.UnwatchedCount}\n");
 
 Console.WriteLine("Titles:");
 
 foreach (var item in picWatchlist.Take(5))
 {
-    Console.WriteLine($" - {item.Title}");
+    Console.WriteLine($" - {item.Title} ({item.MediaType})");
 }
 
 const string CommandPrompt = "Commands: add | list | search | remove | watched |exit";
@@ -78,14 +75,14 @@ while (true)
     {
         var items = await watchlist.ListAsync();
 
-        if (items.Count == 0)
+        if (analysisResult.TotalCount == 0)
         {
             Console.WriteLine("Watchlist is empty.");
             continue;
         }
 
         foreach (var item in items)
-            Console.WriteLine($"- {item.Title} ({item.MediaType}) | Watched: {item.Watched} | Rating: {item.Rating}");
+            Console.WriteLine($"- {item.Title} ({item.MediaType}) | Watched: {item.Watched} | Rating: {item.Rating} | TmdbId: {item.TmdbId}");
 
         Console.WriteLine(CommandPrompt);
         continue;
