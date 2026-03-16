@@ -1,6 +1,7 @@
 ﻿using CapstoneChatbot.App.Data;
 using CapstoneChatbot.App.Clients;
 using CapstoneChatbot.App.Services;
+using CapstoneChatbot.App.Models;
 using CapstoneChatbot.Tmdb.Enums;
 using CapstoneChatbot.Tmdb.Clients;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,6 @@ var options = new DbContextOptionsBuilder<CapstoneDbContext>()
     .Options;
 
 await using var db = new CapstoneDbContext(options);
-await db.Database.EnsureCreatedAsync();
 
 var picHttpClient = new HttpClient
 {
@@ -55,7 +55,10 @@ Console.WriteLine("Titles:");
 
 foreach (var item in picWatchlist.Take(5))
 {
-    Console.WriteLine($" - {item.Title} ({item.MediaType})");
+    var releaseYear = item.ReleaseDate.HasValue
+        ? item.ReleaseDate.Value.Year.ToString()
+        : "Unknown";
+    Console.WriteLine($" - {item.Title} - {releaseYear} ({item.MediaType})");
 }
 
 const string CommandPrompt = "Commands: add | list | search | remove | watched |exit";
@@ -75,14 +78,19 @@ while (true)
     {
         var items = await watchlist.ListAsync();
 
-        if (analysisResult.TotalCount == 0)
+        if (items.Count == 0)
         {
             Console.WriteLine("Watchlist is empty.");
             continue;
         }
 
+
         foreach (var item in items)
-            Console.WriteLine($"- {item.Title} ({item.MediaType}) | Watched: {item.Watched} | Rating: {item.Rating} | TmdbId: {item.TmdbId}");
+        {
+            var releaseYear = item.ReleaseDate.HasValue ? item.ReleaseDate.Value.Year.ToString() : "Unknown";
+            Console.WriteLine($"{item.Title} - {releaseYear} | ({item.MediaType}) | Watched: {item.Watched} | Rating: {item.Rating} | TmdbId: {item.TmdbId}");
+        }
+            
 
         Console.WriteLine(CommandPrompt);
         continue;
@@ -158,8 +166,17 @@ while (true)
             // User sees results numbered 1..N, but List indexing is 0..N-1
             var chosenResult = results[selection - 1];
 
+            DateTime? releaseDate = null;
+
+            if (!string.IsNullOrWhiteSpace(chosenResult.ReleaseDate) &&
+                DateTime.TryParse(chosenResult.ReleaseDate, out var parsedDate))
+            {
+                releaseDate = parsedDate;
+            }
+
             await watchlist.AddAsync(
                 chosenResult.Title, 
+                releaseDate,
                 chosenResult.MediaType, 
                 chosenResult.TmdbId, 
                 null);
@@ -198,7 +215,7 @@ while (true)
 
         try
         {
-            await watchlist.AddAsync(title, mediaType, null, rating);
+            await watchlist.AddAsync(title, null, mediaType, null, rating);
             Console.WriteLine("Item added.");
         }
         catch (Exception ex)

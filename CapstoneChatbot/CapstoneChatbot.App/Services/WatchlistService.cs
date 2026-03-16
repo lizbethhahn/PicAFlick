@@ -2,6 +2,7 @@
 using CapstoneChatbot.App.Models;
 using Microsoft.EntityFrameworkCore;
 using CapstoneChatbot.Tmdb.Enums;
+using CapstoneChatbot.App.Migrations;
 
 namespace CapstoneChatbot.App.Services;
 
@@ -14,7 +15,7 @@ public class WatchlistService
         _db = db;
     }
 
-    public async Task AddAsync(string title, MediaType mediaType, int? tmdbId, decimal? rating)
+    public async Task AddAsync(string title, DateTime? releaseDate, MediaType mediaType, int? tmdbId, decimal? rating)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new ArgumentException("Title is required.", nameof(title));
@@ -31,6 +32,7 @@ public class WatchlistService
         var item = new WatchlistItem
         {
             Title = title.Trim(),
+            ReleaseDate = releaseDate,
             MediaType = mediaType,
             TmdbId = tmdbId,
             Rating = rating,
