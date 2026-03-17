@@ -3,16 +3,19 @@ using CapstoneChatbot.App.Models;
 using Microsoft.EntityFrameworkCore;
 using CapstoneChatbot.Tmdb.Enums;
 using CapstoneChatbot.App.Migrations;
+using CapstoneChatbot.Tmdb.Clients;
 
 namespace CapstoneChatbot.App.Services;
 
 public class WatchlistService
 {
     private readonly CapstoneDbContext _db;
+    private readonly ITmdbClient _tmdbClient;
 
-    public WatchlistService(CapstoneDbContext db)
+    public WatchlistService(CapstoneDbContext db, ITmdbClient tmdbClient)
     {
         _db = db;
+        _tmdbClient = tmdbClient;
     }
 
     public async Task AddAsync(string title, DateTime? releaseDate, MediaType mediaType, int? tmdbId, decimal? rating)
@@ -64,6 +67,36 @@ public class WatchlistService
         item.Watched = true;
 
         await _db.SaveChangesAsync();
+    }
+
+    public async Task<List<WatchlistItem>> GetItemsMissingReleaseDateAsync()
+    {
+        return await _db.WatchlistItems
+            .Where(x => x.ReleaseDate == null && x.TmdbId != null)
+            .ToListAsync();
+    }
+
+    public async Task BackfillReleaseDatesAsync()
+    {
+        var items = await GetItemsMissingReleaseDateAsync();
+
+        foreach (var item in items)
+        {
+            if (item.TmdbId is null)
+            {
+                continue;
+            }
+            var tmdbItem = await _tmdbClient.GetByIdAsync(item.TmdbId.Value, item.MediaType);
+
+            if (tmdbItem is not null &&
+                !string.IsNullOrWhiteSpace(tmdbItem.ReleaseDate) &&
+                DateTime.TryParse(tmdbItem.ReleaseDate, out var parsedDate))
+            {
+                item.ReleaseDate = parsedDate;
+            }
+
+            await _db.SaveChangesAsync();
+        }
     }
 
     public Task<List<WatchlistItem>> ListAsync()

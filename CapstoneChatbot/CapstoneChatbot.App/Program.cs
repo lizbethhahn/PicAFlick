@@ -6,6 +6,7 @@ using CapstoneChatbot.Tmdb.Enums;
 using CapstoneChatbot.Tmdb.Clients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Formats.Tar;
 
 var configuration = new ConfigurationBuilder()
     .AddUserSecrets<Program>()
@@ -38,9 +39,10 @@ var picHttpClient = new HttpClient
 };
 
 var picAFlickApiClient = new PicAFlickApiClient(picHttpClient);
-var watchlist = new WatchlistService(db);
+var watchlist = new WatchlistService(db, tmdbClient);
 var watchlistAnalyzer = new WatchlistAnalyzer();
 
+var capWatchlist = await watchlist.ListAsync();
 var picWatchlist = await picAFlickApiClient.GetWatchlistAsync();
 var analysisResult = watchlistAnalyzer.Analyze((IEnumerable<WatchlistItemDto>)picWatchlist);
 
@@ -53,7 +55,7 @@ Console.WriteLine($"Unwatched: {analysisResult.UnwatchedCount}\n");
 
 Console.WriteLine("Titles:");
 
-foreach (var item in picWatchlist.Take(5))
+foreach (var item in capWatchlist.OrderByDescending(x => x.Id).Take(5))
 {
     var releaseYear = item.ReleaseDate.HasValue
         ? item.ReleaseDate.Value.Year.ToString()
@@ -73,6 +75,8 @@ while (true)
 
     if (cmd is "exit" or "quit" or "q")
         break;
+
+    await watchlist.BackfillReleaseDatesAsync();
 
     if (cmd is "list")
     {
@@ -241,7 +245,7 @@ while (true)
         for (int i = 0; i < items.Count; i++)
         {
             var item = items[i];
-            Console.WriteLine($"{i + 1}. {item.Title} ({item.MediaType})");
+            Console.WriteLine($"{i + 1}. {item.Title} - {item.ReleaseDate} ({item.MediaType})");
         }
 
         Console.Write("Enter a number to remove an item, or press Enter to return to the command prompt: ");
@@ -298,7 +302,7 @@ while (true)
         for (int i = 0; i < items.Count; i++)
         {
             var item = items[i];
-            Console.WriteLine($"{i + 1}. {item.Title} ({item.MediaType}) | Watched: {item.Watched}");
+            Console.WriteLine($"{i + 1}. {item.Title} - {item.ReleaseDate} ({item.MediaType}) | Watched: {item.Watched}");
         }
 
         Console.Write("Enter a number to mark an item as watched, or press Enter to return to the command prompt: ");
