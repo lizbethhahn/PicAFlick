@@ -7,6 +7,7 @@ using CapstoneChatbot.Tmdb.Clients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Formats.Tar;
+using PicAFlick.Shared.Contracts;
 
 var configuration = new ConfigurationBuilder()
     .AddUserSecrets<Program>()
@@ -42,7 +43,6 @@ var picAFlickApiClient = new PicAFlickApiClient(picHttpClient);
 var watchlist = new WatchlistService(db, tmdbClient);
 var watchlistAnalyzer = new WatchlistAnalyzer();
 
-var capWatchlist = await watchlist.ListAsync();
 var picWatchlist = await picAFlickApiClient.GetWatchlistAsync();
 var analysisResult = watchlistAnalyzer.Analyze((IEnumerable<WatchlistItemDto>)picWatchlist);
 
@@ -53,19 +53,19 @@ Console.WriteLine($"TV Shows: {analysisResult.TvShowCount}");
 Console.WriteLine($"Watched: {analysisResult.WatchedCount}");
 Console.WriteLine($"Unwatched: {analysisResult.UnwatchedCount}\n");
 
-Console.WriteLine("Titles:");
+Console.WriteLine("Here is your watchlist:");
 
-foreach (var item in capWatchlist.OrderByDescending(x => x.Id).Take(5))
+foreach (var item in picWatchlist.OrderByDescending(x => x.Id).Take(5))
 {
     var releaseYear = item.ReleaseDate.HasValue
         ? item.ReleaseDate.Value.Year.ToString()
         : "Unknown";
-    Console.WriteLine($" - {item.Title} - {releaseYear} ({item.MediaType})");
+    Console.WriteLine($"{item.Title} - {releaseYear}  ({item.MediaType}) | Watched: {item.Watched} | TmdbId: {item.TmdbId}");
 }
 
-const string CommandPrompt = "Commands: add | list | search | remove | watched |exit";
+const string CommandPrompt = "Available watchlist commands:\n> Commands: add | list | search | remove | watched | exit";
 
-Console.WriteLine("Capstone Chatbot Watchlist");
+Console.Write("\n> ");
 Console.WriteLine(CommandPrompt);
 
 while (true)
@@ -76,11 +76,9 @@ while (true)
     if (cmd is "exit" or "quit" or "q")
         break;
 
-    await watchlist.BackfillReleaseDatesAsync();
-
     if (cmd is "list")
     {
-        var items = await watchlist.ListAsync();
+        var items = await picAFlickApiClient.GetWatchlistAsync();
 
         if (items.Count == 0)
         {
@@ -91,11 +89,14 @@ while (true)
 
         foreach (var item in items)
         {
-            var releaseYear = item.ReleaseDate.HasValue ? item.ReleaseDate.Value.Year.ToString() : "Unknown";
-            Console.WriteLine($"{item.Title} - {releaseYear} | ({item.MediaType}) | Watched: {item.Watched} | Rating: {item.Rating} | TmdbId: {item.TmdbId}");
-        }
+            var releaseYear = item.ReleaseDate.HasValue && item.ReleaseDate.Value.Year > 1
+                ? item.ReleaseDate.Value.Year.ToString()
+                : "Unknown";
             
+            Console.WriteLine($"{item.Title} - {releaseYear}  ({item.MediaType}) | Watched: {item.Watched} | TmdbId: {item.TmdbId}");
+        }
 
+        Console.Write("\n> ");
         Console.WriteLine(CommandPrompt);
         continue;
     }
@@ -140,7 +141,16 @@ while (true)
             for (int i = 0; i < results.Count; i++)
             {
                 var result = results[i];
-                Console.WriteLine($"{i + 1}. {result.Title} ({result.MediaType}) | Release Date: {result.ReleaseDate}");
+
+                string releaseYear = "Unknown";
+
+                if (!string.IsNullOrWhiteSpace(result.ReleaseDate) &&
+                    DateTime.TryParse(result.ReleaseDate, out var parsedReleaseDate))
+                {
+                    releaseYear = parsedReleaseDate.Year.ToString();
+                }
+
+                Console.WriteLine($"{i + 1}. {result.Title} ({releaseYear}) | {result.MediaType}");
             }
 
             Console.WriteLine();
@@ -178,13 +188,17 @@ while (true)
                 releaseDate = parsedDate;
             }
 
-            await watchlist.AddAsync(
-                chosenResult.Title, 
-                releaseDate,
-                chosenResult.MediaType, 
-                chosenResult.TmdbId, 
-                null);
-            Console.WriteLine("Item added.");
+            await picAFlickApiClient.AddToWatchlistAsync(new WatchlistCreationDto
+            {
+                Title = chosenResult.Title,
+                MediaType = (PicAFlick.Domain.Enums.MediaType)chosenResult.MediaType,
+                TmdbId = chosenResult.TmdbId,
+                ReleaseDate = releaseDate
+            });
+
+            Console.Write("\n> ");
+            Console.WriteLine($"{chosenResult.Title} was added.");
+            Console.Write("\n> ");
             Console.WriteLine(CommandPrompt);
         }
         catch (Exception ex)
@@ -196,43 +210,15 @@ while (true)
 
     if (cmd is "add")
     {
-        Console.Write("Title: ");
-        var title = Console.ReadLine() ?? "";
-
-        Console.Write("Media Type (movie/tv): ");
-        var mediaTypeText = Console.ReadLine() ?? "";
-        MediaType mediaType = mediaTypeText.ToLowerInvariant() switch
-        {
-            "movie" => MediaType.Movie,
-            "tv" => MediaType.TvShow,
-            _ => MediaType.Unknown
-        };
-
-        Console.Write("Rating (1–5, halves allowed, optional): ");
-        var ratingText = Console.ReadLine();
-
-        decimal? rating = null;
-        if (!string.IsNullOrWhiteSpace(ratingText) && decimal.TryParse(ratingText, out var parsed)) 
-        {
-            rating = parsed;
-        }
-
-        try
-        {
-            await watchlist.AddAsync(title, null, mediaType, null, rating);
-            Console.WriteLine("Item added.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Could not add item: {ex.Message}");
-        }
+        Console.Write("\n> ");
+        Console.WriteLine("Manual add is not supported. Use 'search' to add items.");
         Console.WriteLine(CommandPrompt);
         continue;
     }
 
     if (cmd is "remove")
     {
-        var items = await watchlist.ListAsync();
+        var items = await picAFlickApiClient.GetWatchlistAsync();
 
         if (items.Count == 0)
         {
@@ -245,7 +231,12 @@ while (true)
         for (int i = 0; i < items.Count; i++)
         {
             var item = items[i];
-            Console.WriteLine($"{i + 1}. {item.Title} - {item.ReleaseDate} ({item.MediaType})");
+
+            var releaseYear = item.ReleaseDate.HasValue
+                ? item.ReleaseDate.Value.Year.ToString()
+                : "Unknown";
+
+            Console.WriteLine($"{i + 1}. {item.Title} - {releaseYear} ({item.MediaType})");
         }
 
         Console.Write("Enter a number to remove an item, or press Enter to return to the command prompt: ");
@@ -274,8 +265,8 @@ while (true)
         var itemToRemove = items[removeSelection - 1];
 
         try
-        {
-            await watchlist.RemoveAsync(itemToRemove.Id);
+        {   
+            await picAFlickApiClient.RemoveFromWatchlistAsync(itemToRemove.Id);
             Console.WriteLine("Item removed.");
         }
         catch (Exception ex)
@@ -283,13 +274,14 @@ while (true)
             Console.WriteLine($"Could not remove item: {ex.Message}");
         }
 
+        Console.Write("\n> ");
         Console.WriteLine(CommandPrompt);
         continue;
     }
 
     if (cmd is "watched")
     {
-        var items = await watchlist.ListAsync();
+        var items = await picAFlickApiClient.GetWatchlistAsync();
 
         if (items.Count == 0)
         {
@@ -302,7 +294,12 @@ while (true)
         for (int i = 0; i < items.Count; i++)
         {
             var item = items[i];
-            Console.WriteLine($"{i + 1}. {item.Title} - {item.ReleaseDate} ({item.MediaType}) | Watched: {item.Watched}");
+
+            var releaseYear = item.ReleaseDate.HasValue
+                ? item.ReleaseDate.Value.Year.ToString()
+                : "Unknown";
+
+            Console.WriteLine($"{i + 1}. {item.Title} - {releaseYear} ({item.MediaType}) | Watched: {item.Watched}");
         }
 
         Console.Write("Enter a number to mark an item as watched, or press Enter to return to the command prompt: ");
@@ -332,7 +329,7 @@ while (true)
 
         try
         {
-            await watchlist.MarkWatchedAsync(itemToMarkWatched.Id);
+            await picAFlickApiClient.MarkAsWatchedAsync(itemToMarkWatched.Id);
             Console.WriteLine("Item marked as watched.");
         }
         catch (Exception ex)
@@ -340,6 +337,7 @@ while (true)
             Console.WriteLine($"Could not mark item as watched: {ex.Message}");
         }
 
+        Console.Write("\n> ");
         Console.WriteLine(CommandPrompt);
         continue;
     }

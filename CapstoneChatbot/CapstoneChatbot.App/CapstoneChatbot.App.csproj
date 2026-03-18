@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\PicAFlick.Shared\PicAFlick.Shared.csproj" />
     <ProjectReference Include="..\CapstoneChatbot.Tmdb\CapstoneChatbot.Tmdb.csproj" />
   </ItemGroup>
 

@@ -13,11 +13,10 @@ namespace PicAFlick.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<WatchlistItem>> GetAllAsync(string? userId, CancellationToken ct = default)
+        public async Task<IEnumerable<WatchlistItem>> GetAllAsync(CancellationToken ct = default)
         {
             return await _context.WatchlistItems
                                  .AsNoTracking()
-                                 .Where(x => x.UserId == userId)
                                  .Include(x => x.UserMedia)
                                  .ToListAsync(ct);
         }
@@ -41,25 +40,25 @@ namespace PicAFlick.Data.Repositories
             return item;
         }
 
-        public async Task RemoveEntryAsync(int id, string userId, CancellationToken ct = default)
+        public async Task RemoveFromWatchlistAsync(int id, CancellationToken ct = default)
         {
             var entity = await _context.WatchlistItems
-                                       .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId, ct);
+                                       .FirstOrDefaultAsync(x => x.Id == id, ct);
 
             if (entity is null)
-                throw new KeyNotFoundException($"No watchlist item {id} for user {userId}");
+                throw new KeyNotFoundException($"No watchlist item with id {id}");
 
             _context.WatchlistItems.Remove(entity);
             await _context.SaveChangesAsync(ct);
         }
 
-        public async Task MarkAsWatchedAsync(int id, string userId, CancellationToken ct = default)
+        public async Task MarkAsWatchedAsync(int id, CancellationToken ct = default)
         {
             var entity = await _context.WatchlistItems
-                                       .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId, ct);
+                                       .FirstOrDefaultAsync(x => x.Id == id, ct);
 
             if (entity is null)
-                throw new KeyNotFoundException($"No watchlist item {id} for user {userId}");
+                throw new KeyNotFoundException($"No watchlist item with id {id}");
 
             entity.Watched = true;
             await _context.SaveChangesAsync(ct);
@@ -77,6 +76,19 @@ namespace PicAFlick.Data.Repositories
             _context.Set<UserMedia>().Add(media);
             await _context.SaveChangesAsync(ct);
             return media;
+        }
+
+        public async Task<WatchlistItem?> GetByUserMediaIdAsync(int userMediaId, CancellationToken ct = default)
+        {
+            return await _context.WatchlistItems
+                .AsNoTracking()
+                .Include(x => x.UserMedia)
+                .FirstOrDefaultAsync(x => x.UserMediaId == userMediaId, ct);
+        }
+        public async Task UpdateUserMediaAsync(UserMedia media, CancellationToken ct = default)
+        {
+            _context.UserMedia.Update(media);
+            await _context.SaveChangesAsync(ct);
         }
     }
 }

@@ -14,14 +14,12 @@ namespace PicAFlick.Data.Context
         {
             modelBuilder.Entity<WatchlistItem>(entity =>
             {
-                entity.Property(x => x.UserId).IsRequired();
-
                 entity.HasOne(x => x.UserMedia)
                       .WithMany()                         
                       .HasForeignKey(x => x.UserMediaId)
-                      .IsRequired();                     
-                entity.HasIndex(x => new { x.UserId, x.UserMediaId }).IsUnique(); 
-             // entity.Property(e => e.Rating).HasColumnType("tinyint");
+                      .IsRequired();
+                entity.HasIndex(x => x.UserMediaId).IsUnique();
+                // entity.Property(e => e.Rating).HasColumnType("tinyint");
             });
 
             modelBuilder.Entity<UserMedia>(entity =>
