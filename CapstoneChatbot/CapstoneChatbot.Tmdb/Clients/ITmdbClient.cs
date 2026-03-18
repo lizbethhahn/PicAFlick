@@ -9,4 +9,9 @@ public interface ITmdbClient
         string query,
         MediaType mediaType,
         CancellationToken cancellationToken = default);
+    
+    Task<TmdbSearchResult?> GetByIdAsync(
+        int tmdbId, 
+        MediaType mediaType, 
+        CancellationToken cancellationToken = default);
 }

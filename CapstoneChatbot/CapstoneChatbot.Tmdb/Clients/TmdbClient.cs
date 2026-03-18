@@ -46,5 +46,33 @@ namespace CapstoneChatbot.Tmdb.Clients
                 })
                 .ToList();
         }
+
+        public async Task<TmdbSearchResult?> GetByIdAsync(int tmdbId, MediaType mediaType, CancellationToken cancellationToken = default)
+        {
+            var endpoint = mediaType switch
+            {
+                MediaType.Movie => $"movie/{tmdbId}",
+                MediaType.TvShow => $"tv/{tmdbId}",
+                _ => throw new ArgumentException("Invalid media type.", nameof(mediaType))
+            };
+            var response = await _httpClient.GetFromJsonAsync<TmdbSearchItemDto>(
+                endpoint,
+                cancellationToken);
+
+            if (response is null)
+            {
+                return null;
+            }
+
+            return new TmdbSearchResult
+            {
+                TmdbId = response.Id,
+                Title = response.Title ?? response.Name ?? string.Empty,
+                MediaType = mediaType,
+                ReleaseDate = response.ReleaseDate ?? response.FirstAirDate,
+                Overview = response.Overview,
+                PosterPath = response.PosterPath
+            };
+        }
     }
 }

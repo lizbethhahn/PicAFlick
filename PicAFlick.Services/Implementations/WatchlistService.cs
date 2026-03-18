@@ -16,9 +16,9 @@ namespace PicAFlick.Services.Implementations
             _repo = repo;
         }
 
-        public async Task<IEnumerable<WatchlistDisplayDto>> GetAllAsync(string userId, CancellationToken ct = default)
+        public async Task<IEnumerable<WatchlistDisplayDto>> GetAllAsync(CancellationToken ct = default)
         {
-            var entities = await _repo.GetAllAsync(userId, ct);
+            var entities = await _repo.GetAllAsync(ct);
             return entities.Select(WatchlistMapper.MapToDisplayDto);
         }
 
@@ -29,31 +29,50 @@ namespace PicAFlick.Services.Implementations
             return WatchlistMapper.MapToDisplayDto(entity);
         }
 
-        public async Task<WatchlistDisplayDto?> AddAsync(WatchlistCreationDto dto, string userId, CancellationToken ct = default)
+        public async Task<WatchlistDisplayDto?> AddAsync(WatchlistCreationDto dto, CancellationToken ct = default)
         {
             var media = await _repo.GetUserMediaByTmdbIdAsync(dto.TmdbId, ct);
+
+            // create media if it doesn't exist
             if (media is null)
             {
-                media = await _repo.AddUserMediaAsync(new UserMedia
+                media = new UserMedia
                 {
                     TmdbId = dto.TmdbId,
                     Title = dto.Title,
                     MediaType = dto.MediaType,
-                }, ct);
+                    ReleaseDate = dto.ReleaseDate
+                };
+
+                media = await _repo.AddUserMediaAsync(media, ct);
+            }
+            // backfill release date if missing
+            else if (media.ReleaseDate == null && dto.ReleaseDate.HasValue)
+            {
+                media.ReleaseDate = dto.ReleaseDate;
+                await _repo.UpdateUserMediaAsync(media, ct);
             }
 
-            var entity = WatchlistMapper.MapFromCreationDto(dto, userId);
+            var existingItem = await _repo.GetByUserMediaIdAsync(media.Id, ct);
+            if (existingItem is not null)
+            {
+                return WatchlistMapper.MapToDisplayDto(existingItem);
+            }
+
+            var entity = WatchlistMapper.MapFromCreationDto(dto);
             entity.UserMediaId = media.Id;
             entity.UserMedia = null!;
 
             var savedEntity = await _repo.AddAsync(entity, ct);
+            savedEntity.UserMedia = media;
+
             return WatchlistMapper.MapToDisplayDto(savedEntity);
         }
 
-        public async Task RemoveEntryAsync(int id, string userId, CancellationToken ct = default)
-            => await _repo.RemoveEntryAsync(id, userId, ct);
+        public async Task RemoveFromWatchlistAsync(int id, CancellationToken ct = default)
+            => await _repo.RemoveFromWatchlistAsync(id, ct);
 
-        public async Task MarkAsWatchedAsync(int id, string userId, CancellationToken ct = default)
-            => await _repo.MarkAsWatchedAsync(id, userId, ct);
+        public async Task MarkAsWatchedAsync(int id, CancellationToken ct = default)
+            => await _repo.MarkAsWatchedAsync(id, ct);
     }
 }

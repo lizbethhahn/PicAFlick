@@ -10,6 +10,7 @@ namespace PicAFlick.Domain.Entities
         public string Title { get; set; } = string.Empty;
         public string? Overview { get; set; }       // from TMDb
         public string? PosterPath { get; set; }     // TMDb gives relative path (e.g., "/abc.jpg")
+        public DateTime? ReleaseDate { get; set; }
 
      // public DateTime LastSyncedUtc { get; set; } = DateTime.UtcNow;
     }

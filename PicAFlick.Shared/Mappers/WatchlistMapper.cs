@@ -6,14 +6,12 @@ namespace PicAFlick.Domain.Services.Mappers
 {
     public static class WatchlistMapper
     {
-        public static WatchlistItem MapFromCreationDto(WatchlistCreationDto dto, string? userId)
+        public static WatchlistItem MapFromCreationDto(WatchlistCreationDto dto)
         {
             return new WatchlistItem
             {
-                UserId = userId,
                 Notes = dto.Notes,
-                Watched = false,
-             // Rating = dto.UserRating
+                Watched = false
             };
         }
 
@@ -31,6 +29,7 @@ namespace PicAFlick.Domain.Services.Mappers
                 Watched = entity.Watched,
                 PosterPath = media.PosterPath,
                 Overview = media.Overview,
+                ReleaseDate = media.ReleaseDate,
              // UserRating = entity.Rating
             };
         }
