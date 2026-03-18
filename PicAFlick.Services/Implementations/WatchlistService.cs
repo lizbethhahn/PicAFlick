@@ -32,7 +32,22 @@ namespace PicAFlick.Services.Implementations
         public async Task<WatchlistDisplayDto?> AddAsync(WatchlistCreationDto dto, CancellationToken ct = default)
         {
             var media = await _repo.GetUserMediaByTmdbIdAsync(dto.TmdbId, ct);
-            if (media is not null && media.ReleaseDate == null && dto.ReleaseDate.HasValue)
+
+            // create media if it doesn't exist
+            if (media is null)
+            {
+                media = new UserMedia
+                {
+                    TmdbId = dto.TmdbId,
+                    Title = dto.Title,
+                    MediaType = dto.MediaType,
+                    ReleaseDate = dto.ReleaseDate
+                };
+
+                media = await _repo.AddUserMediaAsync(media, ct);
+            }
+            // backfill release date if missing
+            else if (media.ReleaseDate == null && dto.ReleaseDate.HasValue)
             {
                 media.ReleaseDate = dto.ReleaseDate;
                 await _repo.UpdateUserMediaAsync(media, ct);
