@@ -4,11 +4,11 @@ using System.Net.Http.Json;
 
 namespace CapstoneChatbot.Tmdb.Clients
 {
-    public class TmdbClient : ITmdbClient
+    public class TmdbApiClient : ITmdbApiClient
     {
         private readonly HttpClient _httpClient;
 
-        public TmdbClient(HttpClient httpClient)
+        public TmdbApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

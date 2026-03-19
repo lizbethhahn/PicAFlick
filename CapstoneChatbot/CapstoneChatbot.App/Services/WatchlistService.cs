@@ -10,12 +10,12 @@ namespace CapstoneChatbot.App.Services;
 public class WatchlistService
 {
     private readonly CapstoneDbContext _db;
-    private readonly ITmdbClient _tmdbClient;
+    private readonly ITmdbApiClient _tmdbApiClient;
 
-    public WatchlistService(CapstoneDbContext db, ITmdbClient tmdbClient)
+    public WatchlistService(CapstoneDbContext db, ITmdbApiClient tmdbApiClient)
     {
         _db = db;
-        _tmdbClient = tmdbClient;
+        _tmdbApiClient = tmdbApiClient;
     }
 
     public async Task AddAsync(string title, DateTime? releaseDate, MediaType mediaType, int? tmdbId, decimal? rating)
@@ -86,7 +86,7 @@ public class WatchlistService
             {
                 continue;
             }
-            var tmdbItem = await _tmdbClient.GetByIdAsync(item.TmdbId.Value, item.MediaType);
+            var tmdbItem = await _tmdbApiClient.GetByIdAsync(item.TmdbId.Value, item.MediaType);
 
             if (tmdbItem is not null &&
                 !string.IsNullOrWhiteSpace(tmdbItem.ReleaseDate) &&

@@ -23,7 +23,7 @@ using var httpClient = new HttpClient
 
 httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {tmdbApiToken}");
 
-var tmdbClient = new TmdbClient(httpClient);
+var tmdbApiClient = new TmdbApiClient(httpClient);
 
 var dbPath = Path.Combine(AppContext.BaseDirectory, "capstone.db");
 var connectionString = $"Data Source={dbPath}";
@@ -40,7 +40,7 @@ var picHttpClient = new HttpClient
 };
 
 var picAFlickApiClient = new PicAFlickApiClient(picHttpClient);
-var watchlist = new WatchlistService(db, tmdbClient);
+var watchlist = new WatchlistService(db, tmdbApiClient);
 var watchlistAnalyzer = new WatchlistAnalyzer();
 
 var picWatchlist = await picAFlickApiClient.GetWatchlistAsync();
@@ -128,7 +128,7 @@ while (true)
 
         try
         {
-            var results = await tmdbClient.SearchAsync(query, mediaType);
+            var results = await tmdbApiClient.SearchAsync(query, mediaType);
 
             if (results.Count == 0)
             {
