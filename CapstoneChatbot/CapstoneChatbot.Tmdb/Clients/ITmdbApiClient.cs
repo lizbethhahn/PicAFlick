@@ -3,7 +3,7 @@ using CapstoneChatbot.Tmdb.Enums;
 
 namespace CapstoneChatbot.Tmdb.Clients;
 
-public interface ITmdbClient
+public interface ITmdbApiClient
 {
     Task<IReadOnlyList<TmdbSearchResult>> SearchAsync(
         string query,
