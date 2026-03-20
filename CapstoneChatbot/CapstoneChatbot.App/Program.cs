@@ -354,7 +354,6 @@ while (true)
         });
 
         var joined = string.Join(Environment.NewLine, lines);
-        Console.WriteLine("\n--- Watchlist Analyzer ---\n");
 
         try
         {
@@ -375,19 +374,35 @@ while (true)
 
             Analyze the user's watchlist and:
             1. Summarize patterns
-            2. Recommend ONE thing to watch next
+            2. Recommend EXACTLY ONE item FROM the watchlist
             3. Explain why
 
-            Use ONLY the data provided.
-
+            Rules:
+            - Use ONLY the data provided
+            - Only recommend titles that appear in the watchlist
+            - Prefer unwatched items
+            - If all items are watched, suggest one rewatch from the list
+            - Do NOT suggest anything not in the list
+            
+            Formatting:
+            - Return plain text only (no markdown)
+            - Use simple headers like: Summary:, Recommendation:, Reasoning:
+            - Use dots (•) for bullet points
+            - Do not use #, *, or markdown syntax
+            - Don't wrap text, keep width to 80 characters, including spaces
+        
             Watchlist:
             {joined}
             ";
 
             var resultContext = await kernel.InvokePromptAsync(prompt);
+            Console.WriteLine("\n--- Watchlist Analyzer ---\n");
             var aiReply = resultContext.ToString();
 
-            Console.WriteLine(aiReply);
+            Console.WriteLine(aiReply.Trim());
+
+            Console.WriteLine("\nPress Enter to continue...");
+            Console.ReadLine();
         }
         catch (Exception ex)
         {
