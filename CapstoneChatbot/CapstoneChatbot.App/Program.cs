@@ -1,13 +1,12 @@
 ﻿using CapstoneChatbot.App.Data;
 using CapstoneChatbot.App.Clients;
 using CapstoneChatbot.App.Services;
-using CapstoneChatbot.App.Models;
 using CapstoneChatbot.Tmdb.Enums;
 using CapstoneChatbot.Tmdb.Clients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.Formats.Tar;
 using PicAFlick.Shared.Contracts;
+using Microsoft.SemanticKernel;
 
 var configuration = new ConfigurationBuilder()
     .AddUserSecrets<Program>()
@@ -63,7 +62,7 @@ foreach (var item in picWatchlist.OrderByDescending(x => x.Id).Take(5))
     Console.WriteLine($"{item.Title} - {releaseYear}  ({item.MediaType}) | Watched: {item.Watched} | TmdbId: {item.TmdbId}");
 }
 
-const string CommandPrompt = "Available watchlist commands:\n> Commands: add | list | search | remove | watched | exit";
+const string CommandPrompt = "Available watchlist commands:\n> Commands: add | list | search | remove | watched | analyze | exit";
 
 Console.Write("\n> ");
 Console.WriteLine(CommandPrompt);
@@ -335,6 +334,65 @@ while (true)
         catch (Exception ex)
         {
             Console.WriteLine($"Could not mark item as watched: {ex.Message}");
+        }
+
+        Console.Write("\n> ");
+        Console.WriteLine(CommandPrompt);
+        continue;
+    }
+
+    if (cmd is "analyze")
+    {
+        var items = await picAFlickApiClient.GetWatchlistAsync();
+
+        var lines = items.Select(item =>
+        {
+            var releaseYear = item.ReleaseDate.HasValue && item.ReleaseDate.Value.Year > 1
+                ? item.ReleaseDate.Value.Year.ToString()
+                : "Unknown";
+            return $"{item.Title} | {releaseYear} | {item.MediaType} | {item.Watched}";
+        });
+
+        var joined = string.Join(Environment.NewLine, lines);
+        Console.WriteLine("\n--- Watchlist Analyzer ---\n");
+
+        try
+        {
+            var githubToken = configuration["GithubModels:ApiKey"]
+                              ?? throw new InvalidOperationException("GithubModels:ApiKey user secret is missing.");
+
+            var kernelBuilder = Kernel.CreateBuilder()
+                .AddOpenAIChatCompletion(
+                    modelId: "openai/gpt-4o",
+                    apiKey: githubToken,
+                    endpoint: new Uri("https://models.github.ai/inference")
+                );
+
+            var kernel = kernelBuilder.Build();
+
+            var prompt = $@"
+            You are a movie and TV recommendation assistant.
+
+            Analyze the user's watchlist and:
+            1. Summarize patterns
+            2. Recommend ONE thing to watch next
+            3. Explain why
+
+            Use ONLY the data provided.
+
+            Watchlist:
+            {joined}
+            ";
+
+            var resultContext = await kernel.InvokePromptAsync(prompt);
+            var aiReply = resultContext.ToString();
+
+            Console.WriteLine(aiReply);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"AI call failed: {ex.Message}");
+            Console.WriteLine(joined);
         }
 
         Console.Write("\n> ");
