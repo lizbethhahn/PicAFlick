@@ -1,12 +1,13 @@
-﻿using CapstoneChatbot.App.Data;
-using CapstoneChatbot.App.Clients;
+﻿using CapstoneChatbot.App.Clients;
+using CapstoneChatbot.App.Data;
 using CapstoneChatbot.App.Services;
-using CapstoneChatbot.Tmdb.Enums;
 using CapstoneChatbot.Tmdb.Clients;
+using CapstoneChatbot.Tmdb.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using PicAFlick.Shared.Contracts;
 using Microsoft.SemanticKernel;
+using PicAFlick.Shared.Contracts;
+using System;
 
 var configuration = new ConfigurationBuilder()
     .AddUserSecrets<Program>()
@@ -39,7 +40,6 @@ var picHttpClient = new HttpClient
 };
 
 var picAFlickApiClient = new PicAFlickApiClient(picHttpClient);
-var watchlist = new WatchlistService(db, tmdbApiClient);
 var watchlistAnalyzer = new WatchlistAnalyzer();
 
 var picWatchlist = await picAFlickApiClient.GetWatchlistAsync();
@@ -383,14 +383,25 @@ while (true)
             - Prefer unwatched items
             - If all items are watched, suggest one rewatch from the list
             - Do NOT suggest anything not in the list
-            
+
             Formatting:
             - Return plain text only (no markdown)
             - Use simple headers like: Summary:, Recommendation:, Reasoning:
             - Use dots (•) for bullet points
             - Do not use #, *, or markdown syntax
             - Don't wrap text, keep width to 80 characters, including spaces
-        
+
+            Output format (strict):
+            Summary:
+            • ...
+            Recommendation:
+            Title | Year | MediaType
+            Reasoning:
+            • ...
+
+            Follow the output format exactly. Do not add any extra text before or after.
+            Return the recommended title exactly as it appears in the watchlist.
+
             Watchlist:
             {joined}
             ";
@@ -401,8 +412,124 @@ while (true)
 
             Console.WriteLine(aiReply.Trim());
 
-            Console.WriteLine("\nPress Enter to continue...");
-            Console.ReadLine();
+            Console.Write("\nType 'watch' to mark the recommended item as watched, or press Enter to continue: ");
+            var userInput = (Console.ReadLine() ?? "").Trim().ToLowerInvariant();
+
+            if (userInput == "watch")
+            {
+                var responseLines = aiReply
+                    .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(line => line.Trim())
+                    .ToList();
+
+                var recIndex = responseLines.FindIndex(line =>
+                    line.StartsWith("Recommendation:", StringComparison.OrdinalIgnoreCase));
+
+                if (recIndex == -1)
+                {
+                    Console.WriteLine("Could not find a recommendation in the AI response.");
+                }
+                else
+                {
+                    var recommendationValue = responseLines[recIndex]["Recommendation:".Length..].Trim();
+
+                    if (string.IsNullOrWhiteSpace(recommendationValue) && recIndex + 1 < responseLines.Count)
+                    {
+                        var nextLine = responseLines[recIndex + 1].Trim();
+
+                        var isAnotherSectionHeader =
+                            nextLine.StartsWith("Summary:", StringComparison.OrdinalIgnoreCase) ||
+                            nextLine.StartsWith("Recommendation:", StringComparison.OrdinalIgnoreCase) ||
+                            nextLine.StartsWith("Reasoning:", StringComparison.OrdinalIgnoreCase);
+
+                        if (!isAnotherSectionHeader)
+                        {
+                            recommendationValue = nextLine;
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(recommendationValue))
+                    {
+                        Console.WriteLine("The recommendation was empty or malformed.");
+                    }
+                    else
+                    {
+                        var parts = recommendationValue
+                            .Split('|', StringSplitOptions.TrimEntries)
+                            .ToList();
+
+                        var titlePart = parts.Count > 0 ? parts[0] : "";
+                        var yearPart = parts.Count > 1 ? parts[1] : "";
+                        var mediaTypePart = parts.Count > 2 ? parts[2] : "";
+                        var normalizedMediaTypePart = mediaTypePart.Replace(" ", "");
+
+                        if (titlePart.StartsWith("Watch ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            titlePart = titlePart.Substring("Watch ".Length).Trim();
+                        }
+
+                        int? parsedYear = null;
+                        if (int.TryParse(yearPart, out var year))
+                        {
+                            parsedYear = year;
+                        }
+
+                        var exactMatches = items.Where(it =>
+                            string.Equals(it.Title, titlePart, StringComparison.OrdinalIgnoreCase) &&
+                            (!parsedYear.HasValue || it.ReleaseDate.HasValue && it.ReleaseDate.Value.Year == parsedYear.Value) &&
+                            (string.IsNullOrWhiteSpace(mediaTypePart) ||
+                             string.Equals(it.MediaType.ToString(), normalizedMediaTypePart, StringComparison.OrdinalIgnoreCase)))
+                            .ToList();
+
+                        var titleAndYearMatches = items.Where(it =>
+                            string.Equals(it.Title, titlePart, StringComparison.OrdinalIgnoreCase) &&
+                            (!parsedYear.HasValue || it.ReleaseDate.HasValue && it.ReleaseDate.Value.Year == parsedYear.Value))
+                            .ToList();
+
+                        var titleOnlyMatches = items.Where(it =>
+                            string.Equals(it.Title, titlePart, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+
+                        var candidateMatches = exactMatches.Any()
+                            ? exactMatches
+                            : titleAndYearMatches.Any()
+                                ? titleAndYearMatches
+                                : titleOnlyMatches;
+
+                        if (!candidateMatches.Any())
+                        {
+                            Console.WriteLine($"'{titlePart}' was not found in your watchlist.");
+                        }
+                        else if (candidateMatches.Count > 1)
+                        {
+                            Console.WriteLine(
+                                $"More than one watchlist item matched '{titlePart}'. " +
+                                "The recommendation was ambiguous, so nothing was marked as watched.");
+                        }
+                        else
+                        {
+                            var match = candidateMatches.Single();
+
+                            if (match.Watched)
+                            {
+                                Console.WriteLine($"'{match.Title}' is already marked as watched.");
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    await picAFlickApiClient.MarkAsWatchedAsync(match.Id);
+                                    Console.WriteLine($"'{match.Title}' has been marked as watched.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"Failed to mark as watched: {ex.Message}");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         catch (Exception ex)
         {
