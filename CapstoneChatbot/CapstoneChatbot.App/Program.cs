@@ -149,7 +149,13 @@ while (true)
                     releaseYear = parsedReleaseDate.Year.ToString();
                 }
 
+                string posterUrl = string.IsNullOrWhiteSpace(result.PosterPath)
+                    ? "Poster: none"
+                    : $"Poster: https://image.tmdb.org/t/p/w500{result.PosterPath}";
+
                 Console.WriteLine($"{i + 1}. {result.Title} ({releaseYear}) | {result.MediaType}");
+                Console.WriteLine($"   {posterUrl}");
+                Console.WriteLine();
             }
 
             Console.WriteLine();
