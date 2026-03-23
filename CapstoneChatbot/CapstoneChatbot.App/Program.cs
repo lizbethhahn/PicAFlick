@@ -105,6 +105,51 @@ while (true)
         Console.Write("Search Title: ");
         var query = Console.ReadLine() ?? "";
 
+        // AI-assisted query cleanup
+        try
+        {
+            var githubToken = configuration["GithubModels:ApiKey"];
+            if (!string.IsNullOrEmpty(githubToken))
+            {
+                var kernelBuilder = Kernel.CreateBuilder()
+                    .AddOpenAIChatCompletion(
+                        modelId: "openai/gpt-4o",
+                        apiKey: githubToken,
+                        endpoint: new Uri("https://models.github.ai/inference")
+                    );
+
+                var kernel = kernelBuilder.Build();
+
+                var cleanupPrompt = $@"
+                You are helping clean up a movie or TV title search query.
+
+                Return ONLY a single cleaned title query.
+                Do not explain.
+                Do not use quotes.
+                Do not add labels.
+                Do not add extra text.
+
+                If the input already looks usable, return it unchanged.
+
+                Input:
+                {query}
+                ";
+
+                var resultContext = await kernel.InvokePromptAsync(cleanupPrompt);
+                var cleanedQuery = resultContext.ToString().Trim();
+
+                if (!string.IsNullOrWhiteSpace(cleanedQuery))
+                {
+                    query = cleanedQuery;
+                    Console.WriteLine($"Cleaned query: {query}");
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // Fall back to original query
+        }
+
         MediaType mediaType;
 
         while (true)
