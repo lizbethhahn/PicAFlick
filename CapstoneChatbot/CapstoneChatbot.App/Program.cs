@@ -1,5 +1,6 @@
 ﻿using CapstoneChatbot.App.Clients;
 using CapstoneChatbot.App.Data;
+using CapstoneChatbot.App.Models;
 using CapstoneChatbot.App.Services;
 using CapstoneChatbot.Tmdb.Clients;
 using CapstoneChatbot.Tmdb.Enums;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using PicAFlick.Shared.Contracts;
-using System;
+using Sprache;
 
 var configuration = new ConfigurationBuilder()
     .AddUserSecrets<Program>()
@@ -62,7 +63,7 @@ foreach (var item in picWatchlist.OrderByDescending(x => x.Id).Take(5))
     Console.WriteLine($"{item.Title} - {releaseYear}  ({item.MediaType}) | Watched: {item.Watched} | TmdbId: {item.TmdbId}");
 }
 
-const string CommandPrompt = "Available watchlist commands:\n> Commands: add | list | search | remove | watched | analyze | exit";
+const string CommandPrompt = "Available watchlist commands:\n> Commands: add | list | search | remove | watched | analyze | chat | exit";
 
 Console.Write("\n> ");
 Console.WriteLine(CommandPrompt);
@@ -91,7 +92,7 @@ while (true)
             var releaseYear = item.ReleaseDate.HasValue && item.ReleaseDate.Value.Year > 1
                 ? item.ReleaseDate.Value.Year.ToString()
                 : "Unknown";
-            
+
             Console.WriteLine($"{item.Title} - {releaseYear}  ({item.MediaType}) | Watched: {item.Watched} | TmdbId: {item.TmdbId}");
         }
 
@@ -315,7 +316,7 @@ while (true)
         var itemToRemove = items[removeSelection - 1];
 
         try
-        {   
+        {
             await picAFlickApiClient.RemoveFromWatchlistAsync(itemToRemove.Id);
             Console.WriteLine("Item removed.");
         }
@@ -395,6 +396,7 @@ while (true)
     if (cmd is "analyze")
     {
         var items = await picAFlickApiClient.GetWatchlistAsync();
+        var session = new ChatSession();
 
         var lines = items.Select(item =>
         {
@@ -593,6 +595,81 @@ while (true)
         continue;
     }
 
-    Console.WriteLine("Unknown command.");
-    Console.WriteLine(CommandPrompt);
+    if (cmd is "chat")
+    {
+        var session = new ChatSession();
+
+        var items = await picAFlickApiClient.GetWatchlistAsync();
+
+        if (items.Count == 0)
+        {
+            Console.WriteLine("Your watchlist is empty.");
+            Console.Write("\n> ");
+            Console.WriteLine(CommandPrompt);
+            continue;
+        }
+
+        var joined = string.Join(Environment.NewLine, items.Select(item =>
+            $"{item.Title} | {item.ReleaseDate?.Year} | {item.MediaType} | Watched: {item.Watched}"));
+
+        Console.WriteLine("Chat mode started. Type 'exit' to leave chat.");
+
+        while (true)
+        {
+            Console.Write("\nYou: ");
+            var input = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrWhiteSpace(input))
+                continue;
+
+            if (input.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                break;
+
+            session.ConversationHistory.Add($"User: {input}");
+            var conversationHistory = string.Join(Environment.NewLine, session.ConversationHistory);
+
+            try
+            {
+                var githubToken = configuration["GithubModels:ApiKey"]
+                                  ?? throw new InvalidOperationException("GithubModels:ApiKey user secret is missing.");
+
+                var kernelBuilder = Kernel.CreateBuilder()
+                    .AddOpenAIChatCompletion(
+                        modelId: "openai/gpt-4o",
+                        apiKey: githubToken,
+                        endpoint: new Uri("https://models.github.ai/inference")
+                    );
+
+                var kernel = kernelBuilder.Build();
+
+                var promptchat = $@"
+                You are a movie and TV assistant.
+
+                The user has this watchlist:
+                {joined}
+
+                Conversation so far:
+                {conversationHistory}
+
+                Respond conversationally and make a recommendation if appropriate.
+                ";
+
+                var result = await kernel.InvokePromptAsync(promptchat);
+                var reply = result.ToString();
+
+                Console.WriteLine($"Bot: {reply}");
+                session.ConversationHistory.Add($"Bot: {reply}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"AI call failed: {ex.Message}");
+                Console.WriteLine("Last user input:");
+                Console.WriteLine(input);
+            }
+        }
+
+        Console.Write("\n> ");
+        Console.WriteLine(CommandPrompt);
+        continue;
+    }
 }
