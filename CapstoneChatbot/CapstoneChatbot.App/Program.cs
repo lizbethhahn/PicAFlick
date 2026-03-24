@@ -1,5 +1,7 @@
 ﻿using CapstoneChatbot.App.Clients;
+using CapstoneChatbot.App.Commands;
 using CapstoneChatbot.App.Data;
+using CapstoneChatbot.App.Helpers;
 using CapstoneChatbot.App.Models;
 using CapstoneChatbot.App.Services;
 using CapstoneChatbot.Tmdb.Clients;
@@ -64,14 +66,12 @@ foreach (var item in picWatchlist.OrderByDescending(x => x.Id).Take(5))
     Console.WriteLine($"{item.Title} - {releaseYear}  ({item.MediaType}) | Watched: {item.Watched} | TmdbId: {item.TmdbId}");
 }
 
-const string CommandPrompt = "Available watchlist commands:\n> Commands: add | list | search | remove | watched | analyze | chat | exit";
-
-Console.Write("\n> ");
-Console.WriteLine(CommandPrompt);
+Console.WriteLine();
+Console.WriteLine(ConsoleHelper.CommandPrompt);
 
 while (true)
 {
-    Console.Write("\n> ");
+    Console.WriteLine();
     var cmd = (Console.ReadLine() ?? "").Trim().ToLowerInvariant();
 
     if (cmd is "exit" or "quit" or "q")
@@ -79,27 +79,7 @@ while (true)
 
     if (cmd is "list")
     {
-        var items = await picAFlickApiClient.GetWatchlistAsync();
-
-        if (items.Count == 0)
-        {
-            Console.WriteLine("Watchlist is empty.");
-            continue;
-        }
-
-
-        foreach (var item in items)
-        {
-            var releaseYear = item.ReleaseDate.HasValue && item.ReleaseDate.Value.Year > 1
-                ? item.ReleaseDate.Value.Year.ToString()
-                : "Unknown";
-
-            Console.WriteLine($"{item.Title} - {releaseYear}  ({item.MediaType}) | Watched: {item.Watched} | TmdbId: {item.TmdbId}");
-        }
-
-        Console.Write("\n> ");
-        Console.WriteLine(CommandPrompt);
-        continue;
+        await ListCommand.ExecuteAsync(picAFlickApiClient);
     }
 
     if (cmd is "search")
@@ -179,7 +159,8 @@ while (true)
             if (results.Count == 0)
             {
                 Console.WriteLine("No results found.");
-                Console.WriteLine(CommandPrompt);
+                Console.WriteLine();
+                Console.WriteLine(ConsoleHelper.CommandPrompt);
                 continue;
             }
 
@@ -211,21 +192,24 @@ while (true)
 
             if (string.IsNullOrWhiteSpace(selectionInput))
             {
-                Console.WriteLine(CommandPrompt);
+                Console.WriteLine();
+                Console.WriteLine(ConsoleHelper.CommandPrompt);
                 continue;
             }
 
             if (!int.TryParse(selectionInput, out int selection))
             {
                 Console.WriteLine("Invalid selection.");
-                Console.WriteLine(CommandPrompt);
+                Console.WriteLine();
+                Console.WriteLine(ConsoleHelper.CommandPrompt);
                 continue;
             }
 
             if (selection < 1 || selection > results.Count)
             {
                 Console.WriteLine("Selection out of range.");
-                Console.WriteLine(CommandPrompt);
+                Console.WriteLine();
+                Console.WriteLine(ConsoleHelper.CommandPrompt);
                 continue;
             }
 
@@ -248,10 +232,10 @@ while (true)
                 ReleaseDate = releaseDate
             });
 
-            Console.Write("\n> ");
+            Console.WriteLine();
             Console.WriteLine($"{chosenResult.Title} was added.");
-            Console.Write("\n> ");
-            Console.WriteLine(CommandPrompt);
+            Console.WriteLine();
+            Console.WriteLine(ConsoleHelper.CommandPrompt);
         }
         catch (Exception ex)
         {
@@ -262,136 +246,21 @@ while (true)
 
     if (cmd is "add")
     {
-        Console.Write("\n> ");
+        Console.WriteLine();
         Console.WriteLine("Manual add is not supported. Use 'search' to add items.");
-        Console.WriteLine(CommandPrompt);
+        Console.WriteLine();
+        Console.WriteLine(ConsoleHelper.CommandPrompt);
         continue;
     }
 
     if (cmd is "remove")
     {
-        var items = await picAFlickApiClient.GetWatchlistAsync();
-
-        if (items.Count == 0)
-        {
-            Console.WriteLine("Watchlist is empty.");
-            Console.WriteLine(CommandPrompt);
-            continue;
-        }
-
-        Console.WriteLine("Watchlist:");
-        for (int i = 0; i < items.Count; i++)
-        {
-            var item = items[i];
-
-            var releaseYear = item.ReleaseDate.HasValue
-                ? item.ReleaseDate.Value.Year.ToString()
-                : "Unknown";
-
-            Console.WriteLine($"{i + 1}. {item.Title} - {releaseYear} ({item.MediaType})");
-        }
-
-        Console.Write("Enter a number to remove an item, or press Enter to return to the command prompt: ");
-        var removeInput = Console.ReadLine();
-
-        if (string.IsNullOrWhiteSpace(removeInput))
-        {
-            Console.WriteLine(CommandPrompt);
-            continue;
-        }
-
-        if (!int.TryParse(removeInput, out int removeSelection))
-        {
-            Console.WriteLine("Invalid selection.");
-            Console.WriteLine(CommandPrompt);
-            continue;
-        }
-
-        if (removeSelection < 1 || removeSelection > items.Count)
-        {
-            Console.WriteLine("Selection out of range.");
-            Console.WriteLine(CommandPrompt);
-            continue;
-        }
-
-        var itemToRemove = items[removeSelection - 1];
-
-        try
-        {
-            await picAFlickApiClient.RemoveFromWatchlistAsync(itemToRemove.Id);
-            Console.WriteLine("Item removed.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Could not remove item: {ex.Message}");
-        }
-
-        Console.Write("\n> ");
-        Console.WriteLine(CommandPrompt);
-        continue;
+        await RemoveCommand.ExecuteAsync(picAFlickApiClient);
     }
 
     if (cmd is "watched")
     {
-        var items = await picAFlickApiClient.GetWatchlistAsync();
-
-        if (items.Count == 0)
-        {
-            Console.WriteLine("Watchlist is empty.");
-            Console.WriteLine(CommandPrompt);
-            continue;
-        }
-
-        Console.WriteLine("Watchlist:");
-        for (int i = 0; i < items.Count; i++)
-        {
-            var item = items[i];
-
-            var releaseYear = item.ReleaseDate.HasValue
-                ? item.ReleaseDate.Value.Year.ToString()
-                : "Unknown";
-
-            Console.WriteLine($"{i + 1}. {item.Title} - {releaseYear} ({item.MediaType}) | Watched: {item.Watched}");
-        }
-
-        Console.Write("Enter a number to mark an item as watched, or press Enter to return to the command prompt: ");
-        var watchedInput = Console.ReadLine();
-
-        if (string.IsNullOrWhiteSpace(watchedInput))
-        {
-            Console.WriteLine(CommandPrompt);
-            continue;
-        }
-
-        if (!int.TryParse(watchedInput, out int watchedSelection))
-        {
-            Console.WriteLine("Invalid selection.");
-            Console.WriteLine(CommandPrompt);
-            continue;
-        }
-
-        if (watchedSelection < 1 || watchedSelection > items.Count)
-        {
-            Console.WriteLine("Selection out of range.");
-            Console.WriteLine(CommandPrompt);
-            continue;
-        }
-
-        var itemToMarkWatched = items[watchedSelection - 1];
-
-        try
-        {
-            await picAFlickApiClient.MarkAsWatchedAsync(itemToMarkWatched.Id);
-            Console.WriteLine("Item marked as watched.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Could not mark item as watched: {ex.Message}");
-        }
-
-        Console.Write("\n> ");
-        Console.WriteLine(CommandPrompt);
-        continue;
+        await WatchedCommand.ExecuteAsync(picAFlickApiClient);
     }
 
     if (cmd is "analyze")
@@ -591,8 +460,8 @@ while (true)
             Console.WriteLine(joined);
         }
 
-        Console.Write("\n> ");
-        Console.WriteLine(CommandPrompt);
+        Console.WriteLine(); ;
+        Console.WriteLine(ConsoleHelper.CommandPrompt);
         continue;
     }
 
@@ -605,8 +474,8 @@ while (true)
         if (items.Count == 0)
         {
             Console.WriteLine("Your watchlist is empty.");
-            Console.Write("\n> ");
-            Console.WriteLine(CommandPrompt);
+            Console.WriteLine();
+            Console.WriteLine(ConsoleHelper.CommandPrompt);
             continue;
         }
 
@@ -672,7 +541,7 @@ while (true)
                         ";
 
                         var result = await kernel.InvokePromptAsync(actorPrompt);
-                        Console.WriteLine(WrapText(result.ToString()));
+                        Console.WriteLine(ConsoleHelper.WrapText(result.ToString()));
                     }
                     else
                     {
@@ -842,7 +711,7 @@ while (true)
                 var reply = result.ToString();
 
                 Console.WriteLine("Bot:");
-                Console.WriteLine(WrapText(reply));
+                Console.WriteLine(ConsoleHelper.WrapText(reply));
                 session.ConversationHistory.Add($"Bot: {reply}");
             }
             catch (Exception ex)
@@ -853,53 +722,8 @@ while (true)
             }
         }
 
-        Console.Write("\n> ");
-        Console.WriteLine(CommandPrompt);
+        Console.WriteLine();
+        Console.WriteLine(ConsoleHelper.CommandPrompt);
         continue;
     }
-}
-
-static string WrapText(string text, int maxLineLength = 80)
-{
-    if (string.IsNullOrWhiteSpace(text))
-        return text;
-
-    var originalLines = text.Replace("\r\n", "\n").Split('\n');
-    var wrappedLines = new List<string>();
-
-    foreach (var originalLine in originalLines)
-    {
-        if (string.IsNullOrWhiteSpace(originalLine))
-        {
-            wrappedLines.Add(string.Empty);
-            continue;
-        }
-
-        var words = originalLine.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        var currentLine = "";
-
-        foreach (var word in words)
-        {
-            if (currentLine.Length == 0)
-            {
-                currentLine = word;
-            }
-            else if ((currentLine.Length + 1 + word.Length) <= maxLineLength)
-            {
-                currentLine += " " + word;
-            }
-            else
-            {
-                wrappedLines.Add(currentLine);
-                currentLine = word;
-            }
-        }
-
-        if (!string.IsNullOrWhiteSpace(currentLine))
-        {
-            wrappedLines.Add(currentLine);
-        }
-    }
-
-    return string.Join(Environment.NewLine, wrappedLines);
 }
