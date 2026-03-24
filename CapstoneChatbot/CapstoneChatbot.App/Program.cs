@@ -4,6 +4,7 @@ using CapstoneChatbot.App.Models;
 using CapstoneChatbot.App.Services;
 using CapstoneChatbot.Tmdb.Clients;
 using CapstoneChatbot.Tmdb.Enums;
+using CapstoneChatbot.Tmdb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
@@ -625,6 +626,128 @@ while (true)
             if (input.Equals("exit", StringComparison.OrdinalIgnoreCase))
                 break;
 
+            if (session.IsWaitingForAddSelection)
+            {
+                if (input.Equals("cancel", StringComparison.OrdinalIgnoreCase))
+                {
+                    session.PendingAddResults.Clear();
+                    session.IsWaitingForAddSelection = false;
+                    Console.WriteLine("Bot: Add canceled.");
+                    continue;
+                }
+
+                if (input.StartsWith("who starred in ", StringComparison.OrdinalIgnoreCase))
+                {
+                    var numberText = input["who starred in ".Length..].Trim();
+
+                    if (int.TryParse(numberText, out var actorSelection) &&
+                        actorSelection >= 1 &&
+                        actorSelection <= session.PendingAddResults.Count)
+                    {
+                        var selected = session.PendingAddResults[actorSelection - 1];
+
+                        Console.WriteLine($"Bot: Let me check who stars in {selected.Title}...");
+
+                        var githubToken = configuration["GithubModels:ApiKey"]
+                          ?? throw new InvalidOperationException("GithubModels:ApiKey user secret is missing.");
+
+                        var kernelBuilder = Kernel.CreateBuilder()
+                            .AddOpenAIChatCompletion(
+                                modelId: "openai/gpt-4o",
+                                apiKey: githubToken,
+                                endpoint: new Uri("https://models.github.ai/inference")
+                            );
+
+                        var kernel = kernelBuilder.Build();
+
+                        var actorPrompt = $@"
+                        You are a movie and TV assistant.
+
+                        Tell me the main actors in this title:
+
+                        Title: {selected.Title}
+                        MediaType: {selected.MediaType}
+
+                        Respond with a short list of main actors.
+                        ";
+
+                        var result = await kernel.InvokePromptAsync(actorPrompt);
+                        Console.WriteLine(WrapText(result.ToString()));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Bot: Please choose a valid result number.");
+                    }
+
+                    continue;
+                }
+
+                if (input.StartsWith("tell me about ", StringComparison.OrdinalIgnoreCase))
+                {
+                    var numberText = input["tell me about ".Length..].Trim();
+
+                    if (int.TryParse(numberText, out var detailSelection) &&
+                        detailSelection >= 1 &&
+                        detailSelection <= session.PendingAddResults.Count)
+                    {
+                        var selected = session.PendingAddResults[detailSelection - 1];
+
+                        string year = "Unknown year";
+
+                        if (!string.IsNullOrWhiteSpace(selected.ReleaseDate) &&
+                            DateTime.TryParse(selected.ReleaseDate, out var parsedDetailDate))
+                        {
+                            year = parsedDetailDate.Year.ToString();
+                        }
+
+                        var overview = string.IsNullOrWhiteSpace(selected.Overview)
+                            ? "No overview available."
+                            : selected.Overview;
+
+                        Console.WriteLine($"Bot: {selected.Title} ({year}) [{selected.MediaType}]");
+                        Console.WriteLine(overview);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Bot: Please choose a valid result number.");
+                    }
+
+                    continue;
+                }
+
+                if (int.TryParse(input, out var selection) &&
+                    selection >= 1 &&
+                    selection <= session.PendingAddResults.Count)
+                {
+                    var chosenResult = session.PendingAddResults[selection - 1];
+
+                    DateTime? releaseDate = null;
+
+                    if (!string.IsNullOrWhiteSpace(chosenResult.ReleaseDate) &&
+                        DateTime.TryParse(chosenResult.ReleaseDate, out var parsedSelectedDate))
+                    {
+                        releaseDate = parsedSelectedDate;
+                    }
+
+                    await picAFlickApiClient.AddToWatchlistAsync(new WatchlistCreationDto
+                    {
+                        Title = chosenResult.Title,
+                        MediaType = (PicAFlick.Domain.Enums.MediaType)chosenResult.MediaType,
+                        TmdbId = chosenResult.TmdbId,
+                        ReleaseDate = releaseDate
+                    });
+
+                    session.PendingAddResults.Clear();
+                    session.IsWaitingForAddSelection = false;
+
+                    Console.WriteLine($"Bot: Added '{chosenResult.Title}' to your watchlist.");
+                    continue;
+                }
+
+                Console.WriteLine("Bot: Type a number to add one of the results, or type 'tell me about 2', 'who starred in 5', or 'cancel'.");
+                continue;
+            }
+
             if (input.StartsWith("add ", StringComparison.OrdinalIgnoreCase))
             {
                 var titleToAdd = input[4..].Trim();
@@ -637,17 +760,19 @@ while (true)
 
                 Console.WriteLine($"Bot: Okay — I’ll try to add '{titleToAdd}'.");
 
-                var results = await tmdbApiClient.SearchAsync(titleToAdd, MediaType.Movie);
+                var movieResults = await tmdbApiClient.SearchAsync(titleToAdd, MediaType.Movie);
+                var tvResults = await tmdbApiClient.SearchAsync(titleToAdd, MediaType.TvShow);
 
-                if (results == null || results.Count == 0)
+                var results = new List<TmdbSearchResult>();
+
+                if (movieResults != null)
                 {
-                    results = await tmdbApiClient.SearchAsync(titleToAdd, MediaType.TvShow);
+                    results.AddRange(movieResults);
                 }
 
-                if (results == null || results.Count == 0)
+                if (tvResults != null)
                 {
-                    Console.WriteLine($"Bot: I couldn't find anything for '{titleToAdd}'.");
-                    continue;
+                    results.AddRange(tvResults);
                 }
 
                 Console.WriteLine("Bot: I found these matches:");
@@ -667,41 +792,14 @@ while (true)
                     Console.WriteLine($"{i + 1}. {result.Title} ({year}) [{result.MediaType}]");
                 }
 
-                Console.WriteLine("Bot: Type the number of the one you want to add.");
-                Console.Write("You (pick a number): ");
-                var selectionInput = Console.ReadLine()?.Trim();
+                session.PendingAddResults.Clear();
+                session.PendingAddResults.AddRange(results);
+                session.IsWaitingForAddSelection = true;
 
-                if (!int.TryParse(selectionInput, out var selection) ||
-                    selection < 1 || selection > results.Count)
-                {
-                    Console.WriteLine("Bot: Invalid selection.");
-                    continue;
-                }
-
-                var chosenResult = results[selection - 1];
-
-                // parse release date (string → DateTime?)
-                DateTime? releaseDate = null;
-
-                if (!string.IsNullOrWhiteSpace(chosenResult.ReleaseDate) &&
-                    DateTime.TryParse(chosenResult.ReleaseDate, out var parsedDate))
-                {
-                    releaseDate = parsedDate;
-                }
-
-                // 🔥 THIS IS YOUR EXISTING WORKING LINE
-                await picAFlickApiClient.AddToWatchlistAsync(new WatchlistCreationDto
-                {
-                    Title = chosenResult.Title,
-                    MediaType = (PicAFlick.Domain.Enums.MediaType)chosenResult.MediaType,
-                    TmdbId = chosenResult.TmdbId,
-                    ReleaseDate = releaseDate
-                });
-
-                Console.WriteLine($"Bot: Added '{chosenResult.Title}' to your watchlist.");
+                Console.WriteLine("Bot: Type a number to add one of the results, or type 'tell me about 2', 'who starred in 5', or 'cancel'.");
                 continue;
             }
-
+            
             session.ConversationHistory.Add($"User: {input}");
             var conversationHistory = string.Join(Environment.NewLine, session.ConversationHistory);
 
@@ -743,7 +841,8 @@ while (true)
                 var result = await kernel.InvokePromptAsync(promptchat);
                 var reply = result.ToString();
 
-                Console.WriteLine($"Bot: {reply}");
+                Console.WriteLine("Bot:");
+                Console.WriteLine(WrapText(reply));
                 session.ConversationHistory.Add($"Bot: {reply}");
             }
             catch (Exception ex)
@@ -758,4 +857,49 @@ while (true)
         Console.WriteLine(CommandPrompt);
         continue;
     }
+}
+
+static string WrapText(string text, int maxLineLength = 80)
+{
+    if (string.IsNullOrWhiteSpace(text))
+        return text;
+
+    var originalLines = text.Replace("\r\n", "\n").Split('\n');
+    var wrappedLines = new List<string>();
+
+    foreach (var originalLine in originalLines)
+    {
+        if (string.IsNullOrWhiteSpace(originalLine))
+        {
+            wrappedLines.Add(string.Empty);
+            continue;
+        }
+
+        var words = originalLine.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var currentLine = "";
+
+        foreach (var word in words)
+        {
+            if (currentLine.Length == 0)
+            {
+                currentLine = word;
+            }
+            else if ((currentLine.Length + 1 + word.Length) <= maxLineLength)
+            {
+                currentLine += " " + word;
+            }
+            else
+            {
+                wrappedLines.Add(currentLine);
+                currentLine = word;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(currentLine))
+        {
+            wrappedLines.Add(currentLine);
+        }
+    }
+
+    return string.Join(Environment.NewLine, wrappedLines);
 }
