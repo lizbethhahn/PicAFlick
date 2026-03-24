@@ -625,6 +625,83 @@ while (true)
             if (input.Equals("exit", StringComparison.OrdinalIgnoreCase))
                 break;
 
+            if (input.StartsWith("add ", StringComparison.OrdinalIgnoreCase))
+            {
+                var titleToAdd = input[4..].Trim();
+
+                if (string.IsNullOrWhiteSpace(titleToAdd))
+                {
+                    Console.WriteLine("Bot: Please type a title after 'add'.");
+                    continue;
+                }
+
+                Console.WriteLine($"Bot: Okay — I’ll try to add '{titleToAdd}'.");
+
+                var results = await tmdbApiClient.SearchAsync(titleToAdd, MediaType.Movie);
+
+                if (results == null || results.Count == 0)
+                {
+                    results = await tmdbApiClient.SearchAsync(titleToAdd, MediaType.TvShow);
+                }
+
+                if (results == null || results.Count == 0)
+                {
+                    Console.WriteLine($"Bot: I couldn't find anything for '{titleToAdd}'.");
+                    continue;
+                }
+
+                Console.WriteLine("Bot: I found these matches:");
+
+                for (int i = 0; i < results.Count; i++)
+                {
+                    var result = results[i];
+
+                    string year = "Unknown year";
+
+                    if (!string.IsNullOrWhiteSpace(result.ReleaseDate) &&
+                        DateTime.TryParse(result.ReleaseDate, out var parsedReleaseDate))
+                    {
+                        year = parsedReleaseDate.Year.ToString();
+                    }
+
+                    Console.WriteLine($"{i + 1}. {result.Title} ({year}) [{result.MediaType}]");
+                }
+
+                Console.WriteLine("Bot: Type the number of the one you want to add.");
+                Console.Write("You (pick a number): ");
+                var selectionInput = Console.ReadLine()?.Trim();
+
+                if (!int.TryParse(selectionInput, out var selection) ||
+                    selection < 1 || selection > results.Count)
+                {
+                    Console.WriteLine("Bot: Invalid selection.");
+                    continue;
+                }
+
+                var chosenResult = results[selection - 1];
+
+                // parse release date (string → DateTime?)
+                DateTime? releaseDate = null;
+
+                if (!string.IsNullOrWhiteSpace(chosenResult.ReleaseDate) &&
+                    DateTime.TryParse(chosenResult.ReleaseDate, out var parsedDate))
+                {
+                    releaseDate = parsedDate;
+                }
+
+                // 🔥 THIS IS YOUR EXISTING WORKING LINE
+                await picAFlickApiClient.AddToWatchlistAsync(new WatchlistCreationDto
+                {
+                    Title = chosenResult.Title,
+                    MediaType = (PicAFlick.Domain.Enums.MediaType)chosenResult.MediaType,
+                    TmdbId = chosenResult.TmdbId,
+                    ReleaseDate = releaseDate
+                });
+
+                Console.WriteLine($"Bot: Added '{chosenResult.Title}' to your watchlist.");
+                continue;
+            }
+
             session.ConversationHistory.Add($"User: {input}");
             var conversationHistory = string.Join(Environment.NewLine, session.ConversationHistory);
 
@@ -643,7 +720,7 @@ while (true)
                 var kernel = kernelBuilder.Build();
 
                 var promptchat = $@"
-                You are a movie and TV assistant.
+                You are a movie and TV assistant helping the user explore their watchlist.
 
                 The user has this watchlist:
                 {joined}
@@ -651,7 +728,16 @@ while (true)
                 Conversation so far:
                 {conversationHistory}
 
-                Respond conversationally and make a recommendation if appropriate.
+                Rules:
+                - Be conversational and helpful.
+                - You may discuss movies, shows, actors, genres, and recommendations.
+                - Do not claim you added, removed, or updated anything in the watchlist.
+                - Only the application can perform watchlist actions.
+                - If the user wants to add something, tell them to use: add <title>
+                - If the user wants something marked watched, do not claim it happened unless the application confirms it.
+                - Prefer titles from the user's watchlist when making recommendations, unless the user is clearly asking more generally.
+
+                Respond in plain text only.
                 ";
 
                 var result = await kernel.InvokePromptAsync(promptchat);
