@@ -16,9 +16,10 @@ public static class ListCommand
             return;
         }
 
+        Console.WriteLine("----Here is your watchlist----");
+
         foreach (var item in items)
         {
-            Console.WriteLine("----Here is your watchlist----");
             var releaseYear = item.ReleaseDate.HasValue && item.ReleaseDate.Value.Year > 1
                 ? item.ReleaseDate.Value.Year.ToString()
                 : "Unknown";
