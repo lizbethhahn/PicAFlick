@@ -47,17 +47,147 @@ public static class ChatCommand
 
             if (session.IsWaitingForAddSelection)
             {
-                if (input.Equals("cancel", StringComparison.OrdinalIgnoreCase))
+                if (session.PendingAddResults.Count == 0)
                 {
-                    session.PendingAddResults.Clear();
                     session.IsWaitingForAddSelection = false;
-                    Console.WriteLine("Bot: Add canceled.");
+                    Console.WriteLine("Bot: Add selection was cleared.");
                     continue;
                 }
 
-                if (input.StartsWith("who starred in ", StringComparison.OrdinalIgnoreCase))
+                if (input.Equals("list", StringComparison.OrdinalIgnoreCase) ||
+                    input.Equals("watchlist", StringComparison.OrdinalIgnoreCase) ||
+                    input.Equals("what is in my watchlist", StringComparison.OrdinalIgnoreCase) ||
+                    input.Equals("what's in my watchlist", StringComparison.OrdinalIgnoreCase) ||
+                    input.Equals("what is in my list", StringComparison.OrdinalIgnoreCase) ||
+                    input.Equals("what's in my list", StringComparison.OrdinalIgnoreCase))
                 {
-                    var numberText = input["who starred in ".Length..].Trim();
+                    session.PendingAddResults.Clear();
+                    session.IsWaitingForAddSelection = false;
+
+                    var watchlist = await picClient.GetWatchlistAsync();
+
+                    if (watchlist.Count == 0)
+                    {
+                        Console.WriteLine("Bot: Your watchlist is empty.");
+                        continue;
+                    }
+
+                    var unwatchedMovies = watchlist
+                        .Where(x => !x.Watched && x.MediaType == MediaType.Movie)
+                        .ToList();
+
+                    var watchedMovies = watchlist
+                        .Where(x => x.Watched && x.MediaType == MediaType.Movie)
+                        .ToList();
+
+                    var unwatchedTv = watchlist
+                        .Where(x => !x.Watched && x.MediaType == MediaType.TvShow)
+                        .ToList();
+
+                    var watchedTv = watchlist
+                        .Where(x => x.Watched && x.MediaType == MediaType.TvShow)
+                        .ToList();
+
+                    Console.WriteLine("Bot:");
+                    Console.WriteLine("Your watchlist looks pretty great! Here's a breakdown:\n");
+
+                    if (unwatchedMovies.Any())
+                    {
+                        Console.WriteLine("Unwatched Movies:");
+                        foreach (var item in unwatchedMovies)
+                        {
+                            Console.WriteLine($"- {item.Title} ({item.ReleaseDate?.Year})");
+                        }
+                        Console.WriteLine();
+                    }
+
+                    if (watchedMovies.Any())
+                    {
+                        Console.WriteLine("Watched Movies:");
+                        foreach (var item in watchedMovies)
+                        {
+                            Console.WriteLine($"- {item.Title} ({item.ReleaseDate?.Year})");
+                        }
+                        Console.WriteLine();
+                    }
+
+                    if (unwatchedTv.Any())
+                    {
+                        Console.WriteLine("Unwatched TV Shows:");
+                        foreach (var item in unwatchedTv)
+                        {
+                            Console.WriteLine($"- {item.Title} ({item.ReleaseDate?.Year})");
+                        }
+                        Console.WriteLine();
+                    }
+
+                    if (watchedTv.Any())
+                    {
+                        Console.WriteLine("Watched TV Shows:");
+                        foreach (var item in watchedTv)
+                        {
+                            Console.WriteLine($"- {item.Title} ({item.ReleaseDate?.Year})");
+                        }
+                        Console.WriteLine();
+                    }
+
+                    continue;
+                }
+                else if (input.StartsWith("add ", StringComparison.OrdinalIgnoreCase) &&
+                         int.TryParse(input[4..].Trim(), out var addSelectionNumber))
+                {
+                    if (addSelectionNumber < 1 || addSelectionNumber > session.PendingAddResults.Count)
+                    {
+                        Console.WriteLine($"Bot: Please choose a number between 1 and {session.PendingAddResults.Count}.");
+                        continue;
+                    }
+
+                    var chosenResult = session.PendingAddResults[addSelectionNumber - 1];
+
+                    DateTime? releaseDate = null;
+                    if (!string.IsNullOrWhiteSpace(chosenResult.ReleaseDate) &&
+                        DateTime.TryParse(chosenResult.ReleaseDate, out var parsedReleaseDate))
+                    {
+                        releaseDate = parsedReleaseDate;
+                    }
+
+                    await picClient.AddToWatchlistAsync(new WatchlistCreationDto
+                    {
+                        Title = chosenResult.Title,
+                        MediaType = (PicAFlick.Domain.Enums.MediaType)chosenResult.MediaType,
+                        TmdbId = chosenResult.TmdbId,
+                        ReleaseDate = releaseDate
+                    });
+
+                    Console.WriteLine($"Bot: Added '{chosenResult.Title}' to your watchlist.");
+
+                    session.PendingAddResults.Clear();
+                    session.IsWaitingForAddSelection = false;
+                    continue;
+                }
+                else if (input.Equals("cancel", StringComparison.OrdinalIgnoreCase))
+                {
+                    session.PendingAddResults.Clear();
+                    session.IsWaitingForAddSelection = false;
+                    Console.WriteLine("Bot: Canceled. If you want to add something, start again with: add <movie title>.");
+                    continue;
+                }
+                else if ((input.StartsWith("add ", StringComparison.OrdinalIgnoreCase) &&
+                          !int.TryParse(input[4..].Trim(), out _)) ||
+                         (input.StartsWith("mark ", StringComparison.OrdinalIgnoreCase) &&
+                          input.EndsWith(" as watched", StringComparison.OrdinalIgnoreCase)))
+                {
+                    session.PendingAddResults.Clear();
+                    session.IsWaitingForAddSelection = false;
+                }
+                else if (input.StartsWith("who starred in ", StringComparison.OrdinalIgnoreCase) ||
+                         input.StartsWith("tell me who starred in ", StringComparison.OrdinalIgnoreCase))
+                {
+                    var prefix = input.StartsWith("tell me who starred in ", StringComparison.OrdinalIgnoreCase)
+                        ? "tell me who starred in "
+                        : "who starred in ";
+
+                    var numberText = input[prefix.Length..].Trim().TrimEnd('?');
 
                     if (int.TryParse(numberText, out var actorSelection) &&
                         actorSelection >= 1 &&
@@ -68,7 +198,7 @@ public static class ChatCommand
                         Console.WriteLine($"Bot: Let me check who stars in {selected.Title}...");
 
                         var githubToken = configuration["GithubModels:ApiKey"]
-                          ?? throw new InvalidOperationException("GithubModels:ApiKey user secret is missing.");
+                            ?? throw new InvalidOperationException("GithubModels:ApiKey user secret is missing.");
 
                         var kernelBuilder = Kernel.CreateBuilder()
                             .AddOpenAIChatCompletion(
@@ -79,15 +209,27 @@ public static class ChatCommand
 
                         var kernel = kernelBuilder.Build();
 
+                        string year = "Unknown year";
+
+                        if (!string.IsNullOrWhiteSpace(selected.ReleaseDate) &&
+                            DateTime.TryParse(selected.ReleaseDate, out var parsedActorDate))
+                        {
+                            year = parsedActorDate.Year.ToString();
+                        }
+
                         var actorPrompt = $@"
                         You are a movie and TV assistant.
 
-                        Tell me the main actors in this title:
+                        Tell me the main actors in this exact title.
+                        Use the year and media type to disambiguate remakes, alternate versions, and similarly named titles.
 
                         Title: {selected.Title}
+                        Year: {year}
                         MediaType: {selected.MediaType}
+                        TmdbId: {selected.TmdbId}
 
-                        Respond with a short list of main actors.
+                        Respond with a short numbered list of the main actors for this exact title only.
+                        If the title is ambiguous, prefer the match that exactly fits the year, media type, and TMDb id above.
                         ";
 
                         var result = await kernel.InvokePromptAsync(actorPrompt);
@@ -100,10 +242,9 @@ public static class ChatCommand
 
                     continue;
                 }
-
-                if (input.StartsWith("tell me about ", StringComparison.OrdinalIgnoreCase))
+                else if (input.StartsWith("tell me about ", StringComparison.OrdinalIgnoreCase))
                 {
-                    var numberText = input["tell me about ".Length..].Trim();
+                    var numberText = input["tell me about ".Length..].Trim().TrimEnd('?');
 
                     if (int.TryParse(numberText, out var detailSelection) &&
                         detailSelection >= 1 &&
@@ -133,10 +274,9 @@ public static class ChatCommand
 
                     continue;
                 }
-
-                if (int.TryParse(input, out var selection) &&
-                    selection >= 1 &&
-                    selection <= session.PendingAddResults.Count)
+                else if (int.TryParse(input, out var selection) &&
+                         selection >= 1 &&
+                         selection <= session.PendingAddResults.Count)
                 {
                     var chosenResult = session.PendingAddResults[selection - 1];
 
@@ -162,25 +302,199 @@ public static class ChatCommand
                     Console.WriteLine($"Bot: Added '{chosenResult.Title}' to your watchlist.");
                     continue;
                 }
+                else
+                {
+                    Console.WriteLine("Bot: Choose a number to add, or type:");
+                    Console.WriteLine("  - tell me about <number>");
+                    Console.WriteLine("  - who starred in <number>");
+                    Console.WriteLine("  - list (view your watchlist)");
+                    Console.WriteLine("  - cancel (go back)");
+                    continue;
+                }
+            }
 
-                Console.WriteLine("Bot: Type a number to add one of the results, or type 'tell me about 2', 'who starred in 5', or 'cancel'.");
+            if (input.Equals("list", StringComparison.OrdinalIgnoreCase) ||
+                input.Equals("watchlist", StringComparison.OrdinalIgnoreCase) ||
+                input.Equals("what is in my watchlist", StringComparison.OrdinalIgnoreCase) ||
+                input.Equals("what's in my watchlist", StringComparison.OrdinalIgnoreCase) ||
+                input.Equals("what is in my list", StringComparison.OrdinalIgnoreCase) ||
+                input.Equals("what's in my list", StringComparison.OrdinalIgnoreCase))
+            {
+                var watchlist = await picClient.GetWatchlistAsync();
+
+                if (watchlist.Count == 0)
+                {
+                    Console.WriteLine("Bot: Your watchlist is empty.");
+                    continue;
+                }
+
+                var unwatchedMovies = watchlist
+                    .Where(x => !x.Watched && x.MediaType == MediaType.Movie)
+                    .ToList();
+
+                var watchedMovies = watchlist
+                    .Where(x => x.Watched && x.MediaType == MediaType.Movie)
+                    .ToList();
+
+                var unwatchedTv = watchlist
+                    .Where(x => !x.Watched && x.MediaType == MediaType.TvShow)
+                    .ToList();
+
+                var watchedTv = watchlist
+                    .Where(x => x.Watched && x.MediaType == MediaType.TvShow)
+                    .ToList();
+
+                Console.WriteLine("Bot:");
+                Console.WriteLine("Your watchlist looks pretty great! Here's a breakdown:\n");
+
+                if (unwatchedMovies.Any())
+                {
+                    Console.WriteLine("Unwatched Movies:");
+                    foreach (var item in unwatchedMovies)
+                    {
+                        Console.WriteLine($"- {item.Title} ({item.ReleaseDate?.Year})");
+                    }
+                    Console.WriteLine();
+                }
+
+                if (watchedMovies.Any())
+                {
+                    Console.WriteLine("Watched Movies:");
+                    foreach (var item in watchedMovies)
+                    {
+                        Console.WriteLine($"- {item.Title} ({item.ReleaseDate?.Year})");
+                    }
+                    Console.WriteLine();
+                }
+
+                if (unwatchedTv.Any())
+                {
+                    Console.WriteLine("Unwatched TV Shows:");
+                    foreach (var item in unwatchedTv)
+                    {
+                        Console.WriteLine($"- {item.Title} ({item.ReleaseDate?.Year})");
+                    }
+                    Console.WriteLine();
+                }
+
+                if (watchedTv.Any())
+                {
+                    Console.WriteLine("Watched TV Shows:");
+                    foreach (var item in watchedTv)
+                    {
+                        Console.WriteLine($"- {item.Title} ({item.ReleaseDate?.Year})");
+                    }
+                    Console.WriteLine();
+                }
+
+                continue;
+            }
+
+            if (input.StartsWith("mark ", StringComparison.OrdinalIgnoreCase) &&
+                input.EndsWith(" as watched", StringComparison.OrdinalIgnoreCase))
+            {
+                const string prefix = "mark ";
+                const string suffix = " as watched";
+
+                // Guard: Ensure there's enough length for both prefix and suffix
+                if (input.Length <= prefix.Length + suffix.Length)
+                {
+                    Console.WriteLine("Bot: Please specify a title to mark as watched.");
+                    continue;
+                }
+
+                var titleToMark = input[prefix.Length..^suffix.Length].Trim();
+
+                if (string.IsNullOrWhiteSpace(titleToMark))
+                {
+                    Console.WriteLine("Bot: Please specify a title to mark as watched.");
+                    continue;
+                }
+
+                var watchlist = await picClient.GetWatchlistAsync();
+
+                var matches = watchlist
+                    .Where(item => item.Title.Contains(titleToMark, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                if (matches.Count == 0)
+                {
+                    Console.WriteLine($"Bot: I couldn't find '{titleToMark}' in your watchlist.");
+                    continue;
+                }
+
+                if (matches.Count > 1)
+                {
+                    Console.WriteLine("Bot: I found more than one match in your watchlist:");
+                    for (int i = 0; i < matches.Count; i++)
+                    {
+                        var year = matches[i].ReleaseDate?.Year.ToString() ?? "Unknown year";
+                        Console.WriteLine($"{i + 1}. {matches[i].Title} ({year}) [{matches[i].MediaType}]");
+                    }
+
+                    Console.WriteLine("Bot: I found more than one match. Try 'list' and mark the correct title as watched from there.");
+                    continue;
+                }
+
+                var match = matches[0];
+
+                await picClient.MarkAsWatchedAsync(match.Id);
+
+                Console.WriteLine($"Bot: Marked '{match.Title}' as watched.");
                 continue;
             }
 
             if (input.StartsWith("add ", StringComparison.OrdinalIgnoreCase))
             {
-                var titleToAdd = input[4..].Trim();
+                var addValue = input[4..].Trim();
+                // DEBUG (temporary)
+Console.WriteLine($"DEBUG: IsWaiting={session.IsWaitingForAddSelection}, Count={session.PendingAddResults.Count}, Value='{addValue}'");
 
-                if (string.IsNullOrWhiteSpace(titleToAdd))
+                if (string.IsNullOrWhiteSpace(addValue))
                 {
                     Console.WriteLine("Bot: Please type a title after 'add'.");
                     continue;
                 }
 
-                Console.WriteLine($"Bot: Okay — I’ll try to add '{titleToAdd}'.");
+                // If we already have pending numbered results, allow: add 3
+                if (session.IsWaitingForAddSelection &&
+                    session.PendingAddResults.Count > 0 &&
+                    int.TryParse(addValue, out var selectedNumber))
+                {
+                    if (selectedNumber < 1 || selectedNumber > session.PendingAddResults.Count)
+                    {
+                        Console.WriteLine($"Bot: Please choose a number between 1 and {session.PendingAddResults.Count}.");
+                        continue;
+                    }
 
-                var movieResults = await tmdbClient.SearchAsync(titleToAdd, MediaType.Movie);
-                var tvResults = await tmdbClient.SearchAsync(titleToAdd, MediaType.TvShow);
+                    var chosenResult = session.PendingAddResults[selectedNumber - 1];
+
+                    DateTime? releaseDate = null;
+                    if (!string.IsNullOrWhiteSpace(chosenResult.ReleaseDate) &&
+                        DateTime.TryParse(chosenResult.ReleaseDate, out var parsedReleaseDate))
+                    {
+                        releaseDate = parsedReleaseDate;
+                    }
+
+                    await picClient.AddToWatchlistAsync(new WatchlistCreationDto
+                    {
+                        Title = chosenResult.Title,
+                        MediaType = (PicAFlick.Domain.Enums.MediaType)chosenResult.MediaType,
+                        TmdbId = chosenResult.TmdbId,
+                        ReleaseDate = releaseDate
+                    });
+
+                    Console.WriteLine($"Bot: Added '{chosenResult.Title}' to your watchlist.");
+
+                    session.PendingAddResults.Clear();
+                    session.IsWaitingForAddSelection = false;
+                    continue;
+                }
+
+                Console.WriteLine($"Bot: Okay — I’ll try to add '{addValue}'.");
+
+                var movieResults = await tmdbClient.SearchAsync(addValue, MediaType.Movie);
+                var tvResults = await tmdbClient.SearchAsync(addValue, MediaType.TvShow);
 
                 var results = new List<TmdbSearchResult>();
 
@@ -194,7 +508,14 @@ public static class ChatCommand
                     results.AddRange(tvResults);
                 }
 
-                Console.WriteLine("Bot: I found these matches:");
+                if (results.Count == 0)
+                {
+                    Console.WriteLine($"Bot: I couldn't find any matches for '{addValue}'.");
+                    Console.WriteLine("Try a simpler title, like: add Little Women");
+                    continue;
+                }
+
+                Console.WriteLine("Bot: I found these matches. Please choose one by number:");
 
                 for (int i = 0; i < results.Count; i++)
                 {
@@ -211,11 +532,18 @@ public static class ChatCommand
                     Console.WriteLine($"{i + 1}. {result.Title} ({year}) [{result.MediaType}]");
                 }
 
+                Console.WriteLine();
+
                 session.PendingAddResults.Clear();
                 session.PendingAddResults.AddRange(results);
                 session.IsWaitingForAddSelection = true;
 
-                Console.WriteLine("Bot: Type a number to add one of the results, or type 'tell me about 2', 'who starred in 5', or 'cancel'.");
+                Console.WriteLine("Bot: Choose a number to add, or type:");
+                Console.WriteLine("  - add <number>");
+                Console.WriteLine("  - tell me about <number>");
+                Console.WriteLine("  - who starred in <number>");
+                Console.WriteLine("  - list (view your watchlist)");
+                Console.WriteLine("  - cancel (go back)");
                 continue;
             }
 
@@ -236,11 +564,15 @@ public static class ChatCommand
 
                 var kernel = kernelBuilder.Build();
 
+                var currentWatchlist = await picClient.GetWatchlistAsync();
+                var joinedWatchlist = string.Join(Environment.NewLine, currentWatchlist.Select(item =>
+                    $"{item.Title} | {item.ReleaseDate?.Year} | {item.MediaType} | Watched: {item.Watched}"));
+
                 var promptchat = $@"
                 You are a movie and TV assistant helping the user explore their watchlist.
 
                 The user has this watchlist:
-                {joined}
+                {joinedWatchlist}
 
                 Conversation so far:
                 {conversationHistory}
