@@ -3,6 +3,7 @@ import { SearchService } from '../../services/search.service';
 import { TmdbMovie } from '../../services/search.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-movie-search',
@@ -18,7 +19,7 @@ export class MovieSearchComponent {
   isLoading: boolean = false;
   errorMessage: string = '';
 
-  constructor(private searchService: SearchService) {}
+  constructor(private searchService: SearchService, private router: Router) {}
 
   onSearch(): void {
     if (!this.searchTerm.trim()) {
@@ -44,4 +45,10 @@ export class MovieSearchComponent {
       }
     });  
   }
+
+  onSelectMovie(movie: any) {
+    this.router.navigate(['/media'], {
+      state: { movie }
+    });
+  } 
 }

@@ -13,9 +13,14 @@
     </div>
 
     <div class="media-meta">
-      <h1>{{ movie.title }}</h1>
-      <p>{{ movie.release_date | date:'yyyy' }}</p>
-    </div>
+  <h2>{{ movie?.title || movie?.name }}</h2>
+  <p>
+    {{
+      (movie?.release_date || movie?.first_air_date)
+        | date:'yyyy'
+    }}
+  </p>
+</div>
   </section>
 
   <section class="chat-panel">

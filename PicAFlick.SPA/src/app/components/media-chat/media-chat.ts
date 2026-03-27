@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-media-chat',
@@ -13,11 +14,15 @@ import { ElementRef, ViewChild } from '@angular/core';
 export class MediaChatComponent {
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
-  movie = {
-    title: 'Wonder Woman',
-    release_date: '2017-05-30',
-    poster_path: '/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg'
-  };
+  media: any;
+
+  constructor(private router: Router) {
+    const nav = this.router.currentNavigation();
+    this.media =
+        nav?.extras?.state?.['movie'] ||
+        history.state?.movie;
+  }
+
 
   messages = [
     {
