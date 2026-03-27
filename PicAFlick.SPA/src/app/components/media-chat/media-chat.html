@@ -20,7 +20,7 @@
 
   <section class="chat-panel">
     <div class="chat-messages" #chatContainer>
-      @for (message of messages; track message) {
+      @for (message of messages; track $index) {
         <div
           class="message-row"
           [class.user]="message.sender === 'user'"

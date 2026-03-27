@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { MediaChatService } from '../../services/media-chat.service';
 
 @Component({
   selector: 'app-media-chat',
@@ -16,7 +17,10 @@ export class MediaChatComponent {
 
   media: any;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private mediaChatService: MediaChatService
+  ) {
     const nav = this.router.currentNavigation();
     this.media =
         nav?.extras?.state?.['media'] ||
@@ -40,24 +44,28 @@ export class MediaChatComponent {
   }
 
   newMessage = '';
-  sendMessage() {
-  const userMessage = this.newMessage;
-  const contextTitle = this.media?.title || this.media?.name;
-  const messageToSend = `Talking about: ${contextTitle}\n\n${userMessage}`;
 
-  if (!userMessage.trim()) return;
-  this.messages.push({
-    sender: 'user',
-    text: userMessage
-  });
-  
-  this.newMessage = '';
+  async sendMessage() {
+    const userMessage = this.newMessage;
 
-  setTimeout(() => {
-    this.chatContainer.nativeElement.scrollTop =
-      this.chatContainer.nativeElement.scrollHeight;
-  });
-}
+    if (!userMessage.trim()) return;
+
+    const contextTitle = this.media?.title || this.media?.name;
+    const messageToSend = `Talking about: ${contextTitle}\n\n${userMessage}`;
+
+    this.messages.push({
+      sender: 'user',
+      text: userMessage
+    });
+
+    this.newMessage = '';
+    
+    const botReply = await this.mediaChatService.sendMessage(messageToSend);
+    setTimeout(() => {
+      this.chatContainer.nativeElement.scrollTop =
+        this.chatContainer.nativeElement.scrollHeight;
+    });
+  }
 
   onKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter' && !event.shiftKey) {
