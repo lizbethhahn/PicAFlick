@@ -19,6 +19,12 @@ export const routes: Routes = [
       import('./components/tv-show-search/tv-show-search')
         .then(m => m.TvShowSearchComponent),
   },
+  {
+    path: 'media',
+  loadComponent: () =>
+    import('./components/media-chat/media-chat')
+      .then(m => m.MediaChatComponent),
+  },
   { path: '**', redirectTo: '' },
 ];
 

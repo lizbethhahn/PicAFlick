@@ -1,0 +1,45 @@
+<div class="media-chat-shell">
+  <section class="media-panel">
+    <div class="poster-wrap">
+      @if (movie.poster_path) {
+        <img
+          src="https://image.tmdb.org/t/p/w185/{{ movie.poster_path }}"
+          alt="Media poster" />
+      } @else {
+          <img
+          src="assets/images/movie-placeholder.jpg"
+          alt="No poster available" />
+      }
+    </div>
+
+    <div class="media-meta">
+      <h1>{{ movie.title }}</h1>
+      <p>{{ movie.release_date | date:'yyyy' }}</p>
+    </div>
+  </section>
+
+  <section class="chat-panel">
+    <div class="chat-messages" #chatContainer>
+      @for (message of messages; track message) {
+        <div
+          class="message-row"
+          [class.user]="message.sender === 'user'"
+          [class.bot]="message.sender === 'bot'">
+          
+          <div class="message-bubble">
+            {{ message.text }}
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="chat-input-area">
+      <textarea
+        [(ngModel)]="newMessage"
+        (keydown)="onKeyDown($event)"
+        placeholder="Ask PicAFlick...">
+      </textarea>
+      <button type="button">Send</button>
+    </div>
+  </section>
+</div>
