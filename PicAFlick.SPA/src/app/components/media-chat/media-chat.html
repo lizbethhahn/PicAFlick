@@ -13,13 +13,8 @@
     </div>
 
     <div class="media-meta">
-      <h2>{{ media?.title || media?.name }}</h2>
-      <p>
-        {{
-          (media?.release_date || media?.first_air_date)
-            | date:'yyyy'
-        }}
-      </p>
+      <h2>{{ mediaTitle }}</h2>
+      <p>{{ mediaYear }}</p>
     </div>
   </section>
 

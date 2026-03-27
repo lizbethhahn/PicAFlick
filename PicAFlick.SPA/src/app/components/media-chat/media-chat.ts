@@ -23,34 +23,41 @@ export class MediaChatComponent {
         history.state?.media;
   }
 
-
   messages = [
     {
-      sender: 'user',
-      text: 'I want something exciting but not too heavy.'
-    },
-    {
       sender: 'bot',
-      text: 'Based on this pick, you might be in the mood for something adventurous with strong character energy.'
+      text: 'How can I help you?'
     }
   ];
 
+  get mediaTitle() {
+    return this.media?.title || this.media?.name;
+  }
+
+  get mediaYear() {
+    const date = this.media?.release_date || this.media?.first_air_date;
+    return date ? new Date(date).getFullYear() : '';
+  }
+
   newMessage = '';
   sendMessage() {
-    if (!this.newMessage.trim()) return;
+  const userMessage = this.newMessage;
+  const contextTitle = this.media?.title || this.media?.name;
+  const messageToSend = `Talking about: ${contextTitle}\n\n${userMessage}`;
 
-    this.messages.push({
-      sender: 'user',
-      text: this.newMessage
-    });
+  if (!userMessage.trim()) return;
+  this.messages.push({
+    sender: 'user',
+    text: userMessage
+  });
+  
+  this.newMessage = '';
 
-    this.newMessage = '';
-
-    setTimeout(() => {
-      this.chatContainer.nativeElement.scrollTop =
-        this.chatContainer.nativeElement.scrollHeight;
-    });
-  }
+  setTimeout(() => {
+    this.chatContainer.nativeElement.scrollTop =
+      this.chatContainer.nativeElement.scrollHeight;
+  });
+}
 
   onKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter' && !event.shiftKey) {
