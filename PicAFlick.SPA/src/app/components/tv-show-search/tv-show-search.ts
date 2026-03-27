@@ -23,7 +23,7 @@ export class TvShowSearchComponent {
 
   onSelectShow(show: any) {
     this.router.navigate(['/media'], {
-      state: { movie: show }
+      state: { media: show }
     });
   }
 

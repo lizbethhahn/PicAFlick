@@ -48,7 +48,7 @@ export class MovieSearchComponent {
 
   onSelectMovie(movie: any) {
     this.router.navigate(['/media'], {
-      state: { movie }
+      state: { media: movie }
     });
   } 
 }

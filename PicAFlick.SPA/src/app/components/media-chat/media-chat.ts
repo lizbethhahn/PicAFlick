@@ -19,8 +19,8 @@ export class MediaChatComponent {
   constructor(private router: Router) {
     const nav = this.router.currentNavigation();
     this.media =
-        nav?.extras?.state?.['movie'] ||
-        history.state?.movie;
+        nav?.extras?.state?.['media'] ||
+        history.state?.media;
   }
 
 

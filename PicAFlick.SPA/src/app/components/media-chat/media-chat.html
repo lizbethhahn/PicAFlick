@@ -1,26 +1,26 @@
 <div class="media-chat-shell">
   <section class="media-panel">
     <div class="poster-wrap">
-      @if (movie.poster_path) {
+      @if (media.poster_path) {
         <img
-          src="https://image.tmdb.org/t/p/w185/{{ movie.poster_path }}"
+          src="https://image.tmdb.org/t/p/w185/{{ media.poster_path }}"
           alt="Media poster" />
       } @else {
           <img
-          src="assets/images/movie-placeholder.jpg"
+          src="assets/images/media-placeholder.jpg"
           alt="No poster available" />
       }
     </div>
 
     <div class="media-meta">
-  <h2>{{ movie?.title || movie?.name }}</h2>
-  <p>
-    {{
-      (movie?.release_date || movie?.first_air_date)
-        | date:'yyyy'
-    }}
-  </p>
-</div>
+      <h2>{{ media?.title || media?.name }}</h2>
+      <p>
+        {{
+          (media?.release_date || media?.first_air_date)
+            | date:'yyyy'
+        }}
+      </p>
+    </div>
   </section>
 
   <section class="chat-panel">
