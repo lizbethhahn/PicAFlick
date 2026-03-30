@@ -24,7 +24,7 @@
   {
     @for (tvShow of searchResults; track tvShow.id)
     {
-      <div class="tv-show-card">
+      <div class="tv-show-card" (click)="onSelectShow(tvShow)">
         <div class="poster">
           @if (tvShow.poster_path)
           {

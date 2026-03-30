@@ -3,6 +3,7 @@ import { SearchService } from '../../services/search.service';
 import { TmdbTvShow } from '../../services/search.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tv-show-search',
@@ -18,7 +19,13 @@ export class TvShowSearchComponent {
   isLoading: boolean = false;
   errorMessage: string = '';
 
-  constructor(private searchService: SearchService) {}
+  constructor(private searchService: SearchService, private router: Router) {}
+
+  onSelectShow(show: any) {
+    this.router.navigate(['/media'], {
+      state: { media: show }
+    });
+  }
 
   onSearch(): void {
     if (!this.searchTerm.trim()) {
