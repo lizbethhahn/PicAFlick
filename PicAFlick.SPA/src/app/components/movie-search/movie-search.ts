@@ -39,9 +39,9 @@ export class MovieSearchComponent {
         this.isLoading = false;  
       },
       error: (error) => {
-        this.isLoading = false;  
-        this.errorMessage = "An error occurred while searching";  
-        console.error(error);
+        this.isLoading = false;
+        this.errorMessage = `Search failed: ${error.status} ${error.statusText}`;
+        console.error('Movie search error:', error);
       }
     });  
   }

@@ -60,10 +60,26 @@ export class MediaChatComponent {
 
     this.newMessage = '';
     
-    const botReply = await this.mediaChatService.sendMessage(messageToSend);
-    setTimeout(() => {
-      this.chatContainer.nativeElement.scrollTop =
-        this.chatContainer.nativeElement.scrollHeight;
+    this.mediaChatService.sendMessage(messageToSend).subscribe({
+      next: (response) => {
+        this.messages.push({
+          sender: 'bot',
+          text: response
+        });
+
+        setTimeout(() => {
+          this.chatContainer.nativeElement.scrollTop =
+            this.chatContainer.nativeElement.scrollHeight;
+        });
+      },
+      error: (error) => {
+        console.error('Media chat error:', error);
+
+        this.messages.push({
+          sender: 'bot',
+          text: `Error: ${error.status} ${error.statusText}`
+        });
+      }
     });
   }
 
