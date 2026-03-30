@@ -60,7 +60,11 @@ export class MediaChatComponent {
 
     this.newMessage = '';
     
-    this.mediaChatService.sendMessage(messageToSend).subscribe({
+    this.mediaChatService.sendMessage(
+      messageToSend,
+      this.media?.id,
+      this.media?.media_type ?? (this.media?.first_air_date ? 'tv' : 'movie') 
+    ).subscribe({
       next: (response) => {
         this.messages.push({
           sender: 'bot',

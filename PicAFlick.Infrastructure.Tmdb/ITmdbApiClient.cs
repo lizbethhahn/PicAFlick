@@ -6,5 +6,6 @@ namespace PicAFlick.Infrastructure.Tmdb
     {
         Task<TmdbMovieSearchResponseDto?> GetMovieByTitleAsync(string query);
         Task<TmdbTvShowSearchResponseDto?> GetTvShowByTitleAsync(string query);
+        Task<string?> GetMovieCreditsAsync(int tmdbId);
     }
 }

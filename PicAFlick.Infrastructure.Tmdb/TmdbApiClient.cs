@@ -52,5 +52,19 @@ namespace PicAFlick.Infrastructure.Tmdb
                 return null;
             }
         }
+
+        public async Task<string?> GetMovieCreditsAsync(int tmdbId)
+        {
+            string requestUrl = $"movie/{tmdbId}/credits";
+
+            HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+
+            return null;
+        }
     }
 }
