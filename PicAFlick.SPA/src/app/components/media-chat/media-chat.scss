@@ -72,6 +72,10 @@
   min-height: 0;
 }
 
+.chat-message-text {
+  white-space: pre-line;
+}
+
 .chat-messages {
   flex: 1;
   display: flex;

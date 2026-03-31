@@ -1,4 +1,5 @@
 ﻿using PicAFlick.Infrastructure.Tmdb.Models;
+using PicTmdb.Models;
 
 namespace PicAFlick.Infrastructure.Tmdb
 {
@@ -6,6 +7,7 @@ namespace PicAFlick.Infrastructure.Tmdb
     {
         Task<TmdbMovieSearchResponseDto?> GetMovieByTitleAsync(string query);
         Task<TmdbTvShowSearchResponseDto?> GetTvShowByTitleAsync(string query);
-        Task<string?> GetMovieCreditsAsync(int tmdbId);
+        Task<TmdbMovieCreditsResponseDto?> GetMovieCreditsAsync(int tmdbId);
+        Task<TmdbMovieCreditsResponseDto?> GetTvCreditsAsync(int tmdbId);
     }
 }

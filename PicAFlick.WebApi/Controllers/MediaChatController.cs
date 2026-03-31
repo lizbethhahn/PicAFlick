@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PicAFlick.Domain.Enums;
 using PicAFlick.Infrastructure.Tmdb;
 using PicAFlick.WebApi.Models;
+using PicTmdb.Models;
 
 namespace PicAFlick.WebApi.Controllers;
 
@@ -25,18 +27,37 @@ public class MediaChatController : ControllerBase
 
         var message = request.Message.ToLower();
 
-        if (message.Contains("who starred") && request.TmdbId.HasValue)
+        if (
+            request.TmdbId.HasValue &&
+            (
+                message.Contains("who starred") ||
+                message.Contains("who stars") ||
+                message.Contains("cast")
+            )
+        )
         {
-            var creditsJson = await _tmdbApiClient.GetMovieCreditsAsync(request.TmdbId.Value);
+            var mediaType = request.MediaType?.ToLower();
 
-            if (creditsJson == null)
+            var credits = mediaType == "tv"
+                ? await _tmdbApiClient.GetTvCreditsAsync(request.TmdbId.Value)
+                : await _tmdbApiClient.GetMovieCreditsAsync(request.TmdbId.Value);
+
+            if (credits?.Cast == null || !credits.Cast.Any())
             {
-                return Ok("Could not retrieve cast right now.");
+                return Ok("No cast information found.");
             }
 
-            return Ok(creditsJson);
+            return Ok(FormatTopCast(credits));
         }
 
         return Ok("I’m still learning, but I got your message!");
+    }
+    private static string FormatTopCast(TmdbMovieCreditsResponseDto credits)
+    {
+        var topCast = credits.Cast
+            .Take(5)
+            .Select(c => $"* {c.Name} as {c.Character}");
+
+        return "Here’s the top cast:\n\n" + string.Join("\n", topCast);
     }
 }
