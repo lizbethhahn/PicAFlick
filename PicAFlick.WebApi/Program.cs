@@ -12,6 +12,9 @@ var envPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!
 var tmdbApiToken = Environment.GetEnvironmentVariable("TMDB_API_TOKEN");
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpClient<ITmdbApiClient, TmdbApiClient>();
+builder.Services.AddControllers();
+
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
     ?? builder.Configuration.GetConnectionString("Default"); ;
 if (string.IsNullOrWhiteSpace(connectionString))

@@ -1,5 +1,6 @@
-﻿using System.Text.Json;
-using PicAFlick.Infrastructure.Tmdb.Models;
+﻿using PicAFlick.Infrastructure.Tmdb.Models;
+using PicTmdb.Models;
+using System.Text.Json;
 
 namespace PicAFlick.Infrastructure.Tmdb
 {
@@ -51,6 +52,48 @@ namespace PicAFlick.Infrastructure.Tmdb
                 // Handle error (e.g., log it, throw exception, etc.)
                 return null;
             }
+        }
+
+        public async Task<TmdbMovieCreditsResponseDto?> GetMovieCreditsAsync(int tmdbId)
+        {
+            string requestUrl = $"movie/{tmdbId}/credits";
+
+            HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            return JsonSerializer.Deserialize<TmdbMovieCreditsResponseDto>(
+                json,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+        }
+
+        public async Task<TmdbMovieCreditsResponseDto?> GetTvCreditsAsync(int tmdbId)
+        {
+            string requestUrl = $"tv/{tmdbId}/credits";
+
+            HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            return JsonSerializer.Deserialize<TmdbMovieCreditsResponseDto>(
+                json,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
         }
     }
 }

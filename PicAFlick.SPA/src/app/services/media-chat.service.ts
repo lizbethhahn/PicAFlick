@@ -6,9 +6,11 @@ import { inject } from '@angular/core';
   providedIn: 'root'
 })
 export class MediaChatService {
-  sendMessage(message: string) {
+  sendMessage(message: string, tmdbId?: number, mediaType?: string) {
   return this.http.post('https://localhost:7043/api/MediaChat', {
-    message: message
+    message: message,
+    tmdbId: tmdbId,
+    mediaType: mediaType
   }, {
     responseType: 'text'
   });
