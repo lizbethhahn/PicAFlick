@@ -36,10 +36,11 @@
     <div class="chat-input-area">
       <textarea
         [(ngModel)]="newMessage"
+        [ngModelOptions]="{ standalone: true }"
         (keydown)="onKeyDown($event)"
         placeholder="Ask PicAFlick...">
       </textarea>
-      <button type="button">Send</button>
+      <button type="button" (click)="sendMessage()">Send</button>
     </div>
   </section>
 </div>

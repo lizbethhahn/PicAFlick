@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PicAFlick.Domain.Enums;
 using PicAFlick.Infrastructure.Tmdb;
 using PicAFlick.WebApi.Models;
 using PicTmdb.Models;
+using Microsoft.SemanticKernel;
 
 namespace PicAFlick.WebApi.Controllers;
 
@@ -11,10 +11,11 @@ namespace PicAFlick.WebApi.Controllers;
 public class MediaChatController : ControllerBase
 {
     private readonly ITmdbApiClient _tmdbApiClient;
-
-    public MediaChatController(ITmdbApiClient tmdbApiClient)
+    private readonly IConfiguration _configuration;
+    public MediaChatController(ITmdbApiClient tmdbApiClient, IConfiguration configuration)
     {
         _tmdbApiClient = tmdbApiClient;
+        _configuration = configuration;
     }
 
     [HttpPost]
@@ -25,29 +26,49 @@ public class MediaChatController : ControllerBase
             return BadRequest("Message is required.");
         }
 
-        var message = request.Message.ToLower();
-
-        if (
-            request.TmdbId.HasValue &&
-            (
-                message.Contains("who starred") ||
-                message.Contains("who stars") ||
-                message.Contains("cast")
-            )
-        )
+        var githubToken = _configuration["GithubModels:ApiKey"];
+    
+        if (!string.IsNullOrEmpty(githubToken))
         {
-            var mediaType = request.MediaType?.ToLower();
+            var kernel = Kernel.CreateBuilder()
+                .AddOpenAIChatCompletion(
+                    modelId: "openai/gpt-4o-mini",
+                    apiKey: githubToken,
+                    endpoint: new Uri("https://models.github.ai/inference")
+                )
+                .Build();
 
-            var credits = mediaType == "tv"
-                ? await _tmdbApiClient.GetTvCreditsAsync(request.TmdbId.Value)
-                : await _tmdbApiClient.GetMovieCreditsAsync(request.TmdbId.Value);
+            var intentPrompt = $@"
+                You are classifying a user message.
 
-            if (credits?.Cast == null || !credits.Cast.Any())
+                If the user is asking about who starred in a movie or show, respond with:
+                CAST
+
+                Otherwise respond with:
+                OTHER
+
+                Message:
+                {request.Message}
+                ";
+
+            var intentResult = await kernel.InvokePromptAsync(intentPrompt);
+            var intent = intentResult.ToString().Trim();
+
+            if (intent.Contains("CAST") && request.TmdbId.HasValue)
             {
-                return Ok("No cast information found.");
-            }
+                var mediaType = request.MediaType?.ToLower();
 
-            return Ok(FormatTopCast(credits));
+                var credits = mediaType == "tv"
+                    ? await _tmdbApiClient.GetTvCreditsAsync(request.TmdbId.Value)
+                    : await _tmdbApiClient.GetMovieCreditsAsync(request.TmdbId.Value);
+
+                if (credits?.Cast == null || !credits.Cast.Any())
+                {
+                    return Ok("No cast information found.");
+                }
+
+                return Ok(FormatTopCast(credits));
+            }
         }
 
         return Ok("I’m still learning, but I got your message!");

@@ -8,6 +8,7 @@ import { MediaChatService } from '../../services/media-chat.service';
 @Component({
   selector: 'app-media-chat',
   imports: [CommonModule, FormsModule],
+  standalone: true,
   templateUrl: './media-chat.html',
   styleUrl: './media-chat.scss',
 })
