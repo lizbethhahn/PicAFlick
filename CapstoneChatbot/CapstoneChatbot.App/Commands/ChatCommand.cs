@@ -447,8 +447,6 @@ public static class ChatCommand
             if (input.StartsWith("add ", StringComparison.OrdinalIgnoreCase))
             {
                 var addValue = input[4..].Trim();
-                // DEBUG (temporary)
-Console.WriteLine($"DEBUG: IsWaiting={session.IsWaitingForAddSelection}, Count={session.PendingAddResults.Count}, Value='{addValue}'");
 
                 if (string.IsNullOrWhiteSpace(addValue))
                 {
