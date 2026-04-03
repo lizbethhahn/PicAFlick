@@ -2,6 +2,9 @@
 
 PicAFlick is a full-stack movie and TV watchlist application built to explore real-world software architecture using modern .NET technologies.
 
+Experience PicAFlick in action — from natural language chat to AI-driven recommendations powered by Semantic Kernel and TMDb.<br>
+[**Watch the demo**](https://drive.google.com/file/d/1IBB3vIgP2ciia-I4rLeiGiPy4sFgJqvQ/view?usp=drive_link)
+
 It serves as both a personal tool for managing what to watch next and a hands-on implementation of clean architecture principles, API design, and client-server interaction.
 
 ## Key Features
@@ -96,4 +99,9 @@ dotnet user-secrets list
 You should see both:
 
 - Tmdb:ApiToken  
-- GitHubModels:ApiKey  
+- GitHubModels:ApiKey
+
+## Attribution
+
+This product uses the TMDb API but is not endorsed or certified by TMDb.
+All movie and TV data is provided by [The Movie Database (TMDb)](https://www.themoviedb.org/).
