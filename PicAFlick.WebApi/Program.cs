@@ -1,24 +1,22 @@
-using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using PicAFlick.Data.Context;
 using PicAFlick.Data.Repositories;
 using PicAFlick.Infrastructure.Tmdb;
 using PicAFlick.Services.Implementations;
 using PicAFlick.Services.Interfaces;
-using System;
-
-var envPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName, ".env");
-               Env.Load(envPath);   
-var tmdbApiToken = Environment.GetEnvironmentVariable("TMDB_API_TOKEN");
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load the TMDb API token from .NET User Secrets for local development.
+var tmdbApiToken = builder.Configuration["Tmdb:ApiToken"]
+    ?? throw new InvalidOperationException("TMDb API token is missing.");
+
 builder.Services.AddHttpClient<ITmdbApiClient, TmdbApiClient>();
 builder.Services.AddControllers();
 
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
-    ?? builder.Configuration.GetConnectionString("Default"); ;
-if (string.IsNullOrWhiteSpace(connectionString))
-    throw new InvalidOperationException("Missing DB connection. Set DB_CONNECTION_STRING or ConnectionStrings:Default.");
+// Load the local SQL Server connection string from appsettings.Development.json.
+var connectionString = builder.Configuration.GetConnectionString("Default")
+    ?? throw new InvalidOperationException("Database connection string is missing.");
 
 // Add services to the container.
 builder.Services.AddDbContext<WatchlistContext>(opt =>
