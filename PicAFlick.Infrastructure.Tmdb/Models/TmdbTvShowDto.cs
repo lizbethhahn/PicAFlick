@@ -35,7 +35,7 @@ namespace PicAFlick.Infrastructure.Tmdb.Models
         public string? PosterPath { get; set; }
 
         [JsonPropertyName("first_air_date")]
-        public DateTime? ReleaseDate { get; set; }
+        public string? ReleaseDate { get; set; }
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }
