@@ -41,16 +41,40 @@ namespace PicAFlick.Services.Implementations
                     TmdbId = dto.TmdbId,
                     Title = dto.Title,
                     MediaType = dto.MediaType,
-                    ReleaseDate = dto.ReleaseDate
+                    ReleaseDate = dto.ReleaseDate,
+                    PosterPath = dto.PosterPath,
+                    Overview = dto.Overview
                 };
 
                 media = await _repo.AddUserMediaAsync(media, ct);
             }
             // backfill release date if missing
-            else if (media.ReleaseDate == null && dto.ReleaseDate.HasValue)
+            else
             {
-                media.ReleaseDate = dto.ReleaseDate;
-                await _repo.UpdateUserMediaAsync(media, ct);
+                var needsUpdate = false;
+
+                if (media.ReleaseDate == null && dto.ReleaseDate.HasValue)
+                {
+                    media.ReleaseDate = dto.ReleaseDate;
+                    needsUpdate = true;
+                }
+
+                if (media.PosterPath == null && dto.PosterPath != null)
+                {
+                    media.PosterPath = dto.PosterPath;
+                    needsUpdate = true;
+                }
+
+                if (media.Overview == null && dto.Overview != null)
+                {
+                    media.Overview = dto.Overview;
+                    needsUpdate = true;
+                }
+
+                if (needsUpdate)
+                {
+                    await _repo.UpdateUserMediaAsync(media, ct);
+                }
             }
 
             var existingItem = await _repo.GetByUserMediaIdAsync(media.Id, ct);

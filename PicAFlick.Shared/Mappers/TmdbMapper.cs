@@ -13,6 +13,9 @@ namespace PicAFlick.Domain.Services.Mappers
                 Title = movie.Title ?? "Unknown Title",
                 MediaType = MediaType.Movie,
                 TmdbId = movie.TmdbMovieId,
+                PosterPath = movie.PosterPath,
+                Overview = movie.Overview,
+                ReleaseDate = movie.ReleaseDate,
                 Notes = null
             };
         }
@@ -24,6 +27,9 @@ namespace PicAFlick.Domain.Services.Mappers
                 Title = show.Name ?? "Unknown Title",
                 MediaType = MediaType.TvShow,
                 TmdbId = show.TmdbTvShowId,
+                PosterPath = show.PosterPath,
+                Overview = show.Overview,
+                ReleaseDate = show.ReleaseDate,
                 Notes = null
             };
         }

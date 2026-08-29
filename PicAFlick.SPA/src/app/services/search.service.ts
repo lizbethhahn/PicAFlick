@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 export interface TmdbMovie {
   id: number;
   title: string;
-  originial_title: string;
+  original_title: string;
   overview: string;
   release_date: string;
   vote_average: number;
