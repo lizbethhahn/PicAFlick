@@ -24,11 +24,21 @@ export class WatchlistComponent {
   getAllWatchlistItems() {
     this.watchlistService.getAll().subscribe({
       next: (results) => {
-        console.log('Watchlist results:', results);
         this.watchlist = results;
       },
       error: (error) => {
         console.error('Watchlist error:', error);
+      }
+    });
+  }
+
+  loadWatchlist(): void {
+    this.watchlistService.getAll().subscribe({
+      next: (items) => {
+        this.watchlist = items;
+      },
+      error: (error) => {
+        console.error('Could not load watchlist:', error);
       }
     });
   }

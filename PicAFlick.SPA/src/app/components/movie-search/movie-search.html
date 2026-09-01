@@ -11,18 +11,15 @@
   <!-- Button to trigger the search -->
   <button type="button" (click)="onSearch()" class="search-button">Search</button>
 
-  @if (errorMessage) 
-  {
+  @if (errorMessage) {
     <div class="error-message">
         {{ errorMessage }}
     </div>
   }
 
   <!-- Display movie data if available -->
-  @if (searchResults)
-  {
-    @for (movie of searchResults; track movie.id)
-    {
+  @if (searchResults) {
+    @for (movie of searchResults; track movie.id) {
       <div class="movie-card" (click)="onSelectMovie(movie)">
         <div class="poster">
           @if (movie.poster_path)
@@ -37,7 +34,41 @@
           <p><strong>Overview:</strong> {{ movie.overview }}</p>
           <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
           <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
+          
+          @if (isInWatchlist(movie)) {
+            <span class="in-watchlist">
+              <strong>In your Watchlist 🤩</strong>
+            </span>
+          } @else {
+            <label 
+              class="watchlist-select"
+              (click)="$event.stopPropagation()"
+            >
+              <input
+                type="checkbox"
+                (change)="onMovieSelectionChange(movie, $event)"
+              />
+              Add to your Watchlist
+            </label>
+          }            
         </div>
       </div>
-    }       
-  }
+    }
+    @if (selectedMovies.length > 0) {
+      <div class="watchlist-action-bar">
+        <button (click)="addSelectedToWatchlist()">
+          <strong>
+            @if (addedMovieCount === selectedMovies.length) {
+              {{ addedMovieCount }}
+              {{ addedMovieCount === 1 ? 'Movie Added' : 'Movies Added' }}
+            } @else {
+              Add {{ selectedMovies.length }}
+              {{ selectedMovies.length === 1 ? 'Item' : 'Items' }}
+              to Watchlist
+            }
+          </strong>
+        </button>
+      </div>
+    }
+  }     
+</div>
