@@ -25,7 +25,6 @@ export class MovieSearchComponent {
   isLoading: boolean = false;
   errorMessage: string = '';
 
-
   constructor(
     private searchService: SearchService, 
     private router: Router, 
@@ -59,7 +58,13 @@ export class MovieSearchComponent {
     const checkbox = event.target as HTMLInputElement;
     
     if (checkbox.checked) {
+      
+      if (this.selectedMovies.length === 0) {
+        this.addedMovieCount = 0;
+      }
+
       this.selectedMovies.push(movie);
+
     } else {
       this.selectedMovies = this.selectedMovies.filter(
         selectedMovie => selectedMovie.id !== movie.id
@@ -87,6 +92,10 @@ export class MovieSearchComponent {
             this.watchlistItems.push(createdItem);
           }                   
           this.addedMovieCount++;
+
+          this.selectedMovies = this.selectedMovies.filter(
+            movie => movie.id !== createdItem.tmdbId
+          );
         },
         error: (error) => {
           console.error('Could not add to watchlist:', error);
@@ -108,7 +117,9 @@ export class MovieSearchComponent {
 
   isInWatchlist(movie: TmdbMovie): boolean {
     return this.watchlistItems.some(
-      item => item.tmdbId === movie.id
+      item =>
+        item.tmdbId === movie.id &&
+        item.mediaType === MediaType.Movie
     );    
   }
 
