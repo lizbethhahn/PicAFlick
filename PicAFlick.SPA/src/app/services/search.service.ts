@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 export interface TmdbMovie {
   id: number;
   title: string;
-  originial_title: string;
+  original_title: string;
   overview: string;
   release_date: string;
   vote_average: number;
@@ -41,6 +41,13 @@ export interface TmdbTvShowSearchResponse {
 
 export class SearchService {
   private apiUrl = 'https://localhost:7043/api/Search'
+
+  movieSearchTerm: string = '';
+  movieSearchResults: TmdbMovie[] = [];
+
+  tvShowSearchTerm: string = '';
+  tvShowSearchResults: TmdbTvShow[] = [];
+  
   constructor(private http: HttpClient) { }
 
   // Search for movies by title

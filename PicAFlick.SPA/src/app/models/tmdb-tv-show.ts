@@ -5,7 +5,7 @@ export interface TmdbTvShowDto {
     tmdbMovieId: number;
     originCountry?: string[];
     originalLanguage?: string;
-    originialName?: string;
+    originalName?: string;
     overview?: string;
     popularity?: number;
     posterPath?: string;

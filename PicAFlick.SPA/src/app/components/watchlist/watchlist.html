@@ -1,1 +1,23 @@
-<p>watchlist works!</p>
+<div class="app-watchlist-container">
+  <h2>My Watchlist</h2>
+
+  @if (watchlist)
+  {
+    @for (item of watchlist; track item.id) {
+      <div class="movie-card">
+        <div class="poster">
+          @if (item.posterPath) {
+              <img src="https://image.tmdb.org/t/p/w185/{{ item.posterPath }}"/>           
+            } @else {
+              <img src="assets/images/movie-placeholder.jpg">
+            }
+        </div>
+        <div class="movie-info">
+          <h3>{{ item.title }}</h3>
+          <p><strong>Overview:</strong> {{ item.overview }}</p>
+          <p><strong>Release Date:</strong> {{ item.releaseDate }}</p>
+        </div>
+      </div>
+    }
+  }
+</div>

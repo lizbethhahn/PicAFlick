@@ -23,7 +23,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin-bottom: 15px;
+  // margin-bottom: 15px;
   color: #333;
 }
 
@@ -68,6 +68,29 @@ button:focus {
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
+}
+
+.watchlist-select {
+  display: block;
+  margin-top: 50px;
+}
+
+.in-watchlist {
+  display: block;
+  margin-top: 50px;
+  color: #e91598
+}
+
+.watchlist-action-bar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 8px;
+  background: white;
+  border-top: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
 }
 
 .error-message {

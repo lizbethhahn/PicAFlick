@@ -19,8 +19,9 @@ describe('SearchService', () => {
     (service: SearchService, httpMock: HttpTestingController) => {
       const mockMovies: TmdbMovie[] = [{
         title: 'Star Wars',
-        originial_title: 'Star Wars',
+        original_title: 'Star Wars',
         overview: 'Princess Leia is captured and held hostage by the evil Imperial forces in their effort to take over the galactic Empire. Venturesome Luke Skywalker and dashing captain Han Solo team together with the loveable robot duo R2-D2 and C-3PO to rescue the beautiful princess and restore peace and justice in the Empire.',
+        poster_path: '',
         release_date: '1977-05-25',
         vote_average: 8.205,
         id: 0
@@ -28,7 +29,7 @@ describe('SearchService', () => {
 
       service.searchMovies('Star Wars').subscribe(movies => {
         expect(movies.length).toBe(1);
-        expect(movies[0].originial_title).toBe('Star Wars');
+        expect(movies[0].original_title).toBe('Star Wars');
       });
 
       const req = httpMock.expectOne('https://localhost:5000/api/Search/movie/Star Wars');
@@ -44,6 +45,7 @@ describe('SearchService', () => {
         name: 'Firefly',
         original_name: 'Firefly',
         overview: 'In the year 2517, after the arrival of humans in a new star system, follow the adventures of the renegade crew of Serenity, a \"Firefly-class\" spaceship.',
+        poster_path: '',
         first_air_date: '2002-09-20',
         vote_average: 8.336,
         id: 0
