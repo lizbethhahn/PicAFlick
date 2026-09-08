@@ -23,11 +23,11 @@ public static class SearchCommand
         {
             // Azure OpenAI configuration
             var deploymentName = configuration["AzureOpenAI:DeploymentName"]
-                ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName usersecret is missing.");
+                ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName user secret is missing.");
             var endpoint = configuration["AzureOpenAI:Endpoint"]
-                ?? throw new InvalidOperationException("AzureOpenAI:Endpoint usersecret is missing.");
+                ?? throw new InvalidOperationException("AzureOpenAI:Endpoint user secret is missing.");
             var apiKey = configuration["AzureOpenAI:ApiKey"]
-                ?? throw new InvalidOperationException("AzureOpenAI:ApiKey usersecret is missing.");
+                ?? throw new InvalidOperationException("AzureOpenAI:ApiKey user secret is missing.");
 
             var kernelBuilder = Kernel.CreateBuilder()
                 .AddAzureOpenAIChatCompletion(
