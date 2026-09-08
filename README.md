@@ -64,16 +64,21 @@ PicAFlick uses [The Movie Database (TMDb)](https://www.themoviedb.org/) for movi
 
 These credentials will be added to .NET User Secrets in the steps below.
 
-### 2. GitHub Models Setup
+### 2. Azure AI Model Setup
 
-The AI functionality uses Semantic Kernel with GitHub Models.
+The AI functionality uses Semantic Kernel with an Azure OpenAI model deployed through Microsoft Foundry.
 
-1. Go to https://github.com/marketplace/models
-2. Sign in to your GitHub account.
-3. Create a GitHub Models API token with access to the OpenAI models, specifically `openai/gpt-4o`.
-4. Copy and store the token securely. It will be added to .NET User Secrets below.
+1. Sign in to Azure and make sure you have an active Azure subscription.
+2. In Microsoft Foundry, create or select a project and deploy an Azure OpenAI model. PicAFlick has been tested with `gpt-5-mini`.
+3. After deployment, locate the following information for your deployment:
+   - Deployment name
+   - Azure OpenAI endpoint
+   - API key
+4. Copy these values securely. They will be added to .NET User Secrets in the next section.
 
-> **Note:** The AI application is currently configured to use `openai/gpt-4o`. If the model is changed in code, the GitHub Models token must have access to the selected model.
+> **Important:** For the endpoint, use the Azure OpenAI resource endpoint, such as `https://<your-resource>.openai.azure.com/`. Do not include `/openai/v1`.
+
+> **Note:** Azure model availability, quotas, and deployment options can vary by subscription and region. See [Microsoft's Foundry model deployment documentation](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/deploy-foundry-models) for current setup instructions.
 
 ### 3. Configure the PicAFlick Web API
 
@@ -152,7 +157,9 @@ Add the required credentials:
 ```bash
 dotnet user-secrets set "Tmdb:ApiToken" "your_api_read_access_token_here"
 dotnet user-secrets set "Tmdb:ApiKey" "your_tmdb_api_key_here"
-dotnet user-secrets set "GithubModels:ApiKey" "your_github_models_api_key_here"
+dotnet user-secrets set "AzureOpenAI:DeploymentName" "gpt-5-mini"
+dotnet user-secrets set "AzureOpenAI:Endpoint" "https://<your-resource-here>.openai.azure.com/"
+dotnet user-secrets set "AzureOpenAI:ApiKey" "your_azure_openai_api_key_here" 
 ```
 
 Verify the configuration:
@@ -166,7 +173,9 @@ You should see:
 ```text
 Tmdb:ApiToken = ...
 Tmdb:ApiKey = ...
-GithubModels:ApiKey = ...
+AzureOpenAI:DeploymentName = ...
+AzureOpenAI:Endpoint = ...
+AzureOpenAI:ApiKey = ...
 ```
 
 Never commit API tokens, API keys, or other secrets to source control.
@@ -221,7 +230,7 @@ Start the AI console application:
 dotnet run
 ```
 
-The AI assistant uses Semantic Kernel and GitHub Models to interpret natural-language requests and communicates with the PicAFlick Web API.
+The AI assistant uses Semantic Kernel and Azure OpenAI Models to interpret natural-language requests and communicates with the PicAFlick Web API.
 
 ### Development Setup at a Glance
 

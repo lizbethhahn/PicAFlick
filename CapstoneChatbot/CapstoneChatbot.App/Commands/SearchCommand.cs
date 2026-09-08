@@ -21,45 +21,50 @@ public static class SearchCommand
         // AI-assisted query cleanup
         try
         {
-            var githubToken = configuration["GithubModels:ApiKey"];
-            if (!string.IsNullOrEmpty(githubToken))
+            // Azure OpenAI configuration
+            var deploymentName = configuration["AzureOpenAI:DeploymentName"]
+                ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName user secret is missing.");
+            var endpoint = configuration["AzureOpenAI:Endpoint"]
+                ?? throw new InvalidOperationException("AzureOpenAI:Endpoint user secret is missing.");
+            var apiKey = configuration["AzureOpenAI:ApiKey"]
+                ?? throw new InvalidOperationException("AzureOpenAI:ApiKey user secret is missing.");
+
+            var kernelBuilder = Kernel.CreateBuilder()
+                .AddAzureOpenAIChatCompletion(
+                    deploymentName: deploymentName,
+                    endpoint: endpoint,
+                    apiKey: apiKey
+                );
+
+            var kernel = kernelBuilder.Build();
+
+            var cleanupPrompt = $@"
+            You are helping clean up a movie or TV title search query.
+
+            Return ONLY a single cleaned title query.
+            Do not explain.
+            Do not use quotes.
+            Do not add labels.
+            Do not add extra text.
+
+            If the input already looks usable, return it unchanged.
+
+            Input:
+            {query}
+            ";
+
+            var resultContext = await kernel.InvokePromptAsync(cleanupPrompt);
+            var cleanedQuery = resultContext.ToString().Trim();
+
+            if (!string.IsNullOrWhiteSpace(cleanedQuery))
             {
-                var kernelBuilder = Kernel.CreateBuilder()
-                    .AddOpenAIChatCompletion(
-                        modelId: "openai/gpt-4o",
-                        apiKey: githubToken,
-                        endpoint: new Uri("https://models.github.ai/inference")
-                    );
-
-                var kernel = kernelBuilder.Build();
-
-                var cleanupPrompt = $@"
-                You are helping clean up a movie or TV title search query.
-
-                Return ONLY a single cleaned title query.
-                Do not explain.
-                Do not use quotes.
-                Do not add labels.
-                Do not add extra text.
-
-                If the input already looks usable, return it unchanged.
-
-                Input:
-                {query}
-                ";
-
-                var resultContext = await kernel.InvokePromptAsync(cleanupPrompt);
-                var cleanedQuery = resultContext.ToString().Trim();
-
-                if (!string.IsNullOrWhiteSpace(cleanedQuery))
-                {
-                    query = cleanedQuery;
-                    Console.WriteLine($"Cleaned query: {query}");
-                }
+                query = cleanedQuery;
+                Console.WriteLine($"Cleaned query: {query}");
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine($"AI cleanup failed: {ex.Message}");
             // Fall back to original query
         }
 

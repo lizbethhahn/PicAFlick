@@ -197,14 +197,19 @@ public static class ChatCommand
 
                         Console.WriteLine($"Bot: Let me check who stars in {selected.Title}...");
 
-                        var githubToken = configuration["GithubModels:ApiKey"]
-                            ?? throw new InvalidOperationException("GithubModels:ApiKey user secret is missing.");
+                        // Azure OpenAI configuration
+                        var deploymentName = configuration["AzureOpenAI:DeploymentName"]
+                            ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName user secret is missing.");
+                        var endpoint = configuration["AzureOpenAI:Endpoint"]
+                            ?? throw new InvalidOperationException("AzureOpenAI:Endpoint user secret is missing.");
+                        var apiKey = configuration["AzureOpenAI:ApiKey"]
+                            ?? throw new InvalidOperationException("AzureOpenAI:ApiKey user secret is missing.");
 
                         var kernelBuilder = Kernel.CreateBuilder()
-                            .AddOpenAIChatCompletion(
-                                modelId: "openai/gpt-4o",
-                                apiKey: githubToken,
-                                endpoint: new Uri("https://models.github.ai/inference")
+                            .AddAzureOpenAIChatCompletion(
+                                deploymentName: deploymentName,
+                                endpoint: endpoint,
+                                apiKey: apiKey
                             );
 
                         var kernel = kernelBuilder.Build();
@@ -550,14 +555,19 @@ public static class ChatCommand
 
             try
             {
-                var githubToken = configuration["GithubModels:ApiKey"]
-                                  ?? throw new InvalidOperationException("GithubModels:ApiKey user secret is missing.");
+                // Azure OpenAI configuration
+                var deploymentName = configuration["AzureOpenAI:DeploymentName"]
+                    ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName user secret is missing.");
+                var endpoint = configuration["AzureOpenAI:Endpoint"]
+                    ?? throw new InvalidOperationException("AzureOpenAI:Endpoint user secret is missing.");
+                var apiKey = configuration["AzureOpenAI:ApiKey"]
+                    ?? throw new InvalidOperationException("AzureOpenAI:ApiKey user secret is missing.");
 
                 var kernelBuilder = Kernel.CreateBuilder()
-                    .AddOpenAIChatCompletion(
-                        modelId: "openai/gpt-4o",
-                        apiKey: githubToken,
-                        endpoint: new Uri("https://models.github.ai/inference")
+                    .AddAzureOpenAIChatCompletion(
+                        deploymentName: deploymentName,
+                        endpoint: endpoint,
+                        apiKey: apiKey
                     );
 
                 var kernel = kernelBuilder.Build();
