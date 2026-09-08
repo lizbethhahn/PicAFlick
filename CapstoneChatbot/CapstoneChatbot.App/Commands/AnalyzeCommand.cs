@@ -27,14 +27,19 @@ public static class AnalyzeCommand
 
         try
         {
-            var githubToken = configuration["GithubModels:ApiKey"]
-                              ?? throw new InvalidOperationException("GithubModels:ApiKey user secret is missing.");
+            //Azure OpenAI configuration
+            var deploymentName = configuration["AzureOpenAI:DeploymentName"]
+                ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName usersecret is missing.");
+            var endpoint = configuration["AzureOpenAI:Endpoint"]
+                ?? throw new InvalidOperationException("AzureOpenAI:Endpoint usersecret is missing.");
+            var apiKey = configuration["AzureOpenAI:ApiKey"]
+                ?? throw new InvalidOperationException("AzureOpenAI:ApiKey usersecret is missing.");
 
             var kernelBuilder = Kernel.CreateBuilder()
-                .AddOpenAIChatCompletion(
-                    modelId: "openai/gpt-4o",
-                    apiKey: githubToken,
-                    endpoint: new Uri("https://models.github.ai/inference")
+                .AddAzureOpenAIChatCompletion(
+                    deploymentName: deploymentName,
+                    endpoint: endpoint,
+                    apiKey: apiKey
                 );
 
             var kernel = kernelBuilder.Build();
@@ -82,10 +87,10 @@ public static class AnalyzeCommand
 
             Console.WriteLine(aiReply.Trim());
 
-            Console.Write("\nType 'watch' to mark the recommended item as watched, or press Enter to continue: ");
+            Console.Write("\nType 'watched' to mark the recommended item as watched, or press Enter to continue: ");
             var userInput = (Console.ReadLine() ?? "").Trim().ToLowerInvariant();
 
-            if (userInput == "watch")
+            if (userInput == "watched")
             {
                 var responseLines = aiReply
                     .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
