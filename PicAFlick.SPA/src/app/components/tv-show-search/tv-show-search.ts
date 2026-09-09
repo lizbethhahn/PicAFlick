@@ -54,7 +54,7 @@ export class TvShowSearchComponent {
     });
   }
 
-  onTvShowSelectionChange(show: TmdbTvShow, event: Event) {
+  onTvShowSelectionChange(tvShow: TmdbTvShow, event: Event) {
     const checkbox = event.target as HTMLInputElement;
 
     if (checkbox.checked) {
@@ -63,11 +63,11 @@ export class TvShowSearchComponent {
         this.addedTvShowCount = 0;
       }
     
-    this.selectedTvShows.push(show);
+    this.selectedTvShows.push(tvShow);
 
     } else {
       this.selectedTvShows = this.selectedTvShows.filter(
-        selectedTvShow => selectedTvShow.id !== show.id
+        selectedTvShow => selectedTvShow.id !== tvShow.id
       );
     }
   }
@@ -75,14 +75,14 @@ export class TvShowSearchComponent {
   addSelectedToWatchlist() {
     this.addedTvShowCount = 0;
 
-    this.selectedTvShows.forEach(show => {
+    this.selectedTvShows.forEach(tvShow => {
       const item = {
-        tmdbId: show.id,
-        title: show.name,
+        tmdbId: tvShow.id,
+        title: tvShow.name,
         mediaType: MediaType.TvShow,
-        posterPath: show.poster_path,
-        overview: show.overview,
-        releaseDate: show.first_air_date || null,
+        posterPath: tvShow.poster_path,
+        overview: tvShow.overview,
+        releaseDate: tvShow.first_air_date || null,
         notes: null
       };
 
@@ -115,10 +115,10 @@ export class TvShowSearchComponent {
     });
   }  
   
-  isInWatchlist(show: TmdbTvShow): boolean {
+  isInWatchlist(tvShow: TmdbTvShow): boolean {
     return this.watchlistItems.some(
       item =>
-        item.tmdbId === show.id &&
+        item.tmdbId === tvShow.id &&
         item.mediaType === MediaType.TvShow
     );
   }
@@ -133,9 +133,9 @@ export class TvShowSearchComponent {
     this.searchTvShows(this.searchTerm);
   }
 
-  onSelectShow(show: any) {
+  onSelectShow(tvShow: any) {
     this.router.navigate(['/media'], {
-      state: { media: show }
+      state: { media: tvShow }
     });
   }
 }
