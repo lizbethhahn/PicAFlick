@@ -11,7 +11,7 @@ namespace PicAFlick.Chat
             _kernelClient = kernelClient;
         }
 
-        public async Task<string?> GenerateResponseAsync(string message)
+        public async Task<string> GenerateResponseAsync(string message)
         {
             if (string.IsNullOrWhiteSpace(message))
                 throw new ArgumentException();
