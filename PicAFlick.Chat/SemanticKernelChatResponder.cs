@@ -1,10 +1,22 @@
-﻿namespace PicAFlick.Chat
+﻿using Microsoft.SemanticKernel;
+
+namespace PicAFlick.Chat
 {
     public class SemanticKernelChatResponder : IChatResponder
     {
-        public Task<string> GenerateResponseAsync(string message)
+        private readonly ISemanticKernelClient _kernelClient;
+
+        public SemanticKernelChatResponder(ISemanticKernelClient kernelClient)
         {
-            throw new NotImplementedException();
+            _kernelClient = kernelClient;
+        }
+
+        public async Task<string?> GenerateResponseAsync(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+                throw new ArgumentException();
+
+            return await _kernelClient.InvokePromptAsync(message);
         }
     }
 }

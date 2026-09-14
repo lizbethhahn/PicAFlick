@@ -3,14 +3,14 @@ using Microsoft.SemanticKernel;
 
 namespace PicAFlick.Chat
 {
-    public class SemanticKernelBuilder
+    public class SemanticKernelFactory
     {
         private readonly IConfiguration _configuration;
-        public SemanticKernelBuilder(IConfiguration configuration)
+        public SemanticKernelFactory(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        public Kernel Build()
+        public Kernel CreateKernel()
         {
             var deploymentName = _configuration["AzureOpenAI:DeploymentName"]
                 ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName user secret is missing.");
@@ -27,6 +27,7 @@ namespace PicAFlick.Chat
                 );
 
             var kernel = kernelBuilder.Build();
+
             return kernel;
         }
     }

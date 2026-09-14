@@ -2,7 +2,7 @@
 
 namespace PicAFlick.Chat.Tests
 {
-    public class SemanticKernelBuilderTests
+    public class SemanticKernelFactoryTests
     {
         [Theory]
         [InlineData("AzureOpenAI:DeploymentName")]
@@ -24,10 +24,10 @@ namespace PicAFlick.Chat.Tests
                 .AddInMemoryCollection(configValues)
                 .Build();
 
-            var builder = new SemanticKernelBuilder(configuration);
+            var factory = new SemanticKernelFactory(configuration);
 
             // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => builder.Build());
+            var exception = Assert.Throws<InvalidOperationException>(() => factory.CreateKernel());
         }
 
         [Fact]
@@ -43,10 +43,10 @@ namespace PicAFlick.Chat.Tests
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(configValues)
                 .Build();
-            var builder = new SemanticKernelBuilder(configuration);
+            var factory = new SemanticKernelFactory(configuration);
 
             // Act
-            var result = builder.Build();
+            var result = factory.CreateKernel();
 
             //Assert
             Assert.NotNull(result);
