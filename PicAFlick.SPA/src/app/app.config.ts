@@ -22,7 +22,7 @@ const routes: Routes = [
         .then(m => m.TvShowSearchComponent),
   },
   {
-    path: 'media',
+    path: 'chat',
     loadComponent: () =>
       import('./components/media-chat/media-chat')
         .then(m => m.MediaChatComponent),

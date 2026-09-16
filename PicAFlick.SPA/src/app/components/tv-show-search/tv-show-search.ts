@@ -134,7 +134,7 @@ export class TvShowSearchComponent {
   }
 
   onSelectShow(tvShow: any) {
-    this.router.navigate(['/media'], {
+    this.router.navigate(['/chat'], {
       state: { media: tvShow }
     });
   }
