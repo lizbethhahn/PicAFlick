@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PicAFlick.Domain.Enums;
+using PicAFlick.Chat;
 using PicAFlick.Infrastructure.Tmdb;
 using PicAFlick.WebApi.Models;
 using PicTmdb.Models;
@@ -11,10 +11,11 @@ namespace PicAFlick.WebApi.Controllers;
 public class MediaChatController : ControllerBase
 {
     private readonly ITmdbApiClient _tmdbApiClient;
-
-    public MediaChatController(ITmdbApiClient tmdbApiClient)
+    private readonly ChatService _chatService;
+    public MediaChatController(ITmdbApiClient tmdbApiClient, ChatService chatService)
     {
         _tmdbApiClient = tmdbApiClient;
+        _chatService = chatService;
     }
 
     [HttpPost]
@@ -50,7 +51,9 @@ public class MediaChatController : ControllerBase
             return Ok(FormatTopCast(credits));
         }
 
-        return Ok("I’m still learning, but I got your message!");
+        var aiResponse = await _chatService.ProcessIncomingMessageAsync(request.Message);
+
+        return Ok(aiResponse);
     }
     private static string FormatTopCast(TmdbMovieCreditsResponseDto credits)
     {

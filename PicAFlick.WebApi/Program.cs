@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SemanticKernel;
+using PicAFlick.Chat;
 using PicAFlick.Data.Context;
 using PicAFlick.Data.Repositories;
 using PicAFlick.Infrastructure.Tmdb;
@@ -50,6 +52,15 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
 builder.Services.AddScoped<IWatchlistService, WatchlistService>();
+builder.Services.AddScoped<ChatService>();
+builder.Services.AddScoped<IChatResponder, SemanticKernelChatResponder>();
+builder.Services.AddScoped<ISemanticKernelClient, SemanticKernelClient>();
+builder.Services.AddScoped<SemanticKernelFactory>();
+builder.Services.AddScoped<Kernel>(sp =>
+{
+    var factory = sp.GetRequiredService<SemanticKernelFactory>();
+    return factory.CreateKernel();
+});
 
 builder.Services.AddHttpsRedirection(o => o.HttpsPort = 7043);
 
