@@ -23,8 +23,8 @@ export class MediaChatComponent {
   ) {
     const nav = this.router.currentNavigation();
     this.media =
-        nav?.extras?.state?.['media'] ||
-        history.state?.media;
+      nav?.extras?.state?.['media'] ||
+      history.state?.media;
   }
 
   messages = [
@@ -50,8 +50,13 @@ export class MediaChatComponent {
 
     if (!userMessage.trim()) return;
 
-    const contextTitle = this.media?.title || this.media?.name;
-    const messageToSend = `Talking about: ${contextTitle}\n\n${userMessage}`;
+    let messageToSend;
+
+    if (this.media) {
+      messageToSend = `User is asking about the ${this.media.media_type} "${this.mediaTitle}" (${this.mediaYear}): ${userMessage}`;
+    } else {
+      messageToSend = userMessage;
+    }
 
     this.messages.push({
       sender: 'user',
@@ -63,7 +68,9 @@ export class MediaChatComponent {
     this.mediaChatService.sendMessage(
       messageToSend,
       this.media?.id,
-      this.media?.media_type ?? (this.media?.first_air_date ? 'tv' : 'movie') 
+      this.media
+        ? this.media?.media_type ?? (this.media?.first_air_date ? 'tv' : 'movie')
+        : undefined
     ).subscribe({
       next: (response) => {
         this.messages.push({

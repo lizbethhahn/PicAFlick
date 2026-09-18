@@ -4,8 +4,9 @@
   <!-- Input field to accept tv show title -->
   <input 
     type="text" 
-    [(ngModel)]="searchTerm"   
-    placeholder="Enter tv show title" 
+    [(ngModel)]="searchTerm"
+    placeholder="Enter tv show title"
+    (keydown.enter)="onSearch()"
     class="tv-show-title-input" />
 
   <!-- Button to trigger the search -->

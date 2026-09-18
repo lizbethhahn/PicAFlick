@@ -1,23 +1,25 @@
 <div class="media-chat-shell">
-  <section class="media-panel">
-    <div class="poster-wrap">
-      @if (media.poster_path) {
-        <img
-          src="https://image.tmdb.org/t/p/w185/{{ media.poster_path }}"
-          alt="Media poster" />
-      } @else {
+  <!-- Selected media uses a divided media/chat layout; general chat uses the full-width chat panel. -->
+  @if (media) {
+    <section class="media-panel">
+      <div class="poster-wrap">
+        @if (media.poster_path) {
           <img
-          src="assets/images/media-placeholder.jpg"
-          alt="No poster available" />
-      }
-    </div>
+            src="https://image.tmdb.org/t/p/w185/{{ media.poster_path }}"
+            alt="Media poster" />
+        } @else {
+            <img
+            src="assets/images/media-placeholder.jpg"
+            alt="No poster available" />
+        }
+      </div>
 
-    <div class="media-meta">
-      <h2>{{ mediaTitle }}</h2>
-      <p>{{ mediaYear }}</p>
-    </div>
-  </section>
-
+      <div class="media-meta">
+        <h2>{{ mediaTitle }}</h2>
+        <p>{{ mediaYear }}</p>
+      </div>
+    </section>
+  }
   <section class="chat-panel">
     <div class="chat-messages" #chatContainer>
       @for (message of messages; track $index) {

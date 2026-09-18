@@ -6,6 +6,7 @@
     type="text" 
     [(ngModel)]="searchTerm"   
     placeholder="Enter movie title" 
+    (keydown.enter)="onSearch()"
     class="movie-title-input" />
 
   <!-- Button to trigger the search -->
