@@ -1,4 +1,29 @@
 /* Container Styles */
+.app-tv-show-search-container {
+  display: flex;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.search-sidebar {
+  width: clamp(220px, 25vw, 300px);
+  flex-shrink: 0;
+}
+
+.search-results {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.search-sidebar,
+.search-results {
+  border: 6px double #e91598;
+  border-radius: 20px;
+  background: #ddf4ef;
+  padding: 1rem;
+}
+
 .tv-show-card {
   display: grid;
   /* Desktop: 1 part poster, 5 parts text */
@@ -7,6 +32,7 @@
   background-color: #a0efdf;
   border: 7px double #e91598;
   border-radius: 20px;
+  margin-bottom: .5rem;
   overflow: hidden;
   font-family: system-ui, -apple-system, sans-serif;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
@@ -23,8 +49,8 @@
 }
 
 .tv-show-info h3 {
-  margin: 0;
-  color: black;
+  margin-bottom: 15px;
+  color: rgb(57, 46, 46);
 }
 
 .tv-show-info p {

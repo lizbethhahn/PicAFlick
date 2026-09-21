@@ -1,19 +1,8 @@
 .media-chat-shell {
   display: flex;
   gap: 1rem;
-  padding: 1rem;
-
-  width: min(calc(100vw - 4rem));
-  height: min(calc(100vh - 144px - 2rem));
-
-  margin: 1rem auto;
-  box-sizing: border-box;
+ 
   min-height: 0;
-
-  border: 7px double #e91598;
-  border-radius: 24px;
-  background: #a0efdf;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .media-panel,
@@ -118,7 +107,6 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  min-height: 500px;
 }
 
 .message-row {
@@ -165,8 +153,8 @@
   white-space: nowrap;
 }
 
-@media (max-width: 768px) {
-  .media-chat-shell {
-    height: calc(100vh - 60px - 2rem);
-  }
-}
+// @media (max-width: 768px) {
+//   .media-chat-shell {
+//     height: calc(100vh - 60px - 2rem);
+//   }
+// }
