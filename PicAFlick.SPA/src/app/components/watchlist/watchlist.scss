@@ -1,0 +1,31 @@
+.app-watchlist-container {
+  display: flex;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.watchlist-sidebar {
+  width: clamp(220px, 25vw, 300px);
+  flex-shrink: 0;
+}
+
+.watchlist-results {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.watchlist-sidebar,
+.watchlist-results {
+  border: 6px double #e91598;
+  border-radius: 20px;
+  background: #ddf4ef;
+  padding: 1rem;
+}
+
+.watchlist-actions {
+	margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+

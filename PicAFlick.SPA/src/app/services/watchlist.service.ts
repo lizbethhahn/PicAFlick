@@ -8,6 +8,7 @@ import { WatchlistItem } from '../models/watchlist-item';
 
 export class WatchlistService {
   private apiUrl = 'https://localhost:7043/api/Watchlist'
+  static itemId: any;
   constructor(private http: HttpClient) { }
 
   // getAll()
@@ -19,5 +20,8 @@ export class WatchlistService {
       return this.http.post<WatchlistItem>(this.apiUrl, item);
   }
 
+  remove(id: number) {
+      return this.http.delete(`${this.apiUrl}/${id}`);
+  }
   // getById(id: number)
 }

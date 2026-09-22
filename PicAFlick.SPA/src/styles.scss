@@ -140,7 +140,7 @@ button:focus {
   margin: 1rem auto;
    
   width: calc(100vw - 4rem);
-  height: calc(100vh - 144px - 2rem);
+  height: calc(100vh - 100px - 2rem);
 
   box-sizing: border-box;
 
@@ -148,4 +148,28 @@ button:focus {
   border-radius: 24px;
   background: #a0efdf;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.media-card {
+  display: grid;
+  /* Desktop: 1 part poster, 5 parts text */
+  grid-template-columns: .75fr 5fr;
+  width: 100%;
+  background-color: #a0efdf;
+  border: 7px double #e91598;
+  border-radius: 20px;
+  margin-bottom: .5rem;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  line-height: 0;
+}
+
+.media-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1.5;
 }
