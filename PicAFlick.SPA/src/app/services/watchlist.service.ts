@@ -23,5 +23,9 @@ export class WatchlistService {
   remove(id: number) {
       return this.http.delete(`${this.apiUrl}/${id}`);
   }
-  // getById(id: number)
+
+  setWatched(id: number, watched: boolean) {
+      return this.http.put(`${this.apiUrl}/${id}/watched`, watched);
+  }
+
 }

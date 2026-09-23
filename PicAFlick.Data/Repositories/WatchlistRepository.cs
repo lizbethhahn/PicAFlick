@@ -52,7 +52,7 @@ namespace PicAFlick.Data.Repositories
             await _context.SaveChangesAsync(ct);
         }
 
-        public async Task MarkAsWatchedAsync(int id, CancellationToken ct = default)
+        public async Task SetWatchedAsync(int id, bool watched, CancellationToken ct = default)
         {
             var entity = await _context.WatchlistItems
                                        .FirstOrDefaultAsync(x => x.Id == id, ct);
@@ -60,7 +60,7 @@ namespace PicAFlick.Data.Repositories
             if (entity is null)
                 throw new KeyNotFoundException($"No watchlist item with id {id}");
 
-            entity.Watched = true;
+            entity.Watched = watched;                                    
             await _context.SaveChangesAsync(ct);
         }
 
@@ -85,6 +85,7 @@ namespace PicAFlick.Data.Repositories
                 .Include(x => x.UserMedia)
                 .FirstOrDefaultAsync(x => x.UserMediaId == userMediaId, ct);
         }
+        
         public async Task UpdateUserMediaAsync(UserMedia media, CancellationToken ct = default)
         {
             _context.UserMedia.Update(media);

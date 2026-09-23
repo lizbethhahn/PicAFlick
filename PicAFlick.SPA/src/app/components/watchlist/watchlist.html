@@ -25,11 +25,25 @@
                 <strong>First Air Date: {{ item.firstAirDate }}</strong>
               }
             </p>
+
+            @if (isWatched(item)) {
+              <span class="watched-label" (click)="setWatched(item.id, false)">
+                <strong>Watched 🎉</strong>
+              </span>
+            } @else {
+              <label class="watched-select">
+                <input
+                  type="checkbox"
+                  (change)="setWatched(item.id, true)"
+                />
+                Mark as Watched
+              </label>
+            }
             <div class="watchlist-actions">
               <button
                 type="button"
                 (click)="removeFromWatchlist(item.id)">
-                Remove
+                Remove this Item
               </button>
             </div>
           </div>

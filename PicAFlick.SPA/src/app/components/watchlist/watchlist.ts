@@ -60,4 +60,22 @@ export class WatchlistComponent {
       }
     });
   }
+
+  setWatched(itemId: number, newStatus: boolean): void {
+    this.watchlistService.setWatched(itemId, true).subscribe({
+      next: () => {
+        const item = this.watchlist.find(item => item.id === itemId);
+        if (item) {
+          item.watched = newStatus;
+        }
+      },
+      error: (error) => {
+        console.error('Could not mark item as watched:', error);
+      }
+    });
+  }
+  
+  isWatched(item: WatchlistItem): boolean {
+    return item.watched;
+  }
 }

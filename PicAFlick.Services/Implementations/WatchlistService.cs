@@ -96,7 +96,7 @@ namespace PicAFlick.Services.Implementations
         public async Task RemoveFromWatchlistAsync(int id, CancellationToken ct = default)
             => await _repo.RemoveFromWatchlistAsync(id, ct);
 
-        public async Task MarkAsWatchedAsync(int id, CancellationToken ct = default)
-            => await _repo.MarkAsWatchedAsync(id, ct);
+        public async Task SetWatchedAsync(int id, bool watched, CancellationToken ct = default)
+            => await _repo.SetWatchedAsync(id, watched, ct);
     }
 }
