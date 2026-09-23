@@ -17,4 +17,5 @@ export interface WatchlistItem {
     posterPath?: string;
     overview?: string;
     releaseDate?: string;
+    firstAirDate?: string;
 }

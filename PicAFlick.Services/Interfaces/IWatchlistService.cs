@@ -8,6 +8,6 @@ namespace PicAFlick.Services.Interfaces
         Task<WatchlistDisplayDto> GetByIdAsync(int id, string userId, CancellationToken ct = default);
         Task<WatchlistDisplayDto?> AddAsync(WatchlistCreationDto dto, CancellationToken ct = default);
         Task RemoveFromWatchlistAsync(int id,CancellationToken ct = default);
-        Task MarkAsWatchedAsync(int id, CancellationToken ct = default);
+        Task SetWatchedAsync(int id, bool watched, CancellationToken ct = default);
     }
 }

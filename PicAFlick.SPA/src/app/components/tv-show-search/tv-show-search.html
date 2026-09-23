@@ -1,80 +1,82 @@
-<div class="app-tv-show-search-container">
-  <h2>Search for a TV Show</h2>
+<div class="app-tv-show-search-container  picaflick-shell">
+  <div class="search-sidebar">
+    <h2>Search for a TV Show</h2>
 
-  <!-- Input field to accept tv show title -->
-  <input 
-    type="text" 
-    [(ngModel)]="searchTerm"   
-    placeholder="Enter tv show title" 
-    class="tv-show-title-input" />
+    <!-- Input field to accept tv show title -->
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm"
+      placeholder="Enter tv show title"
+      (keydown.enter)="onSearch()"
+      class="tv-show-title-input" />
 
-  <!-- Button to trigger the search -->
-  <button type="button" (click)="onSearch()" class="search-button">Search</button>
+    <!-- Button to trigger the search -->
+    <button type="button" (click)="onSearch()" class="search-button">Search</button>
+  </div>
 
-  <!-- Display error message if no tv show found -->
-  @if (errorMessage) 
-  {
-    <div class="error-message">
-        {{ errorMessage }}
-    </div>
-  }
-
-  <!-- Display tv show data if available -->
-  @if (searchResults)
-  {
-    @for (tvShow of searchResults; track tvShow.id)
+  <div class="search-results">
+    @if (errorMessage) 
     {
-      <div class="tv-show-card" (click)="onSelectShow(tvShow)">
-        <div class="poster">
-          @if (tvShow.poster_path)
-          {
-            <img src="https://image.tmdb.org/t/p/w185/{{ tvShow.poster_path }}"/>
-          } @else {
-            <img src="assets/images/tv-placeholder.jpg">
-          }
-        </div>
-
-        <div class="tv-show-info">
-          <h3>{{ tvShow.name }}</h3>
-          <p><strong>Overview:</strong> {{ tvShow.overview }}</p>
-          <p><strong>Release Date:</strong> {{ tvShow.first_air_date }}</p>
-          <p><strong>Rating:</strong> {{ tvShow.vote_average }}</p>
-
-          @if (isInWatchlist(tvShow)) {
-            <span class="in-watchlist">
-              <strong>In your Watchlist 🤩</strong>
-            </span>
-          } @else {
-            <label 
-              class="watchlist-select"
-              (click)="$event.stopPropagation()"
-            >
-              <input
-                type="checkbox"
-                (change)="onTvShowSelectionChange(tvShow, $event)"
-              />
-              Add to your Watchlist
-            </label>
-          }
-        </div>
+      <div class="error-message">
+          {{ errorMessage }}
       </div>
     }
-    
-    @if (selectedTvShows.length > 0) {
-      <div class="watchlist-action-bar">
-        <button (click)="addSelectedToWatchlist()">
-          <strong>
-            @if (addedTvShowCount === selectedTvShows.length) {
-              {{ addedTvShowCount }}
-              {{ addedTvShowCount === 1 ? 'TV Show Added' : 'TV Shows Added' }}
+
+    <!-- Display tv show data if available -->
+    @if (searchResults) {
+      @for (tvShow of searchResults; track tvShow.id) {
+        <div class="tv-show-card" (click)="onSelectShow(tvShow)">
+          <div class="poster">
+            @if (tvShow.poster_path)
+            {
+              <img src="https://image.tmdb.org/t/p/w185/{{ tvShow.poster_path }}"/>
             } @else {
-              Add {{ selectedTvShows.length }}
-              {{ selectedTvShows.length === 1 ? 'Item' : 'Items' }}
-              to Watchlist
+              <img src="assets/images/tv-placeholder.jpg">
             }
-          </strong>
-        </button>
-      </div>
+          </div>
+
+          <div class="tv-show-info">
+            <h3>{{ tvShow.name }}</h3>
+            <p><strong>Overview:</strong> {{ tvShow.overview }}</p>
+            <p><strong>Release Date:</strong> {{ tvShow.first_air_date }}</p>
+            <p><strong>Rating:</strong> {{ tvShow.vote_average }}</p>
+
+            @if (isInWatchlist(tvShow)) {
+              <span class="in-watchlist">
+                <strong>In your Watchlist 🤩</strong>
+              </span>
+            } @else {
+              <label 
+                class="watchlist-select"
+                (click)="$event.stopPropagation()"
+              >
+                <input
+                  type="checkbox"
+                  (change)="onTvShowSelectionChange(tvShow, $event)"
+                />
+                Add to your Watchlist
+              </label>
+            }
+          </div>
+        </div>
+      }
+      
+      @if (selectedTvShows.length > 0) {
+        <div class="watchlist-action-bar">
+          <button (click)="addSelectedToWatchlist()">
+            <strong>
+              @if (addedTvShowCount === selectedTvShows.length) {
+                {{ addedTvShowCount }}
+                {{ addedTvShowCount === 1 ? 'TV Show Added' : 'TV Shows Added' }}
+              } @else {
+                Add {{ selectedTvShows.length }}
+                {{ selectedTvShows.length === 1 ? 'Item' : 'Items' }}
+                to Watchlist
+              }
+            </strong>
+          </button>
+        </div>
+      }
     }
-  }
+  </div>
 </div>

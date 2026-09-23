@@ -65,9 +65,9 @@ namespace PicAFlick.WebApi.Controllers
         }
 
         [HttpPut("{id:int}/watched")]
-        public async Task<IActionResult> MarkAsWatched(int id, CancellationToken ct)
+        public async Task<IActionResult> SetWatched(int id, [FromBody] bool watched, CancellationToken ct)
         {
-            await _watchlistService.MarkAsWatchedAsync(id, ct);
+            await _watchlistService.SetWatchedAsync(id, watched, ct);
             return NoContent();
         }
     }
