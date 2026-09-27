@@ -7,6 +7,17 @@
   padding: 0;
 }
 
+:root {
+  --bottom-nav-height: 72px;
+  --top-nav-height: 72px;
+
+  --color-ink: #17354b;
+  --color-mint: #baf6ec;
+  --color-mint-light: #ddf4ef;
+  --color-pink: #e91598;
+  --color-pink-light: #ff83b8;
+}
+
 html,
 body {
   height: 100%;
@@ -15,8 +26,8 @@ body {
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
-  color: #333;
+  background-color: var(--color-mint);
+  color: var(--color-ink);
   line-height: 1.6;
   margin: 0;
   padding: 0;
@@ -130,24 +141,21 @@ button:focus {
 }
 
 .content {
+  height: 100vh;
+  padding-top: var(--top-nav-height);
   padding-bottom: var(--bottom-nav-height);
-  padding-top: var(--top-nav-height)
+  box-sizing: border-box;
 }
 
 /* You can add global styles to this file, and also import other style files */
 .picaflick-shell {
   padding: 1rem;
-  margin: 1rem auto;
-   
+  margin: 1rem auto;   
   width: calc(100vw - 4rem);
   height: calc(100vh - 100px - 2rem);
-
   box-sizing: border-box;
-
-  border: 7px double #e91598;
+  background: var(--color-mint);
   border-radius: 24px;
-  background: #a0efdf;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .media-card {
@@ -155,14 +163,14 @@ button:focus {
   /* Desktop: 1 part poster, 5 parts text */
   grid-template-columns: .75fr 5fr;
   width: 100%;
-  background-color: #a0efdf;
-  border: 7px double #e91598;
+  background-color: var(--color-mint-light);
+  border: 7px double var(--color-pink);
   border-radius: 20px;
   margin-bottom: .5rem;
   overflow: hidden;
+  scroll-snap-align: start;
   font-family: system-ui, -apple-system, sans-serif;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  line-height: 0;
+  line-height: 0; // allows the poster to take up entire height of container
 }
 
 .media-info {

@@ -5,8 +5,8 @@
   left: 0;
   width: 100%;
   height: 60px;
-  background-color: #ffffff;
-  border-top: 1px solid #ddd;
+  background-color: var(--color-mint);
+  border-top: 1px solid var(--color-pink-light);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -16,11 +16,17 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+.nav-item {
+  color: var(--color-ink);
+  text-decoration: none;
+  font-weight: 600;
+}
+
 /* Desktop: move it to the top and style like a header */
 @media (min-width: 768px) {
   .nav-container {
     border-top: 0;
-    border-bottom: 1px solid rgba(0,0,0,0.12);
+    border-bottom:0;
     top: 0;
     padding: 10px 16px;
     width: 100%;

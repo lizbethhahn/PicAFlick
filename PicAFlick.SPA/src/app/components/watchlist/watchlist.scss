@@ -7,20 +7,21 @@
 .watchlist-sidebar {
   width: clamp(220px, 25vw, 300px);
   flex-shrink: 0;
+
+  border: 6px double #e91598;
+  border-radius: 20px;
+  background: #ddf4ef;
+  padding: 1rem;
 }
 
 .watchlist-results {
   flex: 1;
   min-width: 0;
   overflow-y: auto;
-}
-
-.watchlist-sidebar,
-.watchlist-results {
-  border: 6px double #e91598;
-  border-radius: 20px;
-  background: #ddf4ef;
-  padding: 1rem;
+  scroll-snap-type: y mandatory;
+  border: none;
+  background: transparent;
+  padding: 0;
 }
 
 .watchlist-actions {

@@ -25,7 +25,7 @@
     <!-- Display tv show data if available -->
     @if (searchResults) {
       @for (tvShow of searchResults; track tvShow.id) {
-        <div class="tv-show-card" (click)="onSelectShow(tvShow)">
+        <div class="media-card" (click)="onSelectShow(tvShow)">
           <div class="poster">
             @if (tvShow.poster_path)
             {

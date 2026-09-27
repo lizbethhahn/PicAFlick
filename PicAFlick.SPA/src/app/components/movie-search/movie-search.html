@@ -24,7 +24,7 @@
     <!-- Display movie data if available -->
     @if (searchResults) {
       @for (movie of searchResults; track movie.id) {
-        <div class="movie-card" (click)="onSelectMovie(movie)">
+        <div class="media-card" (click)="onSelectMovie(movie)">
           <div class="poster">
             @if (movie.poster_path)
             {
