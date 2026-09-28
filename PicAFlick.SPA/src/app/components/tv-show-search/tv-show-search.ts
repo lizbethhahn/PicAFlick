@@ -83,6 +83,7 @@ export class TvShowSearchComponent {
         posterPath: tvShow.poster_path,
         overview: tvShow.overview,
         releaseDate: tvShow.first_air_date || null,
+        voteAverage: tvShow.vote_average,
         notes: null
       };
 

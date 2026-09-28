@@ -4,27 +4,38 @@
   </div>
 
   <div class="watchlist-results">
-    @if (watchlist)
-    {
+    @if (watchlist){
       @for (item of watchlist; track item.id) {
         <div class="media-card">
           <div class="poster">
             @if (item.posterPath) {
-                <img src="https://image.tmdb.org/t/p/w185/{{ item.posterPath }}"/>           
-              } @else {
+              <img src="https://image.tmdb.org/t/p/w185/{{ item.posterPath }}">
+            } @else {
+              @if (item.mediaType === MediaType.Movie) {
                 <img src="assets/images/movie-placeholder.jpg">
+              } @else {
+                <img src="assets/images/tv-placeholder.jpg">
               }
+            }
           </div>
           <div class="media-info">
             <h3>{{ item.title }}</h3>
-            <p><strong>Overview:</strong> {{ item.overview }}</p>
-            <p>
-              @if (item.mediaType === MediaType.Movie) {
-                <strong>Release Date: {{ item.releaseDate }}</strong>
-              } @else {
-                <strong>First Air Date: {{ item.firstAirDate }}</strong>
-              }
-            </p>
+
+            <div class="media-meta">
+              <span>{{ item.releaseDate?.slice(0, 4) }}</span>
+              <span class="meta-separator">•</span>
+              <span>★ {{ item.voteAverage != null ? item.voteAverage.toFixed(1) : 'N/A' }}</span>
+              <span class="meta-separator">•</span>
+              <span>
+                 @if (item.mediaType === MediaType.Movie) {
+                <img src="assets/images/clapperboard-icon.svg" alt="" />
+                } @else {
+                  <img src="assets/images/tv-icon.svg" alt="" />
+                }
+              </span>
+            </div>
+
+            <p class="media-overview">{{ item.overview }}</p>
 
             @if (isWatched(item)) {
               <span class="watched-label" (click)="setWatched(item.id, false)">

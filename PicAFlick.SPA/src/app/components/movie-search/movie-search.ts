@@ -83,6 +83,7 @@ export class MovieSearchComponent {
         posterPath: movie.poster_path,
         overview: movie.overview,
         releaseDate: movie.release_date || null,
+        voteAverage: movie.vote_average,
         notes: null
       };
 

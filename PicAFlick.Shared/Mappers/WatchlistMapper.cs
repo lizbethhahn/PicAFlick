@@ -30,7 +30,7 @@ namespace PicAFlick.Domain.Services.Mappers
                 PosterPath = media.PosterPath,
                 Overview = media.Overview,
                 ReleaseDate = media.ReleaseDate,
-             // UserRating = entity.Rating
+                VoteAverage = entity.UserMedia?.VoteAverage,
             };
         }
     }

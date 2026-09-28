@@ -18,4 +18,5 @@ export interface WatchlistItem {
     overview?: string;
     releaseDate?: string;
     firstAirDate?: string;
+    voteAverage?: number | null;
 }

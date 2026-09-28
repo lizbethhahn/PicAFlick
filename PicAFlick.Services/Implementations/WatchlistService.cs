@@ -43,7 +43,8 @@ namespace PicAFlick.Services.Implementations
                     MediaType = dto.MediaType,
                     ReleaseDate = dto.ReleaseDate,
                     PosterPath = dto.PosterPath,
-                    Overview = dto.Overview
+                    Overview = dto.Overview,
+                    VoteAverage = dto.VoteAverage
                 };
 
                 media = await _repo.AddUserMediaAsync(media, ct);
@@ -68,6 +69,12 @@ namespace PicAFlick.Services.Implementations
                 if (media.Overview == null && dto.Overview != null)
                 {
                     media.Overview = dto.Overview;
+                    needsUpdate = true;
+                }
+
+                if (media.VoteAverage == null && dto.VoteAverage.HasValue)
+                {
+                    media.VoteAverage = dto.VoteAverage;
                     needsUpdate = true;
                 }
 

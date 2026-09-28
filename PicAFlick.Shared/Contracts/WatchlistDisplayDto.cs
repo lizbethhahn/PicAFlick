@@ -16,6 +16,7 @@ namespace PicAFlick.Shared.Contracts
         public string? PosterPath { get; set; }
         public string? Overview { get; set; }
         public DateTime? ReleaseDate { get; set; }
+        public double? VoteAverage { get; set; }
 
         // details added by user
         public string? Notes { get; set; }
