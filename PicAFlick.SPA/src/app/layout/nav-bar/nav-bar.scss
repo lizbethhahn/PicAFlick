@@ -22,6 +22,13 @@
   font-weight: 600;
 }
 
+.nav-item.active {
+  text-decoration: underline;
+  text-decoration-color: var(--color-pink);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
 /* Desktop: move it to the top and style like a header */
 @media (min-width: 768px) {
   .nav-container {
