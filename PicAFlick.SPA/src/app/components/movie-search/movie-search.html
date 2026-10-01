@@ -32,48 +32,37 @@
             } @else {
               <img src="assets/images/movie-placeholder.jpg">
             } 
-          </div>          
-          <div class="movie-info">
+          </div>
+          <div class="media-info">
             <h3>{{ movie.title }}</h3>
-            <p class="media-overview">
-              {{ movie.overview }}
-            </p>
-            <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-            <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
-            
+
+            <div class="media-meta">
+              <span>{{ movie.release_date?.slice(0, 4) }}</span>
+              <span class="meta-separator">•</span>
+              <span>★ {{ movie.vote_average != null ? movie.vote_average.toFixed(1) : 'N/A' }}</span>
+              <span class="meta-separator">•</span>
+              <span class="icon-wrapper">
+                <img src="assets/images/clapperboard-icon.svg" alt="" />
+              </span>
+            </div>
+
+            <p class="media-overview">{{ movie.overview }}</p>
+          </div> 
+                   
+          <div class="media-controls">
             @if (isInWatchlist(movie)) {
               <span class="in-watchlist">
                 <strong>In your Watchlist 🤩</strong>
               </span>
             } @else {
-              <label 
-                class="watchlist-select"
-                (click)="$event.stopPropagation()"
-              >
-                <input
-                  type="checkbox"
-                  (change)="onMovieSelectionChange(movie, $event)"
-                />
+              <button
+                type="button"
+                class="add-watchlist-button"
+                (click)="$event.stopPropagation(); addToWatchlist(movie)">
                 Add to your Watchlist
-              </label>
+              </button>
             }            
           </div>
-        </div>
-      }
-      @if (selectedMovies.length > 0) {
-        <div class="watchlist-action-bar">
-          <button (click)="addSelectedToWatchlist()">
-            <strong>
-              @if (addedMovieCount === selectedMovies.length) {
-                {{ addedMovieCount }}
-                {{ addedMovieCount === 1 ? 'Movie Added' : 'Movies Added' }}
-              } @else {
-                Add {{ selectedMovies.length }}
-                {{ selectedMovies.length === 1 ? 'Item' : 'Items' }}
-                to Watchlist
-              }
-            </strong>
-          </button>
         </div>
       }
     } 

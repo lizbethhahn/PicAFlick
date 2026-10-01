@@ -36,27 +36,29 @@
             </div>
 
             <p class="media-overview">{{ item.overview }}</p>
-
+          </div>
+          
+          <div class="media-controls">
             @if (isWatched(item)) {
               <span class="watched-label" (click)="setWatched(item.id, false)">
                 <strong>Watched 🎉</strong>
               </span>
+
+              <div class="watchlist-actions">
+                <button type="button" (click)="removeFromWatchlist(item.id)">
+                  <strong>Remove</strong>
+                </button>
+              </div>
             } @else {
-              <label class="watched-select">
-                <input
-                  type="checkbox"
-                  (change)="setWatched(item.id, true)"
-                />
-                Mark as Watched
-              </label>
-            }
-            <div class="watchlist-actions">
+              <span class="unwatched-label">Unwatched</span>
+
               <button
                 type="button"
-                (click)="removeFromWatchlist(item.id)">
-                Remove this Item
+                class="mark-watched-button"
+                (click)="setWatched(item.id, true)">
+                Mark as Watched
               </button>
-            </div>
+            }
           </div>
         </div>
       }

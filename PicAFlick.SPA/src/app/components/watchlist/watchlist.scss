@@ -26,16 +26,51 @@
 }
 
 .watchlist-actions {
-	margin-top: auto;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
-.watched-label {
+.watchlist-actions button {
+  background-color: white;
+  border: 1px solid var(--color-pink-light);
+  color: var(--color-pink);
+  font-size: 0.875rem;
+  padding: 6px 16px;
+  border-radius: 8px;
+}
+
+.watched-label, .watched-select {
   cursor: pointer;
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: #b5e9df;
+  font-size: 0.875rem;
 }
 
-.meta-separator {
-  margin: 0 15px;
+.unwatched-label {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: #c4e9f4;
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  font-weight: bold;
 }
 
+.mark-watched-button {
+  align-self: flex-start;
+  background-color: var(--color-pink-light);
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  font-weight: bold;
+  padding: 6px 16px;
+  border-radius: 8px;
+}
+.media-overview {
+  margin-top: 4px;
+}
+
+.media-controls {
+  width: 190px;
+}

@@ -54,56 +54,29 @@ export class MovieSearchComponent {
     });  
   }
 
-  onMovieSelectionChange(movie: TmdbMovie, event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    
-    if (checkbox.checked) {
-      
-      if (this.selectedMovies.length === 0) {
-        this.addedMovieCount = 0;
+  addToWatchlist(movie: TmdbMovie) {
+  const item = {
+    tmdbId: movie.id,
+    Title: movie.title,
+    MediaType: MediaType.Movie,
+    posterPath: movie.poster_path,
+    overview: movie.overview,
+    releaseDate: movie.release_date || null,
+    voteAverage: movie.vote_average,
+    notes: null
+  };
+
+  this.watchlistService.add(item).subscribe({
+    next: (createdItem) => {
+      if (!this.watchlistItems.some(item => item.id === createdItem.id)) {
+        this.watchlistItems.push(createdItem);
       }
-
-      this.selectedMovies.push(movie);
-
-    } else {
-      this.selectedMovies = this.selectedMovies.filter(
-        selectedMovie => selectedMovie.id !== movie.id
-      );
+    },
+    error: (error) => {
+      console.error('Could not add to watchlist:', error);
     }
-  }
-
-  addSelectedToWatchlist() {
-    this.addedMovieCount = 0;
-
-    this.selectedMovies.forEach(movie => {
-      const item = {
-        tmdbId: movie.id,
-        Title: movie.title,
-        MediaType: MediaType.Movie,
-        posterPath: movie.poster_path,
-        overview: movie.overview,
-        releaseDate: movie.release_date || null,
-        voteAverage: movie.vote_average,
-        notes: null
-      };
-
-      this.watchlistService.add(item).subscribe({
-        next: (createdItem) => {
-          if (!this.watchlistItems.some(item => item.id === createdItem.id)) {
-            this.watchlistItems.push(createdItem);
-          }                   
-          this.addedMovieCount++;
-
-          this.selectedMovies = this.selectedMovies.filter(
-            movie => movie.id !== createdItem.tmdbId
-          );
-        },
-        error: (error) => {
-          console.error('Could not add to watchlist:', error);
-        }
-      });
-    });
-  }
+  });
+}
 
   loadWatchlist(): void {
     this.watchlistService.getAll().subscribe({
