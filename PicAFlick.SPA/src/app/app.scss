@@ -9,11 +9,6 @@
   grid-template-rows: 1fr auto; /* content takes remaining space, nav sizes itself */
 }
 
-.content {
-  overflow: auto; /* <- scroll happens here */
-  -webkit-overflow-scrolling: touch;
-}
-
 @media (min-width: 768px) {
   .app-shell {
     grid-template-rows: auto 1fr; /* nav row first */

@@ -4,9 +4,10 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 60px;
-  background-color: #ffffff;
-  border-top: 1px solid #ddd;
+  height: auto;
+  min-height: 60px;
+  background-color: var(--color-mint);
+  border-top: 1px solid var(--color-pink-light);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -16,17 +17,59 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+.nav-logo {
+  display: block;
+  width: 300px;
+  height: auto;
+  flex-shrink: 0;
+} 
+
+.nav-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nav-tagline {
+  font-size: 1.0rem;
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+.nav-item {
+  color: var(--color-ink);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.nav-item.active {
+  color: var(--color-pink);
+  text-decoration: underline;
+  text-decoration-color: var(--color-pink);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
 /* Desktop: move it to the top and style like a header */
 @media (min-width: 768px) {
   .nav-container {
     border-top: 0;
-    border-bottom: 1px solid rgba(0,0,0,0.12);
+    border-bottom: 0;
     top: 0;
-    padding: 10px 16px;
-    width: 100%;
-    grid-template-columns: auto auto auto;
-    justify-content: start;
-    gap: 12px;
     bottom: auto;
+    padding: 10px 3rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-content {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .nav-item + .nav-item {
+    margin-left: 16px;
   }
 }

@@ -7,29 +7,70 @@
 .watchlist-sidebar {
   width: clamp(220px, 25vw, 300px);
   flex-shrink: 0;
-}
 
-.watchlist-results {
-  flex: 1;
-  min-width: 0;
-  overflow-y: auto;
-}
-
-.watchlist-sidebar,
-.watchlist-results {
   border: 6px double #e91598;
   border-radius: 20px;
   background: #ddf4ef;
   padding: 1rem;
 }
 
+.watchlist-results {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  border: none;
+  background: transparent;
+  padding-right: 24px;
+  scrollbar-width:auto
+}
+
 .watchlist-actions {
-	margin-top: auto;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
-.watched-label {
+.watchlist-actions button {
+  background-color: white;
+  border: 1px solid var(--color-pink-light);
+  color: var(--color-pink);
+  font-size: 0.875rem;
+  padding: 6px 16px;
+  border-radius: 8px;
+}
+
+.watched-label, .watched-select {
   cursor: pointer;
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: #b5e9df;
+  font-size: 0.875rem;
 }
 
+.unwatched-label {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: #c4e9f4;
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.mark-watched-button {
+  align-self: flex-start;
+  background-color: var(--color-pink-light);
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  font-weight: bold;
+  padding: 6px 16px;
+  border-radius: 8px;
+}
+.media-overview {
+  margin-top: 4px;
+}
+
+.media-controls {
+  width: 190px;
+}

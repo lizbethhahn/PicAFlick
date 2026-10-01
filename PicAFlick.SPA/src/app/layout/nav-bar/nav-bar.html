@@ -1,17 +1,34 @@
 <nav class="nav-container" aria-label="Primary">
-  <a class="nav-item" routerLink="/" routerLinkActive="active">
-    <span class="label">Watchlist</span>
-  </a>
-
-  <a class="nav-item" routerLink="/search/movies" routerLinkActive="active">
-    <span class="label">Movies</span>
-  </a>
-
-  <a class="nav-item" routerLink="/search/tv" routerLinkActive="active">
-    <span class="label">TV</span>
-  </a>
-
-  <a class="nav-item" routerLink="/chat" routerLinkActive="active">
-    <span class="label">Chat</span>
-  </a>
+  <div class="nav-content">
+    <div class="nav-brand">
+      <img
+        class="nav-logo"
+        src="assets/images/picaflick-logo.svg"
+        alt="PicAFlick"
+      />
+      <span class="nav-tagline">Good movies. Great conversations.</span>
+    </div>     
+    <a
+      class="nav-item"
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      <span class="label">Watchlist</span>
+    </a>
+    <a class="nav-item" 
+      routerLink="/search/movies" 
+      routerLinkActive="active">
+      <span class="label">Movies</span>
+    </a>
+    <a class="nav-item" 
+      routerLink="/search/tv" 
+      routerLinkActive="active">
+      <span class="label">TV</span>
+    </a>
+    <a class="nav-item" 
+      routerLink="/chat" 
+      routerLinkActive="active">
+      <span class="label">Chat</span>
+    </a>
+  </div>
 </nav>

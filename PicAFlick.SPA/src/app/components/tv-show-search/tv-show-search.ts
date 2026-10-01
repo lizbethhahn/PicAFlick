@@ -42,7 +42,7 @@ export class TvShowSearchComponent {
     this.searchService.searchTvShows(query).subscribe({
       next: (results) => {
         this.searchResults = results; 
-        this.searchService.movieSearchTerm = this.searchTerm;
+        this.searchService.tvShowSearchTerm = this.searchTerm;
         this.searchService.tvShowSearchResults = results;
         this.isLoading = false;  
       },
@@ -72,35 +72,27 @@ export class TvShowSearchComponent {
     }
   }
 
-  addSelectedToWatchlist() {
-    this.addedTvShowCount = 0;
+  addToWatchlist(tvShow: TmdbTvShow) {
+    const item = {
+      tmdbId: tvShow.id,
+      title: tvShow.name,
+      mediaType: MediaType.TvShow,
+      posterPath: tvShow.poster_path,
+      overview: tvShow.overview,
+      releaseDate: tvShow.first_air_date || null,
+      voteAverage: tvShow.vote_average,
+      notes: null
+    };
 
-    this.selectedTvShows.forEach(tvShow => {
-      const item = {
-        tmdbId: tvShow.id,
-        title: tvShow.name,
-        mediaType: MediaType.TvShow,
-        posterPath: tvShow.poster_path,
-        overview: tvShow.overview,
-        releaseDate: tvShow.first_air_date || null,
-        notes: null
-      };
-
-      this.watchlistService.add(item).subscribe({
-        next: (createdItem) => {
-          if (!this.watchlistItems.some(item => item.id === createdItem.id)) {
-            this.watchlistItems.push(createdItem);
-          }
-          this.addedTvShowCount++;
-
-          this.selectedTvShows = this.selectedTvShows.filter(
-            tvShow => tvShow.id !== createdItem.tmdbId
-          );
-        },
-        error: (error) => {
-          console.error('Could not add to watchlist:', error);
+    this.watchlistService.add(item).subscribe({
+      next: (createdItem) => {
+        if (!this.watchlistItems.some(item => item.id === createdItem.id)) {
+          this.watchlistItems.push(createdItem);
         }
-      });
+      },
+      error: (error) => {
+        console.error('Could not add to watchlist:', error);
+      }
     });
   }
 
