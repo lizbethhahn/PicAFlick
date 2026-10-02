@@ -18,6 +18,7 @@ namespace PicAFlick.Data.Repositories
             return await _context.WatchlistItems
                                  .AsNoTracking()
                                  .Include(x => x.UserMedia)
+                                 .OrderByDescending(x => x.AddedAtUtc)
                                  .ToListAsync(ct);
         }
 

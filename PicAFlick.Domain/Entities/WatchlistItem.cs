@@ -11,8 +11,8 @@ namespace PicAFlick.Domain.Entities
         public string? Notes { get; set; }
         public bool Watched { get; set; }
 
-     // public DateTime AddedAtUtc { get; set; } = DateTime.UtcNow;
+        public DateTime AddedAtUtc { get; set; } = DateTime.UtcNow;
 
-     // public decimal? Rating { get; set; }  // User rating 1-10
+        // public decimal? Rating { get; set; }  // User rating 1-10
     }
 }
